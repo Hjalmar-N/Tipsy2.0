@@ -104,14 +104,15 @@ void SquareLineAdapter::applyStateFeedback(const UiState& state,
 
 generated::UiRenderModel SquareLineAdapter::buildRenderModel(const UiState& state) const {
   generated::UiRenderModel model {};
-  model.headerTitle = "Tipsy2.0";
-  model.headerSubtitle = "Cocktail machine mock UI";
+  model.headerTitle = "Tipsy";
+  model.headerSubtitle = String();
   model.machineStateLabel = "Machine";
   model.machineStateText = machineStateText(state.machineState);
   model.statusLabel = "Status";
-  model.statusText = state.statusMessage;
+  model.statusText = state.machineState == tipsy::app::MachineState::Idle ? "Ready"
+                                                                          : state.statusMessage;
   model.selectedDrinkLabel = "Selected";
-  model.primaryActionLabel = "Start Drink";
+  model.primaryActionLabel = "Pour Drink";
   model.selectedDrinkText = "None";
   model.hasSelectedDrink = !state.selectedDrinkId.isEmpty();
 

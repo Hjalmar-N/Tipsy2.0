@@ -3,6 +3,7 @@
 #include <Arduino.h>
 #include <array>
 #include <cstddef>
+#include <lvgl.h>
 
 #include "config/AppConfig.h"
 
