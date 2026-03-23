@@ -25,7 +25,7 @@ bool RecipeService::load() {
 bool RecipeService::save() {
   DynamicJsonDocument doc(4096);
   doc["schemaVersion"] = 1;
-  JsonArray drinks = doc["drinks"].to<JsonArray>();
+  JsonArray drinks = doc.createNestedArray("drinks");
   serializeRecipes(drinks);
 
   const bool ok = jsonStorage_.writeJson(tipsy::storage::paths::kDrinks, doc);
@@ -139,7 +139,7 @@ void RecipeService::loadDefaults() {
 bool RecipeService::ensureDefaultFile() {
   DynamicJsonDocument doc(4096);
   doc["schemaVersion"] = 1;
-  JsonArray drinks = doc["drinks"].to<JsonArray>();
+  JsonArray drinks = doc.createNestedArray("drinks");
   loadDefaults();
   serializeRecipes(drinks);
 
@@ -189,7 +189,7 @@ bool RecipeService::parseRecipes(const JsonArrayConst& drinksArray) {
 void RecipeService::serializeRecipes(JsonArray drinksArray) const {
   for (std::size_t i = 0; i < recipeCount_; ++i) {
     const auto& recipe = recipes_[i];
-    JsonObject drink = drinksArray.add<JsonObject>();
+    JsonObject drink = drinksArray.createNestedObject();
     drink["id"] = recipe.id;
     drink["displayName"] = recipe.displayName;
     drink["categoryId"] = recipe.categoryId;
@@ -198,9 +198,9 @@ void RecipeService::serializeRecipes(JsonArray drinksArray) const {
     drink["visibleInMenu"] = recipe.visibleInMenu;
     drink["sortOrder"] = recipe.sortOrder;
 
-    JsonArray ingredients = drink["ingredients"].to<JsonArray>();
+    JsonArray ingredients = drink.createNestedArray("ingredients");
     for (std::size_t j = 0; j < recipe.ingredientCount; ++j) {
-      JsonObject ingredient = ingredients.add<JsonObject>();
+      JsonObject ingredient = ingredients.createNestedObject();
       ingredient["ingredientId"] = recipe.ingredients[j].ingredientId;
       ingredient["amountMl"] = recipe.ingredients[j].amountMl;
       ingredient["optional"] = recipe.ingredients[j].optional;

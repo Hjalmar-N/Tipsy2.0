@@ -128,9 +128,9 @@ bool SettingsService::ensureDefaultFiles() {
 
   DynamicJsonDocument pumpMapDoc(2048);
   pumpMapDoc["schemaVersion"] = 1;
-  JsonArray assignments = pumpMapDoc["pumpAssignments"].to<JsonArray>();
+  JsonArray assignments = pumpMapDoc.createNestedArray("pumpAssignments");
   for (const auto& assignment : settings_.pumpAssignments) {
-    JsonObject entry = assignments.add<JsonObject>();
+    JsonObject entry = assignments.createNestedObject();
     entry["pumpIndex"] = assignment.pumpIndex;
     entry["enabled"] = assignment.enabled;
     entry["ingredientId"] = assignment.ingredientId;
@@ -144,9 +144,9 @@ bool SettingsService::ensureDefaultFiles() {
   settingsDoc["mockModeEnabled"] = settings_.mockModeEnabled;
   settingsDoc["adminLockEnabled"] = settings_.adminLockEnabled;
   settingsDoc["manualPourMaxMl"] = settings_.manualPourMaxMl;
-  JsonArray calibrations = settingsDoc["pumpCalibrations"].to<JsonArray>();
+  JsonArray calibrations = settingsDoc.createNestedArray("pumpCalibrations");
   for (const auto& calibration : settings_.pumpCalibrations) {
-    JsonObject entry = calibrations.add<JsonObject>();
+    JsonObject entry = calibrations.createNestedObject();
     entry["pumpIndex"] = calibration.pumpIndex;
     entry["enabled"] = calibration.enabled;
     entry["mlPerSecond"] = calibration.mlPerSecond;
@@ -226,10 +226,10 @@ bool SettingsService::loadSettingsDocument(const JsonObjectConst& settingsObject
 bool SettingsService::savePumpMap() const {
   DynamicJsonDocument doc(2048);
   doc["schemaVersion"] = settings_.schemaVersion;
-  JsonArray assignments = doc["pumpAssignments"].to<JsonArray>();
+  JsonArray assignments = doc.createNestedArray("pumpAssignments");
 
   for (const auto& assignment : settings_.pumpAssignments) {
-    JsonObject entry = assignments.add<JsonObject>();
+    JsonObject entry = assignments.createNestedObject();
     entry["pumpIndex"] = assignment.pumpIndex;
     entry["enabled"] = assignment.enabled;
     entry["ingredientId"] = assignment.ingredientId;
@@ -250,9 +250,9 @@ bool SettingsService::saveSettingsDocument() const {
   doc["adminLockEnabled"] = settings_.adminLockEnabled;
   doc["manualPourMaxMl"] = settings_.manualPourMaxMl;
 
-  JsonArray calibrations = doc["pumpCalibrations"].to<JsonArray>();
+  JsonArray calibrations = doc.createNestedArray("pumpCalibrations");
   for (const auto& calibration : settings_.pumpCalibrations) {
-    JsonObject entry = calibrations.add<JsonObject>();
+    JsonObject entry = calibrations.createNestedObject();
     entry["pumpIndex"] = calibration.pumpIndex;
     entry["enabled"] = calibration.enabled;
     entry["mlPerSecond"] = calibration.mlPerSecond;
