@@ -1,0 +1,59 @@
+<svg width="1080" height="1920" viewBox="0 0 1080 1920" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="130" y1="40" x2="970" y2="1880" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#171B22"/>
+      <stop offset="1" stop-color="#080A0F"/>
+    </linearGradient>
+    <linearGradient id="shell" x1="180" y1="150" x2="900" y2="1770" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#1A202A" stop-opacity="0.97"/>
+      <stop offset="1" stop-color="#10141B" stop-opacity="0.99"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="230" y1="0" x2="850" y2="0" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#F4B662"/>
+      <stop offset="1" stop-color="#D88937"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="1080" height="1920" fill="url(#bg)"/>
+  <circle cx="874" cy="184" r="220" fill="#F4B662" fill-opacity="0.08"/>
+  <rect x="180" y="160" width="720" height="1596" rx="44" fill="url(#shell)"/>
+  <rect x="181.5" y="161.5" width="717" height="1593" rx="42.5" stroke="white" stroke-opacity="0.06" stroke-width="3"/>
+
+  <text x="230" y="254" fill="#8FA0B5" font-size="28" font-weight="550" font-family="Inter, Segoe UI, Arial, sans-serif">Back</text>
+  <text x="230" y="346" fill="#F6F7F9" font-size="72" font-weight="700" font-family="Inter, Segoe UI, Arial, sans-serif">Gin Tonic</text>
+  <text x="232" y="400" fill="#A7B1BF" font-size="26" font-weight="500" font-family="Inter, Segoe UI, Arial, sans-serif">Ready to pour</text>
+
+  <rect x="230" y="462" width="620" height="238" rx="30" fill="#11161D" fill-opacity="0.75"/>
+  <rect x="231.5" y="463.5" width="617" height="235" rx="28.5" stroke="white" stroke-opacity="0.05" stroke-width="3"/>
+  <text x="264" y="534" fill="#F4F6F8" font-size="30" font-weight="650" font-family="Inter, Segoe UI, Arial, sans-serif">Recipe</text>
+  <text x="264" y="584" fill="#98A5B5" font-size="24" font-weight="500" font-family="Inter, Segoe UI, Arial, sans-serif">Gin varies with selected alcohol level</text>
+  <text x="264" y="626" fill="#98A5B5" font-size="24" font-weight="500" font-family="Inter, Segoe UI, Arial, sans-serif">Tonic stays fixed at 150 ml</text>
+  <text x="264" y="668" fill="#B9C4D2" font-size="22" font-weight="600" font-family="Inter, Segoe UI, Arial, sans-serif">Only the alcohol amount changes</text>
+
+  <text x="230" y="810" fill="#F4F6F8" font-size="30" font-weight="650" font-family="Inter, Segoe UI, Arial, sans-serif">Alcohol Strength</text>
+  <text x="230" y="850" fill="#98A5B5" font-size="22" font-weight="500" font-family="Inter, Segoe UI, Arial, sans-serif">Choose spirit amount. Mixer volume remains unchanged.</text>
+
+  <rect x="230" y="900" width="620" height="112" rx="28" fill="#232A35"/>
+  <rect x="230" y="1038" width="620" height="112" rx="28" fill="url(#accent)"/>
+  <rect x="230" y="1176" width="620" height="112" rx="28" fill="#232A35"/>
+
+  <rect x="231.5" y="901.5" width="617" height="109" rx="26.5" stroke="white" stroke-opacity="0.05" stroke-width="3"/>
+  <rect x="231.5" y="1177.5" width="617" height="109" rx="26.5" stroke="white" stroke-opacity="0.05" stroke-width="3"/>
+
+  <text x="280" y="968" fill="#F4F6F8" font-size="32" font-weight="650" font-family="Inter, Segoe UI, Arial, sans-serif">4 cl</text>
+  <text x="800" y="968" text-anchor="end" fill="#98A5B5" font-size="28" font-weight="550" font-family="Inter, Segoe UI, Arial, sans-serif">40 ml</text>
+
+  <text x="280" y="1106" fill="#11151B" font-size="34" font-weight="750" font-family="Inter, Segoe UI, Arial, sans-serif">6 cl</text>
+  <text x="800" y="1106" text-anchor="end" fill="#11151B" font-size="30" font-weight="700" font-family="Inter, Segoe UI, Arial, sans-serif">60 ml</text>
+
+  <text x="280" y="1244" fill="#F4F6F8" font-size="32" font-weight="650" font-family="Inter, Segoe UI, Arial, sans-serif">8 cl</text>
+  <text x="800" y="1244" text-anchor="end" fill="#98A5B5" font-size="28" font-weight="550" font-family="Inter, Segoe UI, Arial, sans-serif">80 ml</text>
+
+  <rect x="230" y="1354" width="620" height="154" rx="32" fill="#11161D" fill-opacity="0.76"/>
+  <rect x="231.5" y="1355.5" width="617" height="151" rx="30.5" stroke="white" stroke-opacity="0.05" stroke-width="3"/>
+  <text x="264" y="1420" fill="#A9B4C2" font-size="24" font-weight="500" font-family="Inter, Segoe UI, Arial, sans-serif">Selected serve</text>
+  <text x="264" y="1470" fill="#F4F6F8" font-size="28" font-weight="650" font-family="Inter, Segoe UI, Arial, sans-serif">Gin 60 ml + Tonic 150 ml</text>
+
+  <rect x="230" y="1562" width="620" height="140" rx="36" fill="url(#accent)"/>
+  <text x="540" y="1648" text-anchor="middle" fill="#11151B" font-size="42" font-weight="750" font-family="Inter, Segoe UI, Arial, sans-serif">Pour</text>
+</svg>

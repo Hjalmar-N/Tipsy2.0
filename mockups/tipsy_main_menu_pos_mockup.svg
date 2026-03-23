@@ -1,0 +1,110 @@
+<svg width="1080" height="1920" viewBox="0 0 1080 1920" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="140" y1="60" x2="960" y2="1860" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#171B22"/>
+      <stop offset="1" stop-color="#090B10"/>
+    </linearGradient>
+    <linearGradient id="shell" x1="170" y1="150" x2="910" y2="1770" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#1A202A" stop-opacity="0.97"/>
+      <stop offset="1" stop-color="#10141B" stop-opacity="0.99"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="220" y1="0" x2="860" y2="0" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#F4B662"/>
+      <stop offset="1" stop-color="#D98A36"/>
+    </linearGradient>
+    <linearGradient id="tile" x1="0" y1="0" x2="0" y2="224" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#242B37"/>
+      <stop offset="1" stop-color="#1A202A"/>
+    </linearGradient>
+    <filter id="shadow" x="112" y="94" width="856" height="1732" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+      <feFlood flood-opacity="0" result="BackgroundImageFix"/>
+      <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+      <feOffset dy="22"/>
+      <feGaussianBlur stdDeviation="34"/>
+      <feColorMatrix type="matrix" values="0 0 0 0 0.02 0 0 0 0 0.03 0 0 0 0 0.06 0 0 0 0.5 0"/>
+      <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_0_1"/>
+      <feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_0_1" result="shape"/>
+    </filter>
+  </defs>
+
+  <rect width="1080" height="1920" fill="url(#bg)"/>
+  <circle cx="886" cy="188" r="214" fill="#F4B662" fill-opacity="0.08"/>
+  <circle cx="160" cy="1670" r="236" fill="#6E8AA0" fill-opacity="0.07"/>
+
+  <g filter="url(#shadow)">
+    <rect x="180" y="160" width="720" height="1596" rx="44" fill="url(#shell)"/>
+    <rect x="181.5" y="161.5" width="717" height="1593" rx="42.5" stroke="white" stroke-opacity="0.06" stroke-width="3"/>
+  </g>
+
+  <text x="230" y="292" fill="#F6F7F9" font-size="84" font-weight="700" font-family="Inter, Segoe UI, Arial, sans-serif">Tipsy</text>
+  <text x="232" y="352" fill="#A7B1BF" font-size="28" font-weight="500" font-family="Inter, Segoe UI, Arial, sans-serif">Ready</text>
+
+  <rect x="230" y="402" width="108" height="56" rx="20" fill="url(#accent)"/>
+  <rect x="352" y="402" width="136" height="56" rx="20" fill="#232A35"/>
+  <rect x="502" y="402" width="120" height="56" rx="20" fill="#232A35"/>
+  <text x="284" y="439" text-anchor="middle" fill="#11151B" font-size="24" font-weight="700" font-family="Inter, Segoe UI, Arial, sans-serif">All</text>
+  <text x="420" y="439" text-anchor="middle" fill="#F4F6F8" font-size="24" font-weight="600" font-family="Inter, Segoe UI, Arial, sans-serif">Drinks</text>
+  <text x="562" y="439" text-anchor="middle" fill="#F4F6F8" font-size="24" font-weight="600" font-family="Inter, Segoe UI, Arial, sans-serif">Shots</text>
+
+  <rect x="230" y="500" width="620" height="1040" rx="28" fill="#11161D" fill-opacity="0.68"/>
+  <rect x="231.5" y="501.5" width="617" height="1037" rx="26.5" stroke="white" stroke-opacity="0.05" stroke-width="3"/>
+
+  <!-- Tiles -->
+  <g>
+    <rect x="252" y="526" width="286" height="150" rx="26" fill="url(#tile)"/>
+    <rect x="542" y="526" width="286" height="150" rx="26" fill="url(#tile)"/>
+    <rect x="252" y="690" width="286" height="150" rx="26" fill="url(#tile)"/>
+    <rect x="542" y="690" width="286" height="150" rx="26" fill="url(#tile)"/>
+    <rect x="252" y="854" width="286" height="150" rx="26" fill="url(#tile)"/>
+    <rect x="542" y="854" width="286" height="150" rx="26" fill="url(#tile)"/>
+    <rect x="252" y="1018" width="286" height="150" rx="26" fill="#2A2318"/>
+    <rect x="542" y="1018" width="286" height="150" rx="26" fill="#2A2318"/>
+    <rect x="252" y="1182" width="286" height="150" rx="26" fill="#2A2318"/>
+  </g>
+
+  <!-- Tile borders -->
+  <g stroke="white" stroke-opacity="0.05" stroke-width="3">
+    <rect x="253.5" y="527.5" width="283" height="147" rx="24.5"/>
+    <rect x="543.5" y="527.5" width="283" height="147" rx="24.5"/>
+    <rect x="253.5" y="691.5" width="283" height="147" rx="24.5"/>
+    <rect x="543.5" y="691.5" width="283" height="147" rx="24.5"/>
+    <rect x="253.5" y="855.5" width="283" height="147" rx="24.5"/>
+    <rect x="543.5" y="855.5" width="283" height="147" rx="24.5"/>
+    <rect x="253.5" y="1019.5" width="283" height="147" rx="24.5"/>
+    <rect x="543.5" y="1019.5" width="283" height="147" rx="24.5"/>
+    <rect x="253.5" y="1183.5" width="283" height="147" rx="24.5"/>
+  </g>
+
+  <g font-family="Inter, Segoe UI, Arial, sans-serif">
+    <text x="284" y="592" fill="#F4F6F8" font-size="34" font-weight="650">Mojito</text>
+    <text x="284" y="633" fill="#8693A3" font-size="22" font-weight="500">Fresh • Rum • Mint</text>
+
+    <text x="574" y="592" fill="#F4F6F8" font-size="34" font-weight="650">Gin Tonic</text>
+    <text x="574" y="633" fill="#8693A3" font-size="22" font-weight="500">Classic • Crisp</text>
+
+    <text x="284" y="756" fill="#F4F6F8" font-size="34" font-weight="650">Whiskey Sour</text>
+    <text x="284" y="797" fill="#8693A3" font-size="22" font-weight="500">Smooth • Citrus</text>
+
+    <text x="574" y="756" fill="#F4F6F8" font-size="34" font-weight="650">Vodka Soda</text>
+    <text x="574" y="797" fill="#8693A3" font-size="22" font-weight="500">Clean • Light</text>
+
+    <text x="284" y="920" fill="#F4F6F8" font-size="34" font-weight="650">Margarita</text>
+    <text x="284" y="961" fill="#8693A3" font-size="22" font-weight="500">Bright • Tequila</text>
+
+    <text x="574" y="920" fill="#F4F6F8" font-size="34" font-weight="650">Rum Cola</text>
+    <text x="574" y="961" fill="#8693A3" font-size="22" font-weight="500">Easy • Sweet</text>
+
+    <text x="284" y="1084" fill="#F6C47A" font-size="34" font-weight="650">Tequila Shot</text>
+    <text x="284" y="1125" fill="#B18B58" font-size="22" font-weight="500">Shot • Quick serve</text>
+
+    <text x="574" y="1084" fill="#F6C47A" font-size="34" font-weight="650">Vodka Shot</text>
+    <text x="574" y="1125" fill="#B18B58" font-size="22" font-weight="500">Shot • Quick serve</text>
+
+    <text x="284" y="1248" fill="#F6C47A" font-size="34" font-weight="650">Whiskey Shot</text>
+    <text x="284" y="1289" fill="#B18B58" font-size="22" font-weight="500">Shot • Quick serve</text>
+  </g>
+
+  <rect x="230" y="1602" width="620" height="110" rx="30" fill="#202630"/>
+  <rect x="231.5" y="1603.5" width="617" height="107" rx="28.5" stroke="white" stroke-opacity="0.06" stroke-width="3"/>
+  <text x="540" y="1669" text-anchor="middle" fill="#F4F6F8" font-size="34" font-weight="650" font-family="Inter, Segoe UI, Arial, sans-serif">Settings</text>
+</svg>
