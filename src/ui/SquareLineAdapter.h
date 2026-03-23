@@ -13,6 +13,8 @@ class SquareLineAdapter {
   void update();
 
  private:
+  String machineStateText(tipsy::app::MachineState state) const;
+  void applyStateFeedback(const UiState& state, generated::UiRenderModel& model) const;
   generated::UiRenderModel buildRenderModel(const UiState& state) const;
 
   UiBridge* uiBridge_ = nullptr;

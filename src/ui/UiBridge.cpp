@@ -62,6 +62,7 @@ void UiBridge::updateUiState(const tipsy::app::MachineStatus& status) {
   uiState_.statusCode = status.code;
   uiState_.statusMessage = status.message;
   uiState_.selectedDrinkId = machineController_.getSelectedDrinkId();
+  uiState_.hasSelectedDrink = !uiState_.selectedDrinkId.isEmpty();
   uiState_.adminOpen = status.state == tipsy::app::MachineState::AdminSettings;
   refreshDrinkList();
 }

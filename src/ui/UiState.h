@@ -17,6 +17,7 @@ struct UiState {
   tipsy::app::MachineStatusCode statusCode = tipsy::app::MachineStatusCode::Ok;
   String statusMessage;
   String selectedDrinkId;
+  bool hasSelectedDrink = false;
   bool adminOpen = false;
   std::array<UiDrinkItem, tipsy::config::kMaxDrinkCount> drinks {};
   std::size_t drinkCount = 0;
