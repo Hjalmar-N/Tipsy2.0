@@ -13,6 +13,7 @@ enum class MachineStatusCode : std::uint8_t {
   InvalidState,
   DrinkNotFound,
   DrinkDisabled,
+  DrinkUnavailable,
   IngredientNotFound,
   IngredientDisabled,
   IngredientNotMapped,

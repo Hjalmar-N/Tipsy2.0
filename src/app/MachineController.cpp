@@ -33,6 +33,14 @@ MachineStatus MachineController::selectDrink(const String& drinkId) {
     return fail(MachineStatusCode::DrinkDisabled, "Selected drink is disabled.");
   }
 
+  for (std::size_t i = 0; i < recipe->ingredientCount; ++i) {
+    MachineStatus validationStatus;
+    if (!isIngredientConfiguredForDrink(recipe->ingredients[i].ingredientId, validationStatus)) {
+      return fail(MachineStatusCode::DrinkUnavailable,
+                  "Selected drink is currently unavailable.");
+    }
+  }
+
   selectedDrinkId_ = drinkId;
   return setState(MachineState::DrinkSelection,
                   MachineStatus::ok(MachineState::DrinkSelection, "Drink selected."));
@@ -57,6 +65,10 @@ MachineStatus MachineController::startDrink(const String& drinkId, std::uint8_t 
     return fail(MachineStatusCode::DrinkDisabled, "Drink is disabled.");
   }
 
+  // For this machine generation we intentionally pour recipe ingredients simultaneously.
+  // The pump layer already supports multiple timed tasks, and simultaneous pours reduce
+  // total serve time. If recipe sequencing becomes necessary later, this method is the
+  // single place to switch to a queued step-by-step strategy.
   for (std::size_t i = 0; i < recipe->ingredientCount; ++i) {
     MachineStatus validationStatus;
     if (!isIngredientAvailable(recipe->ingredients[i].ingredientId, validationStatus)) {
@@ -220,6 +232,22 @@ MachineStatus MachineController::stopAll() {
                   MachineStatus::ok(MachineState::Idle, "All pours stopped."));
 }
 
+bool MachineController::isDrinkAvailable(const String& drinkId) const {
+  const auto* recipe = recipeService_.findById(drinkId);
+  if (recipe == nullptr || !recipe->enabled) {
+    return false;
+  }
+
+  for (std::size_t i = 0; i < recipe->ingredientCount; ++i) {
+    MachineStatus status;
+    if (!isIngredientConfiguredForDrink(recipe->ingredients[i].ingredientId, status)) {
+      return false;
+    }
+  }
+
+  return true;
+}
+
 MachineState MachineController::getCurrentState() const {
   return state_;
 }
@@ -267,6 +295,24 @@ bool MachineController::isIngredientAvailable(const String& ingredientId,
     status = MachineStatus::error(MachineStatusCode::IngredientDisabled,
                                   MachineState::Error,
                                   "Ingredient is disabled.");
+    return false;
+  }
+
+  status = MachineStatus::ok(state_);
+  return true;
+}
+
+bool MachineController::isIngredientConfiguredForDrink(const String& ingredientId,
+                                                       MachineStatus& status) const {
+  if (!isIngredientAvailable(ingredientId, status)) {
+    return false;
+  }
+
+  const auto* assignment = settingsService_.findPumpAssignmentByIngredient(ingredientId);
+  if (assignment == nullptr || !assignment->enabled || !assignment->isAssigned()) {
+    status = MachineStatus::error(MachineStatusCode::DrinkUnavailable,
+                                  MachineState::Idle,
+                                  "Drink ingredient is not mapped to an enabled pump.");
     return false;
   }
 

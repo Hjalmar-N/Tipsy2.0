@@ -46,9 +46,9 @@ bool Application::begin() {
 }
 
 void Application::update() {
-  uiManager_.update();
-  machineController_.update();
   pumpController_.update();
+  machineController_.update();
+  uiManager_.update();
 }
 
 const String& Application::lastError() const {

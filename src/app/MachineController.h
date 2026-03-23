@@ -32,6 +32,7 @@ class MachineController {
   MachineStatus acknowledgeComplete();
   MachineStatus stopAll();
 
+  bool isDrinkAvailable(const String& drinkId) const;
   MachineState getCurrentState() const;
   const MachineStatus& getLastStatus() const;
   const String& getSelectedDrinkId() const;
@@ -42,6 +43,7 @@ class MachineController {
   MachineStatus busyStatus() const;
   bool canStartPouring() const;
   bool isIngredientAvailable(const String& ingredientId, MachineStatus& status) const;
+  bool isIngredientConfiguredForDrink(const String& ingredientId, MachineStatus& status) const;
   bool resolvePumpForIngredient(const String& ingredientId, std::uint8_t& pumpIndex,
                                 MachineStatus& status) const;
 

@@ -21,6 +21,7 @@ class UiBridge {
                                                  const String& ingredientId,
                                                  const String& ingredientDisplayName,
                                                  bool enabled);
+  bool isDrinkAvailable(const String& drinkId) const;
   UiState currentState() const;
 
  private:

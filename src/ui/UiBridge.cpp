@@ -42,6 +42,10 @@ tipsy::app::MachineStatus UiBridge::onEditPumpAssignment(std::uint8_t pumpIndex,
   return status;
 }
 
+bool UiBridge::isDrinkAvailable(const String& drinkId) const {
+  return machineController_.isDrinkAvailable(drinkId);
+}
+
 UiState UiBridge::currentState() const {
   return uiState_;
 }
