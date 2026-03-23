@@ -16,6 +16,7 @@ class UiBridge {
   void syncFromMachine();
 
   tipsy::app::MachineStatus onSelectDrink(const String& drinkId);
+  tipsy::app::MachineStatus onStartSelectedDrink(std::uint8_t speedPercent = 100);
   tipsy::app::MachineStatus onStartManualPour(const String& ingredientId, float volumeMl,
                                               std::uint8_t speedPercent);
   tipsy::app::MachineStatus onOpenAdmin();

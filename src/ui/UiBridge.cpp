@@ -20,6 +20,12 @@ tipsy::app::MachineStatus UiBridge::onSelectDrink(const String& drinkId) {
   return status;
 }
 
+tipsy::app::MachineStatus UiBridge::onStartSelectedDrink(std::uint8_t speedPercent) {
+  const auto status = machineController_.startSelectedDrink(speedPercent);
+  updateUiState(status);
+  return status;
+}
+
 tipsy::app::MachineStatus UiBridge::onStartManualPour(const String& ingredientId, float volumeMl,
                                                       std::uint8_t speedPercent) {
   const auto status = machineController_.startManualPour(ingredientId, volumeMl, speedPercent);

@@ -46,6 +46,14 @@ MachineStatus MachineController::selectDrink(const String& drinkId) {
                   MachineStatus::ok(MachineState::DrinkSelection, "Drink selected."));
 }
 
+MachineStatus MachineController::startSelectedDrink(std::uint8_t speedPercent) {
+  if (selectedDrinkId_.isEmpty()) {
+    return fail(MachineStatusCode::NoDrinkSelected, "Select a drink before starting a pour.");
+  }
+
+  return startDrink(selectedDrinkId_, speedPercent);
+}
+
 MachineStatus MachineController::startDrink(const String& drinkId, std::uint8_t speedPercent) {
   if (!canStartPouring()) {
     return busyStatus();

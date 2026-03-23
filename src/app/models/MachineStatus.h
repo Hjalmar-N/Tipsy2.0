@@ -11,6 +11,7 @@ enum class MachineStatusCode : std::uint8_t {
   Ok = 0,
   Busy,
   InvalidState,
+  NoDrinkSelected,
   DrinkNotFound,
   DrinkDisabled,
   DrinkUnavailable,

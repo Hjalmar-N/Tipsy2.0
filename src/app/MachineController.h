@@ -19,6 +19,7 @@ class MachineController {
   void update();
 
   MachineStatus selectDrink(const String& drinkId);
+  MachineStatus startSelectedDrink(std::uint8_t speedPercent = 100);
   MachineStatus startDrink(const String& drinkId, std::uint8_t speedPercent = 100);
   MachineStatus enterManualPourMode();
   MachineStatus startManualPour(const String& ingredientId, float volumeMl,

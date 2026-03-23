@@ -1,6 +1,7 @@
 #pragma once
 
 #include "ui/UiBridge.h"
+#include "ui/generated/ui.h"
 
 namespace tipsy::ui {
 
@@ -12,6 +13,8 @@ class SquareLineAdapter {
   void update();
 
  private:
+  generated::UiRenderModel buildRenderModel(const UiState& state) const;
+
   UiBridge* uiBridge_ = nullptr;
 };
 

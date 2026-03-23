@@ -6,6 +6,10 @@ void handleDrinkSelected(UiBridge& uiBridge, const char* drinkId) {
   uiBridge.onSelectDrink(String(drinkId));
 }
 
+void handleStartSelectedDrink(UiBridge& uiBridge, std::uint8_t speedPercent) {
+  uiBridge.onStartSelectedDrink(speedPercent);
+}
+
 void handleManualPourRequested(UiBridge& uiBridge, const char* ingredientId, float volumeMl,
                                std::uint8_t speedPercent) {
   uiBridge.onStartManualPour(String(ingredientId), volumeMl, speedPercent);
@@ -23,4 +27,3 @@ void handlePumpAssignmentEdited(UiBridge& uiBridge, std::uint8_t pumpIndex,
 }
 
 }  // namespace tipsy::ui::events
-
