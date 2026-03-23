@@ -2,6 +2,8 @@
 
 #include <cstdint>
 
+#include <ArduinoJson.h>
+
 #include "domain/models/SystemSettings.h"
 #include "storage/JsonStorage.h"
 
@@ -38,4 +40,3 @@ class SettingsService {
 };
 
 }  // namespace tipsy::app
-

@@ -9,6 +9,7 @@ class SquareLineAdapter {
  public:
   void bind(UiBridge& uiBridge);
   void begin();
+  void update();
 
  private:
   UiBridge* uiBridge_ = nullptr;

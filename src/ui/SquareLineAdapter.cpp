@@ -14,4 +14,14 @@ void SquareLineAdapter::begin() {
   (void)uiBridge_;
 }
 
+void SquareLineAdapter::update() {
+  if (uiBridge_ == nullptr) {
+    return;
+  }
+
+  const UiState state = uiBridge_->currentState();
+  ui_show_status(state.statusMessage.c_str());
+  ui_show_drinks();
+}
+
 }  // namespace tipsy::ui

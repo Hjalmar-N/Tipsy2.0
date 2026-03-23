@@ -21,6 +21,7 @@ void UiManager::update() {
 
   // Keep the UI-facing snapshot fresh before LVGL processes timers and callbacks.
   uiBridge_.syncFromMachine();
+  squareLineAdapter_.update();
   lv_timer_handler();
 }
 

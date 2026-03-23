@@ -2,8 +2,9 @@
 
 namespace tipsy::ui {
 
-UiBridge::UiBridge(tipsy::app::MachineController& machineController)
-    : machineController_(machineController) {}
+UiBridge::UiBridge(tipsy::app::MachineController& machineController,
+                   tipsy::app::RecipeService& recipeService)
+    : machineController_(machineController), recipeService_(recipeService) {}
 
 void UiBridge::begin() {
   syncFromMachine();
@@ -56,6 +57,22 @@ void UiBridge::updateUiState(const tipsy::app::MachineStatus& status) {
   uiState_.statusMessage = status.message;
   uiState_.selectedDrinkId = machineController_.getSelectedDrinkId();
   uiState_.adminOpen = status.state == tipsy::app::MachineState::AdminSettings;
+  refreshDrinkList();
+}
+
+void UiBridge::refreshDrinkList() {
+  uiState_.drinkCount = 0;
+
+  const auto& recipes = recipeService_.all();
+  for (std::size_t i = 0; i < recipeService_.count() && i < uiState_.drinks.size(); ++i) {
+    const auto& recipe = recipes[i];
+    auto& item = uiState_.drinks[i];
+    item.id = recipe.id;
+    item.displayName = recipe.displayName;
+    item.available = machineController_.isDrinkAvailable(recipe.id);
+    item.selected = recipe.id == machineController_.getSelectedDrinkId();
+    ++uiState_.drinkCount;
+  }
 }
 
 }  // namespace tipsy::ui

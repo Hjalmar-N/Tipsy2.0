@@ -1,6 +1,7 @@
 #pragma once
 
 #include "app/MachineController.h"
+#include "app/services/RecipeService.h"
 #include "ui/UiState.h"
 
 namespace tipsy::ui {
@@ -8,7 +9,8 @@ namespace tipsy::ui {
 // Translates future LVGL/SquareLine callbacks into application-layer commands.
 class UiBridge {
  public:
-  explicit UiBridge(tipsy::app::MachineController& machineController);
+  UiBridge(tipsy::app::MachineController& machineController,
+           tipsy::app::RecipeService& recipeService);
 
   void begin();
   void syncFromMachine();
@@ -25,9 +27,11 @@ class UiBridge {
   UiState currentState() const;
 
  private:
+  void refreshDrinkList();
   void updateUiState(const tipsy::app::MachineStatus& status);
 
   tipsy::app::MachineController& machineController_;
+  tipsy::app::RecipeService& recipeService_;
   UiState uiState_ {};
 };
 

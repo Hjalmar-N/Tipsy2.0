@@ -1,6 +1,9 @@
 #pragma once
 
 #include <array>
+#include <cstddef>
+
+#include <ArduinoJson.h>
 
 #include "config/AppConfig.h"
 #include "domain/models/DrinkRecipe.h"
@@ -34,4 +37,3 @@ class RecipeService {
 };
 
 }  // namespace tipsy::app
-

@@ -25,7 +25,7 @@ tipsy::app::IngredientService ingredientService(jsonStorage);
 tipsy::app::SettingsService settingsService(jsonStorage);
 tipsy::app::MachineController machineController(recipeService, ingredientService, settingsService,
                                                 pumpController);
-tipsy::ui::UiBridge uiBridge(machineController);
+tipsy::ui::UiBridge uiBridge(machineController, recipeService);
 tipsy::ui::UiManager uiManager(uiBridge);
 tipsy::app::Application application(storageManager, recipeService, ingredientService,
                                     settingsService, machineController, pumpController, uiManager);
@@ -54,5 +54,6 @@ void loop() {
     return;
   }
 
+  uiManager.tick(5);
   application.update();
 }
