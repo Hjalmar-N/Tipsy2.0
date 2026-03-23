@@ -14,8 +14,8 @@ class JsonStorage {
 
   bool exists(const char* path) const;
   bool readJson(const char* path, DynamicJsonDocument& doc);
-  bool writeJson(const char* path, const JsonDocument& doc);
-  bool ensureFile(const char* path, const JsonDocument& defaultDoc);
+  bool writeJson(const char* path, const DynamicJsonDocument& doc);
+  bool ensureFile(const char* path, const DynamicJsonDocument& defaultDoc);
   const String& lastError() const;
 
  private:
@@ -24,4 +24,3 @@ class JsonStorage {
 };
 
 }  // namespace tipsy::storage
-

@@ -26,7 +26,7 @@ bool JsonStorage::readJson(const char* path, DynamicJsonDocument& doc) {
   return true;
 }
 
-bool JsonStorage::writeJson(const char* path, const JsonDocument& doc) {
+bool JsonStorage::writeJson(const char* path, const DynamicJsonDocument& doc) {
   String content;
   serializeJson(doc, content);
   if (!fileSystemManager_.writeText(path, content)) {
@@ -39,7 +39,7 @@ bool JsonStorage::writeJson(const char* path, const JsonDocument& doc) {
   return true;
 }
 
-bool JsonStorage::ensureFile(const char* path, const JsonDocument& defaultDoc) {
+bool JsonStorage::ensureFile(const char* path, const DynamicJsonDocument& defaultDoc) {
   if (fileSystemManager_.exists(path)) {
     lastError_ = String();
     return true;
