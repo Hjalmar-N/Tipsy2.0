@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "pumpAssignments": [
+    { "pumpIndex": 0, "enabled": true, "ingredientId": "gin", "ingredientDisplayName": "Gin" },
+    { "pumpIndex": 1, "enabled": true, "ingredientId": "tonic", "ingredientDisplayName": "Tonic Water" },
+    { "pumpIndex": 2, "enabled": true, "ingredientId": "vodka", "ingredientDisplayName": "Vodka" },
+    { "pumpIndex": 3, "enabled": true, "ingredientId": "rum", "ingredientDisplayName": "Rum" },
+    { "pumpIndex": 4, "enabled": true, "ingredientId": "cola", "ingredientDisplayName": "Cola" },
+    { "pumpIndex": 5, "enabled": true, "ingredientId": "orange_juice", "ingredientDisplayName": "Orange Juice" }
+  ]
+}
+

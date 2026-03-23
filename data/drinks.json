@@ -1,0 +1,72 @@
+{
+  "schemaVersion": 1,
+  "drinks": [
+    {
+      "id": "gin_tonic",
+      "displayName": "Gin & Tonic",
+      "categoryId": "highball",
+      "description": "Classic gin and tonic.",
+      "enabled": true,
+      "visibleInMenu": true,
+      "sortOrder": 10,
+      "ingredients": [
+        { "ingredientId": "gin", "amountMl": 50, "optional": false },
+        { "ingredientId": "tonic", "amountMl": 150, "optional": false }
+      ]
+    },
+    {
+      "id": "vodka_soda",
+      "displayName": "Vodka Soda",
+      "categoryId": "highball",
+      "description": "Clean and simple vodka soda.",
+      "enabled": true,
+      "visibleInMenu": true,
+      "sortOrder": 20,
+      "ingredients": [
+        { "ingredientId": "vodka", "amountMl": 50, "optional": false },
+        { "ingredientId": "soda", "amountMl": 150, "optional": false }
+      ]
+    },
+    {
+      "id": "rum_cola",
+      "displayName": "Rum & Cola",
+      "categoryId": "highball",
+      "description": "Rum served with cola over ice.",
+      "enabled": true,
+      "visibleInMenu": true,
+      "sortOrder": 30,
+      "ingredients": [
+        { "ingredientId": "rum", "amountMl": 50, "optional": false },
+        { "ingredientId": "cola", "amountMl": 150, "optional": false }
+      ]
+    },
+    {
+      "id": "tequila_sunrise",
+      "displayName": "Tequila Sunrise",
+      "categoryId": "signature",
+      "description": "Tequila, orange juice, and grenadine.",
+      "enabled": true,
+      "visibleInMenu": true,
+      "sortOrder": 40,
+      "ingredients": [
+        { "ingredientId": "tequila", "amountMl": 45, "optional": false },
+        { "ingredientId": "orange_juice", "amountMl": 120, "optional": false },
+        { "ingredientId": "grenadine", "amountMl": 15, "optional": false }
+      ]
+    },
+    {
+      "id": "screwdriver",
+      "displayName": "Screwdriver",
+      "categoryId": "highball",
+      "description": "Vodka topped with orange juice.",
+      "enabled": true,
+      "visibleInMenu": true,
+      "sortOrder": 50,
+      "ingredients": [
+        { "ingredientId": "vodka", "amountMl": 50, "optional": false },
+        { "ingredientId": "orange_juice", "amountMl": 150, "optional": false }
+      ]
+    }
+  ]
+}
+

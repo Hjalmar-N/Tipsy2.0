@@ -1,0 +1,87 @@
+{
+  "schemaVersion": 1,
+  "ingredients": [
+    {
+      "id": "gin",
+      "displayName": "Gin",
+      "categoryId": "spirit",
+      "enabled": true,
+      "alcoholic": true,
+      "abvPercent": 37.5,
+      "sortOrder": 10
+    },
+    {
+      "id": "vodka",
+      "displayName": "Vodka",
+      "categoryId": "spirit",
+      "enabled": true,
+      "alcoholic": true,
+      "abvPercent": 40.0,
+      "sortOrder": 20
+    },
+    {
+      "id": "rum",
+      "displayName": "Rum",
+      "categoryId": "spirit",
+      "enabled": true,
+      "alcoholic": true,
+      "abvPercent": 37.5,
+      "sortOrder": 30
+    },
+    {
+      "id": "tequila",
+      "displayName": "Tequila",
+      "categoryId": "spirit",
+      "enabled": true,
+      "alcoholic": true,
+      "abvPercent": 38.0,
+      "sortOrder": 40
+    },
+    {
+      "id": "tonic",
+      "displayName": "Tonic Water",
+      "categoryId": "mixer",
+      "enabled": true,
+      "alcoholic": false,
+      "abvPercent": 0.0,
+      "sortOrder": 50
+    },
+    {
+      "id": "soda",
+      "displayName": "Soda Water",
+      "categoryId": "mixer",
+      "enabled": true,
+      "alcoholic": false,
+      "abvPercent": 0.0,
+      "sortOrder": 60
+    },
+    {
+      "id": "cola",
+      "displayName": "Cola",
+      "categoryId": "mixer",
+      "enabled": true,
+      "alcoholic": false,
+      "abvPercent": 0.0,
+      "sortOrder": 70
+    },
+    {
+      "id": "orange_juice",
+      "displayName": "Orange Juice",
+      "categoryId": "juice",
+      "enabled": true,
+      "alcoholic": false,
+      "abvPercent": 0.0,
+      "sortOrder": 80
+    },
+    {
+      "id": "grenadine",
+      "displayName": "Grenadine",
+      "categoryId": "syrup",
+      "enabled": true,
+      "alcoholic": false,
+      "abvPercent": 0.0,
+      "sortOrder": 90
+    }
+  ]
+}
+

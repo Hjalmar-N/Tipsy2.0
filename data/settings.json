@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "machineId": "tipsy2_s3",
+  "venueName": "Tipsy Demo Bar",
+  "mockModeEnabled": true,
+  "adminLockEnabled": false,
+  "manualPourMaxMl": 250.0,
+  "pumpCalibrations": [
+    { "pumpIndex": 0, "enabled": true, "mlPerSecond": 10.0, "pwmDuty": 512, "primeDurationMs": 1000, "settleDurationMs": 250 },
+    { "pumpIndex": 1, "enabled": true, "mlPerSecond": 11.0, "pwmDuty": 512, "primeDurationMs": 1000, "settleDurationMs": 250 },
+    { "pumpIndex": 2, "enabled": true, "mlPerSecond": 12.0, "pwmDuty": 512, "primeDurationMs": 1000, "settleDurationMs": 250 },
+    { "pumpIndex": 3, "enabled": true, "mlPerSecond": 13.0, "pwmDuty": 512, "primeDurationMs": 1000, "settleDurationMs": 250 },
+    { "pumpIndex": 4, "enabled": true, "mlPerSecond": 14.0, "pwmDuty": 512, "primeDurationMs": 1000, "settleDurationMs": 250 },
+    { "pumpIndex": 5, "enabled": true, "mlPerSecond": 15.0, "pwmDuty": 512, "primeDurationMs": 1000, "settleDurationMs": 250 }
+  ]
+}
+
