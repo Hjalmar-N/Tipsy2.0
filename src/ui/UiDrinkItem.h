@@ -8,9 +8,10 @@ namespace tipsy::ui {
 struct UiDrinkItem {
   String id;
   String displayName;
+  String subtitle;
+  String categoryId;
   bool available = false;
   bool selected = false;
 };
 
 }  // namespace tipsy::ui
-

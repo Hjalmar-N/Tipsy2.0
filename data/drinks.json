@@ -10,8 +10,8 @@
       "visibleInMenu": true,
       "sortOrder": 10,
       "ingredients": [
-        { "ingredientId": "gin", "amountMl": 50, "optional": false },
-        { "ingredientId": "tonic", "amountMl": 150, "optional": false }
+        { "ingredientId": "gin", "amountMl": 60, "optional": false, "isAlcohol": true },
+        { "ingredientId": "tonic", "amountMl": 150, "optional": false, "isAlcohol": false }
       ]
     },
     {
@@ -23,8 +23,8 @@
       "visibleInMenu": true,
       "sortOrder": 20,
       "ingredients": [
-        { "ingredientId": "vodka", "amountMl": 50, "optional": false },
-        { "ingredientId": "soda", "amountMl": 150, "optional": false }
+        { "ingredientId": "vodka", "amountMl": 60, "optional": false, "isAlcohol": true },
+        { "ingredientId": "soda", "amountMl": 150, "optional": false, "isAlcohol": false }
       ]
     },
     {
@@ -36,8 +36,8 @@
       "visibleInMenu": true,
       "sortOrder": 30,
       "ingredients": [
-        { "ingredientId": "rum", "amountMl": 50, "optional": false },
-        { "ingredientId": "cola", "amountMl": 150, "optional": false }
+        { "ingredientId": "rum", "amountMl": 60, "optional": false, "isAlcohol": true },
+        { "ingredientId": "cola", "amountMl": 150, "optional": false, "isAlcohol": false }
       ]
     },
     {
@@ -49,9 +49,9 @@
       "visibleInMenu": true,
       "sortOrder": 40,
       "ingredients": [
-        { "ingredientId": "tequila", "amountMl": 45, "optional": false },
-        { "ingredientId": "orange_juice", "amountMl": 120, "optional": false },
-        { "ingredientId": "grenadine", "amountMl": 15, "optional": false }
+        { "ingredientId": "tequila", "amountMl": 60, "optional": false, "isAlcohol": true },
+        { "ingredientId": "orange_juice", "amountMl": 120, "optional": false, "isAlcohol": false },
+        { "ingredientId": "grenadine", "amountMl": 15, "optional": false, "isAlcohol": false }
       ]
     },
     {
@@ -63,10 +63,88 @@
       "visibleInMenu": true,
       "sortOrder": 50,
       "ingredients": [
-        { "ingredientId": "vodka", "amountMl": 50, "optional": false },
-        { "ingredientId": "orange_juice", "amountMl": 150, "optional": false }
+        { "ingredientId": "vodka", "amountMl": 60, "optional": false, "isAlcohol": true },
+        { "ingredientId": "orange_juice", "amountMl": 150, "optional": false, "isAlcohol": false }
+      ]
+    },
+    {
+      "id": "mojito",
+      "displayName": "Mojito",
+      "categoryId": "signature",
+      "description": "Rum with mint, soda, and lime.",
+      "enabled": true,
+      "visibleInMenu": true,
+      "sortOrder": 60,
+      "ingredients": [
+        { "ingredientId": "rum", "amountMl": 60, "optional": false, "isAlcohol": true },
+        { "ingredientId": "mint_mix", "amountMl": 120, "optional": false, "isAlcohol": false },
+        { "ingredientId": "soda", "amountMl": 80, "optional": false, "isAlcohol": false },
+        { "ingredientId": "lime", "amountMl": 20, "optional": false, "isAlcohol": false }
+      ]
+    },
+    {
+      "id": "whiskey_sour",
+      "displayName": "Whiskey Sour",
+      "categoryId": "signature",
+      "description": "Whiskey with sour mix and lime.",
+      "enabled": true,
+      "visibleInMenu": true,
+      "sortOrder": 70,
+      "ingredients": [
+        { "ingredientId": "whiskey", "amountMl": 60, "optional": false, "isAlcohol": true },
+        { "ingredientId": "sour_mix", "amountMl": 90, "optional": false, "isAlcohol": false },
+        { "ingredientId": "lime", "amountMl": 20, "optional": false, "isAlcohol": false }
+      ]
+    },
+    {
+      "id": "margarita",
+      "displayName": "Margarita",
+      "categoryId": "signature",
+      "description": "Tequila with citrus mix and lime.",
+      "enabled": true,
+      "visibleInMenu": true,
+      "sortOrder": 80,
+      "ingredients": [
+        { "ingredientId": "tequila", "amountMl": 60, "optional": false, "isAlcohol": true },
+        { "ingredientId": "citrus_mix", "amountMl": 80, "optional": false, "isAlcohol": false },
+        { "ingredientId": "lime", "amountMl": 20, "optional": false, "isAlcohol": false }
+      ]
+    },
+    {
+      "id": "tequila_shot",
+      "displayName": "Tequila Shot",
+      "categoryId": "shot",
+      "description": "Straight tequila shot.",
+      "enabled": true,
+      "visibleInMenu": true,
+      "sortOrder": 90,
+      "ingredients": [
+        { "ingredientId": "tequila", "amountMl": 60, "optional": false, "isAlcohol": true }
+      ]
+    },
+    {
+      "id": "vodka_shot",
+      "displayName": "Vodka Shot",
+      "categoryId": "shot",
+      "description": "Straight vodka shot.",
+      "enabled": true,
+      "visibleInMenu": true,
+      "sortOrder": 100,
+      "ingredients": [
+        { "ingredientId": "vodka", "amountMl": 60, "optional": false, "isAlcohol": true }
+      ]
+    },
+    {
+      "id": "whiskey_shot",
+      "displayName": "Whiskey Shot",
+      "categoryId": "shot",
+      "description": "Straight whiskey shot.",
+      "enabled": true,
+      "visibleInMenu": true,
+      "sortOrder": 110,
+      "ingredients": [
+        { "ingredientId": "whiskey", "amountMl": 60, "optional": false, "isAlcohol": true }
       ]
     }
   ]
 }
-

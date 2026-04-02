@@ -1,0 +1,800 @@
+Processing esp32-s3-devkitc-1 (platform: espressif32; board: esp32-s3-devkitc-1; framework: arduino)
+--------------------------------------------------------------------------------
+Removing unused dependencies...
+Library Manager: Removing GFX Library for Arduino @ 1.6.5
+Library Manager: GFX Library for Arduino@1.6.5 has been removed!
+Library Manager: Installing moononournation/GFX Library for Arduino @ 1.4.6
+Downloading 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Unpacking 0% 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+Library Manager: GFX Library for Arduino@1.4.6 has been installed!
+Verbose mode can be enabled via `-v, --verbose` option
+CONFIGURATION: https://docs.platformio.org/page/boards/espressif32/esp32-s3-devkitc-1.html
+PLATFORM: Espressif 32 (6.13.0) > Espressif ESP32-S3-DevKitC-1-N8 (8 MB QD, No PSRAM)
+HARDWARE: ESP32S3 240MHz, 320KB RAM, 8MB Flash
+DEBUG: Current (esp-builtin) On-board (esp-builtin) External (cmsis-dap, esp-bridge, esp-prog, iot-bus-jtag, jlink, minimodule, olimex-arm-usb-ocd, olimex-arm-usb-ocd-h, olimex-arm-usb-tiny-h, olimex-jtag-tiny, tumpa)
+PACKAGES: 
+ - framework-arduinoespressif32 @ 3.20017.241212+sha.dcc1105b 
+ - tool-esptoolpy @ 2.41100.0 (4.11.0) 
+ - toolchain-riscv32-esp @ 8.4.0+2021r2-patch5 
+ - toolchain-xtensa-esp32s3 @ 8.4.0+2021r2-patch5
+LDF: Library Dependency Finder -> https://bit.ly/configure-pio-ldf
+LDF Modes: Finder ~ chain, Compatibility ~ soft
+Found 36 compatible libraries
+Scanning dependencies...
+Dependency Graph
+|-- lvgl @ 9.5.0
+|-- GFX Library for Arduino @ 1.4.6
+|-- Wire @ 2.0.0
+|-- ArduinoJson @ 6.21.6
+|-- LittleFS @ 2.0.0
+Building in release mode
+Compiling .pio\build\esp32-s3-devkitc-1\src\app\Application.cpp.o
+Compiling .pio\build\esp32-s3-devkitc-1\src\app\MachineController.cpp.o
+Compiling .pio\build\esp32-s3-devkitc-1\src\app\models\MachineStatus.cpp.o
+Compiling .pio\build\esp32-s3-devkitc-1\src\app\services\IngredientService.cpp.o
+Compiling .pio\build\esp32-s3-devkitc-1\src\app\services\RecipeService.cpp.o
+Compiling .pio\build\esp32-s3-devkitc-1\src\app\services\SettingsService.cpp.o
+Compiling .pio\build\esp32-s3-devkitc-1\src\domain\models\DrinkIngredient.cpp.o
+Compiling .pio\build\esp32-s3-devkitc-1\src\domain\models\DrinkRecipe.cpp.o
+Compiling .pio\build\esp32-s3-devkitc-1\src\domain\models\Ingredient.cpp.o
+Compiling .pio\build\esp32-s3-devkitc-1\src\domain\models\PourRequest.cpp.o
+Compiling .pio\build\esp32-s3-devkitc-1\src\domain\models\PumpAssignment.cpp.o
+Compiling .pio\build\esp32-s3-devkitc-1\src\domain\models\PumpCalibration.cpp.o
+Compiling .pio\build\esp32-s3-devkitc-1\src\domain\models\SystemSettings.cpp.o
+Compiling .pio\build\esp32-s3-devkitc-1\src\hal\HardwareFactory.cpp.o
+Compiling .pio\build\esp32-s3-devkitc-1\src\hal\esp32\LittleFsFileSystem.cpp.o
+Compiling .pio\build\esp32-s3-devkitc-1\src\hal\esp32\SystemTimeProvider.cpp.o
+Compiling .pio\build\esp32-s3-devkitc-1\src\hal\mock\MockFileSystem.cpp.o
+Compiling .pio\build\esp32-s3-devkitc-1\src\main.cpp.o
+Compiling .pio\build\esp32-s3-devkitc-1\src\pumps\Esp32PumpDriver.cpp.o
+Compiling .pio\build\esp32-s3-devkitc-1\src\pumps\MockPumpDriver.cpp.o
+Compiling .pio\build\esp32-s3-devkitc-1\src\pumps\PumpController.cpp.o
+Compiling .pio\build\esp32-s3-devkitc-1\src\simulation\main.cpp.o
+Compiling .pio\build\esp32-s3-devkitc-1\src\storage\FileSystemManager.cpp.o
+Compiling .pio\build\esp32-s3-devkitc-1\src\storage\JsonStorage.cpp.o
+Compiling .pio\build\esp32-s3-devkitc-1\src\storage\StorageManager.cpp.o
+Compiling .pio\build\esp32-s3-devkitc-1\src\ui\SquareLineAdapter.cpp.o
+Compiling .pio\build\esp32-s3-devkitc-1\src\ui\UiBridge.cpp.o
+Compiling .pio\build\esp32-s3-devkitc-1\src\ui\UiEvents.cpp.o
+Compiling .pio\build\esp32-s3-devkitc-1\src\ui\UiManager.cpp.o
+Compiling .pio\build\esp32-s3-devkitc-1\src\ui\generated\ui.cpp.o
+Building .pio\build\esp32-s3-devkitc-1\bootloader.bin
+Generating partitions .pio\build\esp32-s3-devkitc-1\partitions.bin
+Compiling .pio\build\esp32-s3-devkitc-1\lib504\FS\FS.cpp.o
+esptool.py v4.11.0
+Creating esp32s3 image...
+Merged 1 ELF section
+Successfully created esp32s3 image.
+Compiling .pio\build\esp32-s3-devkitc-1\lib504\FS\vfs_api.cpp.o
+Compiling .pio\build\esp32-s3-devkitc-1\lib69e\LittleFS\LittleFS.cpp.o
+Compiling .pio\build\esp32-s3-devkitc-1\lib2fb\SPI\SPI.cpp.o
+Compiling .pio\build\esp32-s3-devkitc-1\lib13c\SD\SD.cpp.o
+Compiling .pio\build\esp32-s3-devkitc-1\lib13c\SD\sd_diskio.cpp.o
+Compiling .pio\build\esp32-s3-devkitc-1\lib13c\SD\sd_diskio_crc.c.o
+In file included from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/lv_init.h:16,
+                 from .pio/libdeps/esp32-s3-devkitc-1/lvgl/lvgl.h:21,
+                 from src/ui/UiManager.h:5,
+                 from src/app/Application.h:11,
+                 from src/app/Application.cpp:1:
+.pio/libdeps/esp32-s3-devkitc-1/lvgl/src/lv_conf_internal.h:77:120: note: #pragma message: Possible failure to include lv_conf.h, please read the comment in this file if you get errors
+         #pragma message("Possible failure to include lv_conf.h, please read the comment in this file if you get errors")
+                                                                                                                        ^
+Compiling .pio\build\esp32-s3-devkitc-1\lib8f0\lvgl\core\lv_group.c.o
+Compiling .pio\build\esp32-s3-devkitc-1\lib8f0\lvgl\core\lv_obj.c.o
+Compiling .pio\build\esp32-s3-devkitc-1\lib8f0\lvgl\core\lv_obj_class.c.o
+Compiling .pio\build\esp32-s3-devkitc-1\lib8f0\lvgl\core\lv_obj_draw.c.o
+In file included from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/core/../misc/lv_ext_data.h:16,
+                 from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/core/lv_group_private.h:16,
+                 from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/core/lv_group.c:9:
+.pio/libdeps/esp32-s3-devkitc-1/lvgl/src/core/../misc/../lv_conf_internal.h:77:17: note: #pragma message: Possible failure to include lv_conf.h, please read the comment in this file if you get errors
+         #pragma message("Possible failure to include lv_conf.h, please read the comment in this file if you get errors")
+                 ^~~~~~~
+In file included from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/core/../misc/lv_ext_data.h:16,
+                 from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/core/lv_obj_private.h:16,
+                 from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/core/lv_obj.c:9:
+.pio/libdeps/esp32-s3-devkitc-1/lvgl/src/core/../misc/../lv_conf_internal.h:77:17: note: #pragma message: Possible failure to include lv_conf.h, please read the comment in this file if you get errors
+         #pragma message("Possible failure to include lv_conf.h, please read the comment in this file if you get errors")
+                 ^~~~~~~
+In file included from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/core/../misc/lv_types.h:16,
+                 from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/core/lv_obj_class.h:16,
+                 from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/core/lv_obj_class_private.h:17,
+                 from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/core/lv_obj_class.c:9:
+.pio/libdeps/esp32-s3-devkitc-1/lvgl/src/core/../misc/../lv_conf_internal.h:77:17: note: #pragma message: Possible failure to include lv_conf.h, please read the comment in this file if you get errors
+         #pragma message("Possible failure to include lv_conf.h, please read the comment in this file if you get errors")
+                 ^~~~~~~
+In file included from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/core/../misc/lv_types.h:16,
+                 from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/core/lv_obj_draw.h:16,
+                 from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/core/lv_obj_draw_private.h:17,
+                 from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/core/lv_obj_draw.c:9:
+.pio/libdeps/esp32-s3-devkitc-1/lvgl/src/core/../misc/../lv_conf_internal.h:77:17: note: #pragma message: Possible failure to include lv_conf.h, please read the comment in this file if you get errors
+         #pragma message("Possible failure to include lv_conf.h, please read the comment in this file if you get errors")
+                 ^~~~~~~
+In file included from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/lv_init.h:16,
+                 from .pio/libdeps/esp32-s3-devkitc-1/lvgl/lvgl.h:21,
+                 from src/ui/UiManager.h:5,
+                 from src/app/Application.h:11,
+                 from src/main.cpp:3:
+.pio/libdeps/esp32-s3-devkitc-1/lvgl/src/lv_conf_internal.h:77:120: note: #pragma message: Possible failure to include lv_conf.h, please read the comment in this file if you get errors
+         #pragma message("Possible failure to include lv_conf.h, please read the comment in this file if you get errors")
+                                                                                                                        ^
+Compiling .pio\build\esp32-s3-devkitc-1\lib8f0\lvgl\core\lv_obj_event.c.o
+In file included from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/core/../misc/lv_ext_data.h:16,
+                 from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/core/../misc/lv_event_private.h:17,
+                 from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/core/lv_obj_event.c:9:
+.pio/libdeps/esp32-s3-devkitc-1/lvgl/src/core/../misc/../lv_conf_internal.h:77:17: note: #pragma message: Possible failure to include lv_conf.h, please read the comment in this file if you get errors
+         #pragma message("Possible failure to include lv_conf.h, please read the comment in this file if you get errors")
+                 ^~~~~~~
+Compiling .pio\build\esp32-s3-devkitc-1\lib8f0\lvgl\core\lv_obj_id_builtin.c.o
+Compiling .pio\build\esp32-s3-devkitc-1\lib8f0\lvgl\core\lv_obj_pos.c.o
+Compiling .pio\build\esp32-s3-devkitc-1\lib8f0\lvgl\core\lv_obj_property.c.o
+Compiling .pio\build\esp32-s3-devkitc-1\lib8f0\lvgl\core\lv_obj_scroll.c.o
+In file included from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/core/../misc/lv_types.h:16,
+                 from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/core/lv_obj_class.h:16,
+                 from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/core/lv_obj_class_private.h:17,
+                 from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/core/lv_obj_id_builtin.c:9:
+.pio/libdeps/esp32-s3-devkitc-1/lvgl/src/core/../misc/../lv_conf_internal.h:77:17: note: #pragma message: Possible failure to include lv_conf.h, please read the comment in this file if you get errors
+         #pragma message("Possible failure to include lv_conf.h, please read the comment in this file if you get errors")
+                 ^~~~~~~
+In file included from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/core/../misc/lv_area.h:16,
+                 from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/core/../misc/lv_area_private.h:17,
+                 from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/core/lv_obj_pos.c:9:
+.pio/libdeps/esp32-s3-devkitc-1/lvgl/src/core/../misc/../lv_conf_internal.h:77:17: note: #pragma message: Possible failure to include lv_conf.h, please read the comment in this file if you get errors
+         #pragma message("Possible failure to include lv_conf.h, please read the comment in this file if you get errors")
+                 ^~~~~~~
+In file included from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/core/../misc/lv_ext_data.h:16,
+                 from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/core/lv_obj_private.h:16,
+                 from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/core/lv_obj_property.c:9:
+.pio/libdeps/esp32-s3-devkitc-1/lvgl/src/core/../misc/../lv_conf_internal.h:77:17: note: #pragma message: Possible failure to include lv_conf.h, please read the comment in this file if you get errors
+         #pragma message("Possible failure to include lv_conf.h, please read the comment in this file if you get errors")
+                 ^~~~~~~
+In file included from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/core/../misc/lv_area.h:16,
+                 from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/core/lv_obj_scroll.h:16,
+                 from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/core/lv_obj_scroll_private.h:17,
+                 from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/core/lv_obj_scroll.c:9:
+.pio/libdeps/esp32-s3-devkitc-1/lvgl/src/core/../misc/../lv_conf_internal.h:77:17: note: #pragma message: Possible failure to include lv_conf.h, please read the comment in this file if you get errors
+         #pragma message("Possible failure to include lv_conf.h, please read the comment in this file if you get errors")
+                 ^~~~~~~
+Compiling .pio\build\esp32-s3-devkitc-1\lib8f0\lvgl\core\lv_obj_style.c.o
+In file included from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/core/../misc/lv_ext_data.h:16,
+                 from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/core/lv_obj_private.h:16,
+                 from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/core/lv_obj_style.c:9:
+.pio/libdeps/esp32-s3-devkitc-1/lvgl/src/core/../misc/../lv_conf_internal.h:77:17: note: #pragma message: Possible failure to include lv_conf.h, please read the comment in this file if you get errors
+         #pragma message("Possible failure to include lv_conf.h, please read the comment in this file if you get errors")
+                 ^~~~~~~
+Compiling .pio\build\esp32-s3-devkitc-1\lib8f0\lvgl\core\lv_obj_style_gen.c.o
+Compiling .pio\build\esp32-s3-devkitc-1\lib8f0\lvgl\core\lv_obj_tree.c.o
+In file included from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/core/lv_obj.h:16,
+                 from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/core/lv_obj_style_gen.c:11:
+.pio/libdeps/esp32-s3-devkitc-1/lvgl/src/core/../lv_conf_internal.h:77:17: note: #pragma message: Possible failure to include lv_conf.h, please read the comment in this file if you get errors
+         #pragma message("Possible failure to include lv_conf.h, please read the comment in this file if you get errors")
+                 ^~~~~~~
+In file included from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/core/../misc/lv_ext_data.h:16,
+                 from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/core/lv_obj_private.h:16,
+                 from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/core/lv_obj_tree.c:9:
+.pio/libdeps/esp32-s3-devkitc-1/lvgl/src/core/../misc/../lv_conf_internal.h:77:17: note: #pragma message: Possible failure to include lv_conf.h, please read the comment in this file if you get errors
+         #pragma message("Possible failure to include lv_conf.h, please read the comment in this file if you get errors")
+                 ^~~~~~~
+Compiling .pio\build\esp32-s3-devkitc-1\lib8f0\lvgl\core\lv_observer.c.o
+Compiling .pio\build\esp32-s3-devkitc-1\lib8f0\lvgl\core\lv_refr.c.o
+In file included from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/core/../misc/lv_ext_data.h:16,
+                 from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/core/lv_observer.h:17,
+                 from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/core/lv_observer_private.h:17,
+                 from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/core/lv_observer.c:10:
+.pio/libdeps/esp32-s3-devkitc-1/lvgl/src/core/../misc/../lv_conf_internal.h:77:17: note: #pragma message: Possible failure to include lv_conf.h, please read the comment in this file if you get errors
+         #pragma message("Possible failure to include lv_conf.h, please read the comment in this file if you get errors")
+                 ^~~~~~~
+In file included from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/core/lv_obj.h:16,
+                 from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/core/lv_refr.h:16,
+                 from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/core/lv_refr_private.h:17,
+                 from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/core/lv_refr.c:9:
+.pio/libdeps/esp32-s3-devkitc-1/lvgl/src/core/../lv_conf_internal.h:77:17: note: #pragma message: Possible failure to include lv_conf.h, please read the comment in this file if you get errors
+         #pragma message("Possible failure to include lv_conf.h, please read the comment in this file if you get errors")
+                 ^~~~~~~
+Compiling .pio\build\esp32-s3-devkitc-1\lib8f0\lvgl\debugging\monkey\lv_monkey.c.o
+Compiling .pio\build\esp32-s3-devkitc-1\lib8f0\lvgl\debugging\sysmon\lv_sysmon.c.o
+Compiling .pio\build\esp32-s3-devkitc-1\lib8f0\lvgl\debugging\test\lv_test_display.c.o
+In file included from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/debugging/monkey/lv_monkey.h:15,
+                 from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/debugging/monkey/lv_monkey_private.h:17,
+                 from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/debugging/monkey/lv_monkey.c:9:
+.pio/libdeps/esp32-s3-devkitc-1/lvgl/src/debugging/monkey/../../lv_conf_internal.h:77:17: note: #pragma message: Possible failure to include lv_conf.h, please read the comment in this file if you get errors
+         #pragma message("Possible failure to include lv_conf.h, please read the comment in this file if you get errors")
+                 ^~~~~~~
+Compiling .pio\build\esp32-s3-devkitc-1\lib8f0\lvgl\debugging\test\lv_test_fs.c.o
+In file included from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/debugging/sysmon/../../misc/lv_timer.h:15,
+                 from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/debugging/sysmon/lv_sysmon.h:17,
+                 from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/debugging/sysmon/lv_sysmon_private.h:17,
+                 from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/debugging/sysmon/lv_sysmon.c:10:
+c:\users\hjalmar\tipsy2.0\.pio\libdeps\esp32-s3-devkitc-1\lvgl\src\lv_conf_internal.h:77:17: note: #pragma message: Possible failure to include lv_conf.h, please read the comment in this file if you get errors
+         #pragma message("Possible failure to include lv_conf.h, please read the comment in this file if you get errors")
+                 ^~~~~~~
+In file included from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/debugging/test/lv_test_display.h:16,
+                 from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/debugging/test/lv_test_display.c:9:
+.pio/libdeps/esp32-s3-devkitc-1/lvgl/src/debugging/test/../../lv_conf_internal.h:77:17: note: #pragma message: Possible failure to include lv_conf.h, please read the comment in this file if you get errors
+         #pragma message("Possible failure to include lv_conf.h, please read the comment in this file if you get errors")
+                 ^~~~~~~
+Compiling .pio\build\esp32-s3-devkitc-1\lib8f0\lvgl\debugging\test\lv_test_helpers.c.o
+Compiling .pio\build\esp32-s3-devkitc-1\lib8f0\lvgl\debugging\test\lv_test_indev.c.o
+In file included from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/debugging/test/lv_test_fs.h:17,
+                 from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/debugging/test/lv_test_fs.c:10:
+.pio/libdeps/esp32-s3-devkitc-1/lvgl/src/debugging/test/../../lv_conf_internal.h:77:17: note: #pragma message: Possible failure to include lv_conf.h, please read the comment in this file if you get errors
+         #pragma message("Possible failure to include lv_conf.h, please read the comment in this file if you get errors")
+                 ^~~~~~~
+Compiling .pio\build\esp32-s3-devkitc-1\lib8f0\lvgl\debugging\test\lv_test_indev_gesture.c.o
+Compiling .pio\build\esp32-s3-devkitc-1\lib8f0\lvgl\debugging\test\lv_test_screenshot_compare.c.o
+In file included from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/debugging/test/lv_test_helpers.h:17,
+                 from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/debugging/test/lv_test_helpers.c:10:
+.pio/libdeps/esp32-s3-devkitc-1/lvgl/src/debugging/test/../../lv_conf_internal.h:77:17: note: #pragma message: Possible failure to include lv_conf.h, please read the comment in this file if you get errors
+         #pragma message("Possible failure to include lv_conf.h, please read the comment in this file if you get errors")
+                 ^~~~~~~
+In file included from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/debugging/test/lv_test.h:16,
+                 from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/debugging/test/lv_test_indev.c:9:
+.pio/libdeps/esp32-s3-devkitc-1/lvgl/src/debugging/test/../../lv_conf_internal.h:77:17: note: #pragma message: Possible failure to include lv_conf.h, please read the comment in this file if you get errors
+         #pragma message("Possible failure to include lv_conf.h, please read the comment in this file if you get errors")
+                 ^~~~~~~
+Compiling .pio\build\esp32-s3-devkitc-1\lib8f0\lvgl\debugging\vg_lite_tvg\vg_lite_matrix.c.o
+In file included from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/debugging/test/lv_test.h:16,
+                 from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/debugging/test/lv_test_indev_gesture.c:9:
+.pio/libdeps/esp32-s3-devkitc-1/lvgl/src/debugging/test/../../lv_conf_internal.h:77:17: note: #pragma message: Possible failure to include lv_conf.h, please read the comment in this file if you get errors
+         #pragma message("Possible failure to include lv_conf.h, please read the comment in this file if you get errors")
+                 ^~~~~~~
+In file included from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/debugging/test/lv_test_screenshot_compare.c:14:
+.pio/libdeps/esp32-s3-devkitc-1/lvgl/src/debugging/test/../../lv_conf_internal.h:77:17: note: #pragma message: Possible failure to include lv_conf.h, please read the comment in this file if you get errors
+         #pragma message("Possible failure to include lv_conf.h, please read the comment in this file if you get errors")
+                 ^~~~~~~
+Compiling .pio\build\esp32-s3-devkitc-1\lib8f0\lvgl\debugging\vg_lite_tvg\vg_lite_tvg.cpp.o
+Compiling .pio\build\esp32-s3-devkitc-1\lib8f0\lvgl\display\lv_display.c.o
+Compiling .pio\build\esp32-s3-devkitc-1\lib8f0\lvgl\draw\convert\helium\lv_draw_buf_convert_helium.c.o
+In file included from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/debugging/vg_lite_tvg/vg_lite_matrix.c:10:
+c:\users\hjalmar\tipsy2.0\.pio\libdeps\esp32-s3-devkitc-1\lvgl\src\lv_conf_internal.h:77:17: note: #pragma message: Possible failure to include lv_conf.h, please read the comment in this file if you get errors
+         #pragma message("Possible failure to include lv_conf.h, please read the comment in this file if you get errors")
+                 ^~~~~~~
+Compiling .pio\build\esp32-s3-devkitc-1\lib8f0\lvgl\draw\convert\lv_draw_buf_convert.c.o
+Compiling .pio\build\esp32-s3-devkitc-1\lib8f0\lvgl\draw\convert\neon\lv_draw_buf_convert_neon.c.o
+In file included from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/debugging/vg_lite_tvg/vg_lite_tvg.cpp:9:
+c:\users\hjalmar\tipsy2.0\.pio\libdeps\esp32-s3-devkitc-1\lvgl\src\lv_conf_internal.h:77:120: note: #pragma message: Possible failure to include lv_conf.h, please read the comment in this file if you get errors
+         #pragma message("Possible failure to include lv_conf.h, please read the comment in this file if you get errors")
+                                                                                                                        ^
+In file included from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/display/../display/../misc/lv_ext_data.h:16,
+                 from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/display/../display/lv_display_private.h:16,
+                 from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/display/lv_display.c:9:
+c:\users\hjalmar\tipsy2.0\.pio\libdeps\esp32-s3-devkitc-1\lvgl\src\lv_conf_internal.h:77:17: note: #pragma message: Possible failure to include lv_conf.h, please read the comment in this file if you get errors
+         #pragma message("Possible failure to include lv_conf.h, please read the comment in this file if you get errors")
+                 ^~~~~~~
+In file included from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/convert/helium/lv_draw_buf_convert_helium.c:9:
+c:\users\hjalmar\tipsy2.0\.pio\libdeps\esp32-s3-devkitc-1\lvgl\src\lv_conf_internal.h:77:17: note: #pragma message: Possible failure to include lv_conf.h, please read the comment in this file if you get errors
+         #pragma message("Possible failure to include lv_conf.h, please read the comment in this file if you get errors")
+                 ^~~~~~~
+Compiling .pio\build\esp32-s3-devkitc-1\lib8f0\lvgl\draw\dma2d\lv_draw_dma2d.c.o
+Compiling .pio\build\esp32-s3-devkitc-1\lib8f0\lvgl\draw\dma2d\lv_draw_dma2d_fill.c.o
+Compiling .pio\build\esp32-s3-devkitc-1\lib8f0\lvgl\draw\dma2d\lv_draw_dma2d_img.c.o
+In file included from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/convert/../../misc/lv_color.h:16,
+                 from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/convert/lv_draw_buf_convert.h:13,
+                 from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/convert/lv_draw_buf_convert.c:9:
+c:\users\hjalmar\tipsy2.0\.pio\libdeps\esp32-s3-devkitc-1\lvgl\src\lv_conf_internal.h:77:17: note: #pragma message: Possible failure to include lv_conf.h, please read the comment in this file if you get errors
+         #pragma message("Possible failure to include lv_conf.h, please read the comment in this file if you get errors")
+                 ^~~~~~~
+In file included from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/convert/neon/lv_draw_buf_convert_neon.c:9:
+c:\users\hjalmar\tipsy2.0\.pio\libdeps\esp32-s3-devkitc-1\lvgl\src\lv_conf_internal.h:77:17: note: #pragma message: Possible failure to include lv_conf.h, please read the comment in this file if you get errors
+         #pragma message("Possible failure to include lv_conf.h, please read the comment in this file if you get errors")
+                 ^~~~~~~
+In file included from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/dma2d/lv_draw_dma2d.h:17,
+                 from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/dma2d/lv_draw_dma2d_private.h:17,
+                 from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/dma2d/lv_draw_dma2d.c:10:
+.pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/dma2d/../../lv_conf_internal.h:77:17: note: #pragma message: Possible failure to include lv_conf.h, please read the comment in this file if you get errors
+         #pragma message("Possible failure to include lv_conf.h, please read the comment in this file if you get errors")
+                 ^~~~~~~
+In file included from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/dma2d/lv_draw_dma2d.h:17,
+                 from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/dma2d/lv_draw_dma2d_private.h:17,
+                 from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/dma2d/lv_draw_dma2d_fill.c:10:
+.pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/dma2d/../../lv_conf_internal.h:77:17: note: #pragma message: Possible failure to include lv_conf.h, please read the comment in this file if you get errors
+         #pragma message("Possible failure to include lv_conf.h, please read the comment in this file if you get errors")
+                 ^~~~~~~
+In file included from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/dma2d/lv_draw_dma2d.h:17,
+                 from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/dma2d/lv_draw_dma2d_private.h:17,
+                 from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/dma2d/lv_draw_dma2d_img.c:10:
+.pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/dma2d/../../lv_conf_internal.h:77:17: note: #pragma message: Possible failure to include lv_conf.h, please read the comment in this file if you get errors
+         #pragma message("Possible failure to include lv_conf.h, please read the comment in this file if you get errors")
+                 ^~~~~~~
+Compiling .pio\build\esp32-s3-devkitc-1\lib8f0\lvgl\draw\espressif\ppa\lv_draw_ppa.c.o
+Compiling .pio\build\esp32-s3-devkitc-1\lib8f0\lvgl\draw\espressif\ppa\lv_draw_ppa_buf.c.o
+Compiling .pio\build\esp32-s3-devkitc-1\lib8f0\lvgl\draw\espressif\ppa\lv_draw_ppa_fill.c.o
+Compiling .pio\build\esp32-s3-devkitc-1\lib8f0\lvgl\draw\espressif\ppa\lv_draw_ppa_img.c.o
+In file included from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/espressif/ppa/lv_draw_ppa_private.h:16,
+                 from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/espressif/ppa/lv_draw_ppa.c:10:
+c:\users\hjalmar\tipsy2.0\.pio\libdeps\esp32-s3-devkitc-1\lvgl\src\lv_conf_internal.h:77:17: note: #pragma message: Possible failure to include lv_conf.h, please read the comment in this file if you get errors
+         #pragma message("Possible failure to include lv_conf.h, please read the comment in this file if you get errors")
+                 ^~~~~~~
+In file included from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/espressif/ppa/lv_draw_ppa_private.h:16,
+                 from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/espressif/ppa/lv_draw_ppa_buf.c:9:
+c:\users\hjalmar\tipsy2.0\.pio\libdeps\esp32-s3-devkitc-1\lvgl\src\lv_conf_internal.h:77:17: note: #pragma message: Possible failure to include lv_conf.h, please read the comment in this file if you get errors
+         #pragma message("Possible failure to include lv_conf.h, please read the comment in this file if you get errors")
+                 ^~~~~~~
+In file included from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/espressif/ppa/lv_draw_ppa_private.h:16,
+                 from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/espressif/ppa/lv_draw_ppa_fill.c:6:
+c:\users\hjalmar\tipsy2.0\.pio\libdeps\esp32-s3-devkitc-1\lvgl\src\lv_conf_internal.h:77:17: note: #pragma message: Possible failure to include lv_conf.h, please read the comment in this file if you get errors
+         #pragma message("Possible failure to include lv_conf.h, please read the comment in this file if you get errors")
+                 ^~~~~~~
+In file included from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/espressif/ppa/lv_draw_ppa_private.h:16,
+                 from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/espressif/ppa/lv_draw_ppa_img.c:6:
+c:\users\hjalmar\tipsy2.0\.pio\libdeps\esp32-s3-devkitc-1\lvgl\src\lv_conf_internal.h:77:17: note: #pragma message: Possible failure to include lv_conf.h, please read the comment in this file if you get errors
+         #pragma message("Possible failure to include lv_conf.h, please read the comment in this file if you get errors")
+                 ^~~~~~~
+Compiling .pio\build\esp32-s3-devkitc-1\lib8f0\lvgl\draw\eve\lv_draw_eve.c.o
+Compiling .pio\build\esp32-s3-devkitc-1\lib8f0\lvgl\draw\eve\lv_draw_eve_arc.c.o
+Compiling .pio\build\esp32-s3-devkitc-1\lib8f0\lvgl\draw\eve\lv_draw_eve_fill.c.o
+Compiling .pio\build\esp32-s3-devkitc-1\lib8f0\lvgl\draw\eve\lv_draw_eve_image.c.o
+Compiling .pio\build\esp32-s3-devkitc-1\lib8f0\lvgl\draw\eve\lv_draw_eve_letter.c.o
+Compiling .pio\build\esp32-s3-devkitc-1\lib8f0\lvgl\draw\eve\lv_draw_eve_line.c.o
+In file included from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/eve/lv_draw_eve.h:24,
+                 from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/eve/lv_draw_eve_private.h:22,
+                 from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/eve/lv_draw_eve.c:16:
+.pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/eve/../../lv_conf_internal.h:77:17: note: #pragma message: Possible failure to include lv_conf.h, please read the comment in this file if you get errors
+         #pragma message("Possible failure to include lv_conf.h, please read the comment in this file if you get errors")
+                 ^~~~~~~
+In file included from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/eve/lv_draw_eve.h:24,
+                 from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/eve/lv_draw_eve_private.h:22,
+                 from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/eve/lv_draw_eve_arc.c:15:
+.pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/eve/../../lv_conf_internal.h:77:17: note: #pragma message: Possible failure to include lv_conf.h, please read the comment in this file if you get errors
+         #pragma message("Possible failure to include lv_conf.h, please read the comment in this file if you get errors")
+                 ^~~~~~~
+In file included from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/eve/lv_draw_eve.h:24,
+                 from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/eve/lv_draw_eve_private.h:22,
+                 from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/eve/lv_draw_eve_fill.c:15:
+.pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/eve/../../lv_conf_internal.h:77:17: note: #pragma message: Possible failure to include lv_conf.h, please read the comment in this file if you get errors
+         #pragma message("Possible failure to include lv_conf.h, please read the comment in this file if you get errors")
+                 ^~~~~~~
+In file included from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/eve/lv_draw_eve.h:24,
+                 from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/eve/lv_draw_eve_private.h:22,
+                 from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/eve/lv_draw_eve_image.c:15:
+.pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/eve/../../lv_conf_internal.h:77:17: note: #pragma message: Possible failure to include lv_conf.h, please read the comment in this file if you get errors
+         #pragma message("Possible failure to include lv_conf.h, please read the comment in this file if you get errors")
+                 ^~~~~~~
+In file included from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/eve/lv_draw_eve.h:24,
+                 from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/eve/lv_draw_eve_private.h:22,
+                 from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/eve/lv_draw_eve_letter.c:14:
+.pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/eve/../../lv_conf_internal.h:77:17: note: #pragma message: Possible failure to include lv_conf.h, please read the comment in this file if you get errors
+         #pragma message("Possible failure to include lv_conf.h, please read the comment in this file if you get errors")
+                 ^~~~~~~
+Compiling .pio\build\esp32-s3-devkitc-1\lib8f0\lvgl\draw\eve\lv_draw_eve_ram_g.c.o
+Compiling .pio\build\esp32-s3-devkitc-1\lib8f0\lvgl\draw\eve\lv_draw_eve_triangle.c.o
+Compiling .pio\build\esp32-s3-devkitc-1\lib8f0\lvgl\draw\eve\lv_eve.c.o
+Compiling .pio\build\esp32-s3-devkitc-1\lib8f0\lvgl\draw\lv_draw.c.o
+Compiling .pio\build\esp32-s3-devkitc-1\lib8f0\lvgl\draw\lv_draw_3d.c.o
+Compiling .pio\build\esp32-s3-devkitc-1\lib8f0\lvgl\draw\lv_draw_arc.c.o
+In file included from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/eve/lv_draw_eve.h:24,
+                 from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/eve/lv_draw_eve_private.h:22,
+                 from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/eve/lv_draw_eve_line.c:16:
+.pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/eve/../../lv_conf_internal.h:77:17: note: #pragma message: Possible failure to include lv_conf.h, please read the comment in this file if you get errors
+         #pragma message("Possible failure to include lv_conf.h, please read the comment in this file if you get errors")
+                 ^~~~~~~
+Compiling .pio\build\esp32-s3-devkitc-1\lib8f0\lvgl\draw\lv_draw_blur.c.o
+In file included from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/eve/lv_draw_eve.h:24,
+                 from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/eve/lv_draw_eve_private.h:22,
+                 from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/eve/lv_draw_eve_ram_g.c:15:
+.pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/eve/../../lv_conf_internal.h:77:17: note: #pragma message: Possible failure to include lv_conf.h, please read the comment in this file if you get errors
+         #pragma message("Possible failure to include lv_conf.h, please read the comment in this file if you get errors")
+                 ^~~~~~~
+In file included from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/eve/lv_draw_eve.h:24,
+                 from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/eve/lv_draw_eve_private.h:22,
+                 from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/eve/lv_draw_eve_triangle.c:15:
+.pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/eve/../../lv_conf_internal.h:77:17: note: #pragma message: Possible failure to include lv_conf.h, please read the comment in this file if you get errors
+         #pragma message("Possible failure to include lv_conf.h, please read the comment in this file if you get errors")
+                 ^~~~~~~
+In file included from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/eve/lv_draw_eve.h:24,
+                 from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/eve/lv_eve.c:15:
+.pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/eve/../../lv_conf_internal.h:77:17: note: #pragma message: Possible failure to include lv_conf.h, please read the comment in this file if you get errors
+         #pragma message("Possible failure to include lv_conf.h, please read the comment in this file if you get errors")
+                 ^~~~~~~
+In file included from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/../misc/lv_area.h:16,
+                 from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/../misc/lv_area_private.h:17,
+                 from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/lv_draw.c:13:
+.pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/../misc/../lv_conf_internal.h:77:17: note: #pragma message: Possible failure to include lv_conf.h, please read the comment in this file if you get errors
+         #pragma message("Possible failure to include lv_conf.h, please read the comment in this file if you get errors")
+                 ^~~~~~~
+In file included from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/lv_draw_3d.h:17,
+                 from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/lv_draw_3d.c:10:
+.pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/../lv_conf_internal.h:77:17: note: #pragma message: Possible failure to include lv_conf.h, please read the comment in this file if you get errors
+         #pragma message("Possible failure to include lv_conf.h, please read the comment in this file if you get errors")
+                 ^~~~~~~
+In file included from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/lv_draw.h:20,
+                 from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/lv_draw_private.h:21,
+                 from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/lv_draw_arc.c:9:
+.pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/../lv_conf_internal.h:77:17: note: #pragma message: Possible failure to include lv_conf.h, please read the comment in this file if you get errors
+         #pragma message("Possible failure to include lv_conf.h, please read the comment in this file if you get errors")
+                 ^~~~~~~
+Compiling .pio\build\esp32-s3-devkitc-1\lib8f0\lvgl\draw\lv_draw_buf.c.o
+Compiling .pio\build\esp32-s3-devkitc-1\lib8f0\lvgl\draw\lv_draw_image.c.o
+Compiling .pio\build\esp32-s3-devkitc-1\lib8f0\lvgl\draw\lv_draw_label.c.o
+Compiling .pio\build\esp32-s3-devkitc-1\lib8f0\lvgl\draw\lv_draw_line.c.o
+In file included from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/lv_draw.h:20,
+                 from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/lv_draw_private.h:21,
+                 from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/lv_draw_blur.c:9:
+.pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/../lv_conf_internal.h:77:17: note: #pragma message: Possible failure to include lv_conf.h, please read the comment in this file if you get errors
+         #pragma message("Possible failure to include lv_conf.h, please read the comment in this file if you get errors")
+                 ^~~~~~~
+In file included from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/../misc/lv_types.h:16,
+                 from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/lv_draw_buf.h:16,
+                 from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/lv_draw_buf_private.h:17,
+                 from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/lv_draw_buf.c:9:
+.pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/../misc/../lv_conf_internal.h:77:17: note: #pragma message: Possible failure to include lv_conf.h, please read the comment in this file if you get errors
+         #pragma message("Possible failure to include lv_conf.h, please read the comment in this file if you get errors")
+                 ^~~~~~~
+In file included from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/lv_draw.h:20,
+                 from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/lv_draw_image.h:16,
+                 from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/lv_draw_image_private.h:17,
+                 from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/lv_draw_image.c:9:
+.pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/../lv_conf_internal.h:77:17: note: #pragma message: Possible failure to include lv_conf.h, please read the comment in this file if you get errors
+         #pragma message("Possible failure to include lv_conf.h, please read the comment in this file if you get errors")
+                 ^~~~~~~
+In file included from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/lv_draw.h:20,
+                 from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/lv_draw_label.h:16,
+                 from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/lv_draw_label_private.h:17,
+                 from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/lv_draw_label.c:9:
+.pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/../lv_conf_internal.h:77:17: note: #pragma message: Possible failure to include lv_conf.h, please read the comment in this file if you get errors
+         #pragma message("Possible failure to include lv_conf.h, please read the comment in this file if you get errors")
+                 ^~~~~~~
+In file included from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/lv_draw.h:20,
+                 from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/lv_draw_private.h:21,
+                 from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/lv_draw_line.c:9:
+.pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/../lv_conf_internal.h:77:17: note: #pragma message: Possible failure to include lv_conf.h, please read the comment in this file if you get errors
+         #pragma message("Possible failure to include lv_conf.h, please read the comment in this file if you get errors")
+                 ^~~~~~~
+Compiling .pio\build\esp32-s3-devkitc-1\lib8f0\lvgl\draw\lv_draw_mask.c.o
+Compiling .pio\build\esp32-s3-devkitc-1\lib8f0\lvgl\draw\lv_draw_rect.c.o
+Compiling .pio\build\esp32-s3-devkitc-1\lib8f0\lvgl\draw\lv_draw_triangle.c.o
+In file included from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/lv_init.h:16,
+                 from .pio/libdeps/esp32-s3-devkitc-1/lvgl/lvgl.h:21,
+                 from src/ui/generated/ui.h:6,
+                 from src/ui/generated/ui.cpp:1:
+.pio/libdeps/esp32-s3-devkitc-1/lvgl/src/lv_conf_internal.h:77:120: note: #pragma message: Possible failure to include lv_conf.h, please read the comment in this file if you get errors
+         #pragma message("Possible failure to include lv_conf.h, please read the comment in this file if you get errors")
+                                                                                                                        ^
+In file included from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/lv_draw.h:20,
+                 from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/lv_draw_mask.h:16,
+                 from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/lv_draw_mask.c:9:
+.pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/../lv_conf_internal.h:77:17: note: #pragma message: Possible failure to include lv_conf.h, please read the comment in this file if you get errors
+         #pragma message("Possible failure to include lv_conf.h, please read the comment in this file if you get errors")
+                 ^~~~~~~
+In file included from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/lv_draw.h:20,
+                 from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/lv_draw_rect.h:16,
+                 from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/lv_draw_rect_private.h:17,
+                 from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/lv_draw_rect.c:9:
+.pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/../lv_conf_internal.h:77:17: note: #pragma message: Possible failure to include lv_conf.h, please read the comment in this file if you get errors
+         #pragma message("Possible failure to include lv_conf.h, please read the comment in this file if you get errors")
+                 ^~~~~~~
+In file included from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/lv_draw.h:20,
+                 from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/lv_draw_rect.h:16,
+                 from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/lv_draw_triangle.h:16,
+                 from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/lv_draw_triangle_private.h:17,
+                 from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/lv_draw_triangle.c:10:
+.pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/../lv_conf_internal.h:77:17: note: #pragma message: Possible failure to include lv_conf.h, please read the comment in this file if you get errors
+         #pragma message("Possible failure to include lv_conf.h, please read the comment in this file if you get errors")
+                 ^~~~~~~
+Compiling .pio\build\esp32-s3-devkitc-1\lib8f0\lvgl\draw\lv_draw_vector.c.o
+Compiling .pio\build\esp32-s3-devkitc-1\lib8f0\lvgl\draw\lv_image_decoder.c.o
+In file included from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/../misc/lv_types.h:16,
+                 from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/../misc/lv_array.h:16,
+                 from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/lv_draw_vector.h:16,
+                 from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/lv_draw_vector_private.h:17,
+                 from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/lv_draw_vector.c:9:
+.pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/../misc/../lv_conf_internal.h:77:17: note: #pragma message: Possible failure to include lv_conf.h, please read the comment in this file if you get errors
+         #pragma message("Possible failure to include lv_conf.h, please read the comment in this file if you get errors")
+                 ^~~~~~~
+In file included from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/lv_image_decoder.h:16,
+                 from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/lv_image_decoder_private.h:16,
+                 from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/lv_image_decoder.c:9:
+.pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/../lv_conf_internal.h:77:17: note: #pragma message: Possible failure to include lv_conf.h, please read the comment in this file if you get errors
+         #pragma message("Possible failure to include lv_conf.h, please read the comment in this file if you get errors")
+                 ^~~~~~~
+Compiling .pio\build\esp32-s3-devkitc-1\lib8f0\lvgl\draw\nanovg\lv_draw_nanovg.c.o
+Archiving .pio\build\esp32-s3-devkitc-1\lib2fb\libSPI.a
+Archiving .pio\build\esp32-s3-devkitc-1\lib504\libFS.a
+Compiling .pio\build\esp32-s3-devkitc-1\lib8f0\lvgl\draw\nanovg\lv_draw_nanovg_3d.c.o
+Compiling .pio\build\esp32-s3-devkitc-1\lib8f0\lvgl\draw\nanovg\lv_draw_nanovg_arc.c.o
+Compiling .pio\build\esp32-s3-devkitc-1\lib8f0\lvgl\draw\nanovg\lv_draw_nanovg_border.c.o
+Compiling .pio\build\esp32-s3-devkitc-1\lib8f0\lvgl\draw\nanovg\lv_draw_nanovg_box_shadow.c.o
+Compiling .pio\build\esp32-s3-devkitc-1\lib8f0\lvgl\draw\nanovg\lv_draw_nanovg_fill.c.o
+In file included from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/nanovg/../../misc/lv_types.h:16,
+                 from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/nanovg/lv_draw_nanovg.h:17,
+                 from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/nanovg/lv_draw_nanovg.c:10:
+.pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/nanovg/../../misc/../lv_conf_internal.h:77:17: note: #pragma message: Possible failure to include lv_conf.h, please read the comment in this file if you get errors
+         #pragma message("Possible failure to include lv_conf.h, please read the comment in this file if you get errors")
+                 ^~~~~~~
+Compiling .pio\build\esp32-s3-devkitc-1\lib8f0\lvgl\draw\nanovg\lv_draw_nanovg_grad.c.o
+Compiling .pio\build\esp32-s3-devkitc-1\lib8f0\lvgl\draw\nanovg\lv_draw_nanovg_image.c.o
+Compiling .pio\build\esp32-s3-devkitc-1\lib8f0\lvgl\draw\nanovg\lv_draw_nanovg_label.c.o
+In file included from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/nanovg/lv_draw_nanovg_private.h:17,
+                 from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/nanovg/lv_draw_nanovg_3d.c:10:
+.pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/nanovg/../../lv_conf_internal.h:77:17: note: #pragma message: Possible failure to include lv_conf.h, please read the comment in this file if you get errors
+         #pragma message("Possible failure to include lv_conf.h, please read the comment in this file if you get errors")
+                 ^~~~~~~
+In file included from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/nanovg/lv_draw_nanovg_private.h:17,
+                 from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/nanovg/lv_draw_nanovg_arc.c:10:
+.pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/nanovg/../../lv_conf_internal.h:77:17: note: #pragma message: Possible failure to include lv_conf.h, please read the comment in this file if you get errors
+         #pragma message("Possible failure to include lv_conf.h, please read the comment in this file if you get errors")
+                 ^~~~~~~
+Archiving .pio\build\esp32-s3-devkitc-1\lib69e\libLittleFS.a
+In file included from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/nanovg/lv_draw_nanovg_private.h:17,
+                 from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/nanovg/lv_draw_nanovg_border.c:10:
+.pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/nanovg/../../lv_conf_internal.h:77:17: note: #pragma message: Possible failure to include lv_conf.h, please read the comment in this file if you get errors
+         #pragma message("Possible failure to include lv_conf.h, please read the comment in this file if you get errors")
+                 ^~~~~~~
+Compiling .pio\build\esp32-s3-devkitc-1\lib8f0\lvgl\draw\nanovg\lv_draw_nanovg_layer.c.o
+In file included from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/nanovg/lv_draw_nanovg_private.h:17,
+                 from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/nanovg/lv_draw_nanovg_box_shadow.c:10:
+.pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/nanovg/../../lv_conf_internal.h:77:17: note: #pragma message: Possible failure to include lv_conf.h, please read the comment in this file if you get errors
+         #pragma message("Possible failure to include lv_conf.h, please read the comment in this file if you get errors")
+                 ^~~~~~~
+Compiling .pio\build\esp32-s3-devkitc-1\lib8f0\lvgl\draw\nanovg\lv_draw_nanovg_line.c.o
+In file included from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/nanovg/lv_draw_nanovg_private.h:17,
+                 from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/nanovg/lv_draw_nanovg_fill.c:10:
+.pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/nanovg/../../lv_conf_internal.h:77:17: note: #pragma message: Possible failure to include lv_conf.h, please read the comment in this file if you get errors
+         #pragma message("Possible failure to include lv_conf.h, please read the comment in this file if you get errors")
+                 ^~~~~~~
+Compiling .pio\build\esp32-s3-devkitc-1\lib8f0\lvgl\draw\nanovg\lv_draw_nanovg_mask_rect.c.o
+In file included from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/nanovg/lv_draw_nanovg_private.h:17,
+                 from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/nanovg/lv_draw_nanovg_grad.c:10:
+.pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/nanovg/../../lv_conf_internal.h:77:17: note: #pragma message: Possible failure to include lv_conf.h, please read the comment in this file if you get errors
+         #pragma message("Possible failure to include lv_conf.h, please read the comment in this file if you get errors")
+                 ^~~~~~~
+Compiling .pio\build\esp32-s3-devkitc-1\lib8f0\lvgl\draw\nanovg\lv_draw_nanovg_triangle.c.o
+In file included from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/nanovg/lv_draw_nanovg_private.h:17,
+                 from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/nanovg/lv_draw_nanovg_image.c:10:
+.pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/nanovg/../../lv_conf_internal.h:77:17: note: #pragma message: Possible failure to include lv_conf.h, please read the comment in this file if you get errors
+         #pragma message("Possible failure to include lv_conf.h, please read the comment in this file if you get errors")
+                 ^~~~~~~
+Compiling .pio\build\esp32-s3-devkitc-1\lib8f0\lvgl\draw\nanovg\lv_draw_nanovg_vector.c.o
+In file included from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/lv_init.h:16,
+                 from .pio/libdeps/esp32-s3-devkitc-1/lvgl/lvgl.h:21,
+                 from src/ui/UiManager.h:5,
+                 from src/ui/UiManager.cpp:1:
+.pio/libdeps/esp32-s3-devkitc-1/lvgl/src/lv_conf_internal.h:77:120: note: #pragma message: Possible failure to include lv_conf.h, please read the comment in this file if you get errors
+         #pragma message("Possible failure to include lv_conf.h, please read the comment in this file if you get errors")
+                                                                                                                        ^
+Compiling .pio\build\esp32-s3-devkitc-1\lib8f0\lvgl\draw\nanovg\lv_nanovg_fbo_cache.c.o
+In file included from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/nanovg/lv_draw_nanovg_private.h:17,
+                 from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/nanovg/lv_draw_nanovg_label.c:10:
+.pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/nanovg/../../lv_conf_internal.h:77:17: note: #pragma message: Possible failure to include lv_conf.h, please read the comment in this file if you get errors
+         #pragma message("Possible failure to include lv_conf.h, please read the comment in this file if you get errors")
+                 ^~~~~~~
+Compiling .pio\build\esp32-s3-devkitc-1\lib8f0\lvgl\draw\nanovg\lv_nanovg_image_cache.c.o
+Compiling .pio\build\esp32-s3-devkitc-1\lib8f0\lvgl\draw\nanovg\lv_nanovg_utils.c.o
+In file included from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/nanovg/lv_draw_nanovg_private.h:17,
+                 from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/nanovg/lv_draw_nanovg_layer.c:10:
+.pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/nanovg/../../lv_conf_internal.h:77:17: note: #pragma message: Possible failure to include lv_conf.h, please read the comment in this file if you get errors
+         #pragma message("Possible failure to include lv_conf.h, please read the comment in this file if you get errors")
+                 ^~~~~~~
+In file included from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/nanovg/lv_draw_nanovg_private.h:17,
+                 from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/nanovg/lv_draw_nanovg_line.c:10:
+.pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/nanovg/../../lv_conf_internal.h:77:17: note: #pragma message: Possible failure to include lv_conf.h, please read the comment in this file if you get errors
+         #pragma message("Possible failure to include lv_conf.h, please read the comment in this file if you get errors")
+                 ^~~~~~~
+In file included from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/nanovg/lv_draw_nanovg_private.h:17,
+                 from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/nanovg/lv_draw_nanovg_triangle.c:10:
+.pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/nanovg/../../lv_conf_internal.h:77:17: note: #pragma message: Possible failure to include lv_conf.h, please read the comment in this file if you get errors
+         #pragma message("Possible failure to include lv_conf.h, please read the comment in this file if you get errors")
+                 ^~~~~~~
+In file included from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/nanovg/lv_draw_nanovg_private.h:17,
+                 from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/nanovg/lv_draw_nanovg_mask_rect.c:10:
+.pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/nanovg/../../lv_conf_internal.h:77:17: note: #pragma message: Possible failure to include lv_conf.h, please read the comment in this file if you get errors
+         #pragma message("Possible failure to include lv_conf.h, please read the comment in this file if you get errors")
+                 ^~~~~~~
+In file included from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/nanovg/lv_nanovg_fbo_cache.h:17,
+                 from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/nanovg/lv_nanovg_fbo_cache.c:10:
+.pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/nanovg/../../lv_conf_internal.h:77:17: note: #pragma message: Possible failure to include lv_conf.h, please read the comment in this file if you get errors
+         #pragma message("Possible failure to include lv_conf.h, please read the comment in this file if you get errors")
+                 ^~~~~~~
+In file included from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/nanovg/lv_draw_nanovg_private.h:17,
+                 from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/nanovg/lv_draw_nanovg_vector.c:10:
+.pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/nanovg/../../lv_conf_internal.h:77:17: note: #pragma message: Possible failure to include lv_conf.h, please read the comment in this file if you get errors
+         #pragma message("Possible failure to include lv_conf.h, please read the comment in this file if you get errors")
+                 ^~~~~~~
+In file included from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/nanovg/lv_nanovg_image_cache.h:17,
+                 from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/nanovg/lv_nanovg_image_cache.c:10:
+.pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/nanovg/../../lv_conf_internal.h:77:17: note: #pragma message: Possible failure to include lv_conf.h, please read the comment in this file if you get errors
+         #pragma message("Possible failure to include lv_conf.h, please read the comment in this file if you get errors")
+                 ^~~~~~~
+Compiling .pio\build\esp32-s3-devkitc-1\lib8f0\lvgl\draw\nema_gfx\lv_draw_nema_gfx.c.o
+Compiling .pio\build\esp32-s3-devkitc-1\lib8f0\lvgl\draw\nema_gfx\lv_draw_nema_gfx_arc.c.o
+In file included from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/nanovg/lv_nanovg_utils.h:17,
+                 from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/nanovg/lv_nanovg_utils.c:10:
+.pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/nanovg/../../lv_conf_internal.h:77:17: note: #pragma message: Possible failure to include lv_conf.h, please read the comment in this file if you get errors
+         #pragma message("Possible failure to include lv_conf.h, please read the comment in this file if you get errors")
+                 ^~~~~~~
+Compiling .pio\build\esp32-s3-devkitc-1\lib8f0\lvgl\draw\nema_gfx\lv_draw_nema_gfx_border.c.o
+Compiling .pio\build\esp32-s3-devkitc-1\lib8f0\lvgl\draw\nema_gfx\lv_draw_nema_gfx_fill.c.o
+Compiling .pio\build\esp32-s3-devkitc-1\lib8f0\lvgl\draw\nema_gfx\lv_draw_nema_gfx_img.c.o
+In file included from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/lv_init.h:16,
+                 from .pio/libdeps/esp32-s3-devkitc-1/lvgl/lvgl.h:21,
+                 from src/ui/generated/ui.h:6,
+                 from src/ui/SquareLineAdapter.h:4,
+                 from src/ui/SquareLineAdapter.cpp:1:
+.pio/libdeps/esp32-s3-devkitc-1/lvgl/src/lv_conf_internal.h:77:120: note: #pragma message: Possible failure to include lv_conf.h, please read the comment in this file if you get errors
+         #pragma message("Possible failure to include lv_conf.h, please read the comment in this file if you get errors")
+                                                                                                                        ^
+Compiling .pio\build\esp32-s3-devkitc-1\lib8f0\lvgl\draw\nema_gfx\lv_draw_nema_gfx_label.c.o
+Compiling .pio\build\esp32-s3-devkitc-1\lib8f0\lvgl\draw\nema_gfx\lv_draw_nema_gfx_layer.c.o
+Compiling .pio\build\esp32-s3-devkitc-1\lib8f0\lvgl\draw\nema_gfx\lv_draw_nema_gfx_line.c.o
+In file included from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/nema_gfx/../../core/lv_obj.h:16,
+                 from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/nema_gfx/../../core/lv_refr.h:16,
+                 from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/nema_gfx/lv_draw_nema_gfx.c:35:
+c:\users\hjalmar\tipsy2.0\.pio\libdeps\esp32-s3-devkitc-1\lvgl\src\lv_conf_internal.h:77:17: note: #pragma message: Possible failure to include lv_conf.h, please read the comment in this file if you get errors
+         #pragma message("Possible failure to include lv_conf.h, please read the comment in this file if you get errors")
+                 ^~~~~~~
+Compiling .pio\build\esp32-s3-devkitc-1\lib8f0\lvgl\draw\nema_gfx\lv_draw_nema_gfx_stm32_hal.c.o
+Compiling .pio\build\esp32-s3-devkitc-1\lib8f0\lvgl\draw\nema_gfx\lv_draw_nema_gfx_triangle.c.o
+Compiling .pio\build\esp32-s3-devkitc-1\lib8f0\lvgl\draw\nema_gfx\lv_draw_nema_gfx_utils.c.o
+Compiling .pio\build\esp32-s3-devkitc-1\lib8f0\lvgl\draw\nema_gfx\lv_draw_nema_gfx_vector.c.o
+In file included from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/nema_gfx/lv_draw_nema_gfx.h:42,
+                 from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/nema_gfx/lv_draw_nema_gfx_arc.c:35:
+.pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/nema_gfx/../../lv_conf_internal.h:77:17: note: #pragma message: Possible failure to include lv_conf.h, please read the comment in this file if you get errors
+         #pragma message("Possible failure to include lv_conf.h, please read the comment in this file if you get errors")
+                 ^~~~~~~
+Compiling .pio\build\esp32-s3-devkitc-1\lib8f0\lvgl\draw\nema_gfx\lv_nema_gfx_path.c.o
+In file included from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/nema_gfx/lv_draw_nema_gfx.h:42,
+                 from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/nema_gfx/lv_draw_nema_gfx_border.c:35:
+.pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/nema_gfx/../../lv_conf_internal.h:77:17: note: #pragma message: Possible failure to include lv_conf.h, please read the comment in this file if you get errors
+         #pragma message("Possible failure to include lv_conf.h, please read the comment in this file if you get errors")
+                 ^~~~~~~
+In file included from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/nema_gfx/lv_draw_nema_gfx.h:42,
+                 from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/nema_gfx/lv_draw_nema_gfx_fill.c:35:
+.pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/nema_gfx/../../lv_conf_internal.h:77:17: note: #pragma message: Possible failure to include lv_conf.h, please read the comment in this file if you get errors
+         #pragma message("Possible failure to include lv_conf.h, please read the comment in this file if you get errors")
+                 ^~~~~~~
+Compiling .pio\build\esp32-s3-devkitc-1\lib8f0\lvgl\draw\nxp\g2d\lv_draw_buf_g2d.c.o
+Archiving .pio\build\esp32-s3-devkitc-1\lib13c\libSD.a
+In file included from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/nema_gfx/lv_draw_nema_gfx.h:42,
+                 from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/nema_gfx/lv_draw_nema_gfx_img.c:35:
+.pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/nema_gfx/../../lv_conf_internal.h:77:17: note: #pragma message: Possible failure to include lv_conf.h, please read the comment in this file if you get errors
+         #pragma message("Possible failure to include lv_conf.h, please read the comment in this file if you get errors")
+                 ^~~~~~~
+Compiling .pio\build\esp32-s3-devkitc-1\lib8f0\lvgl\draw\nxp\g2d\lv_draw_g2d.c.o
+Compiling .pio\build\esp32-s3-devkitc-1\lib8f0\lvgl\draw\nxp\g2d\lv_draw_g2d_fill.c.o
+In file included from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/nema_gfx/lv_draw_nema_gfx.h:42,
+                 from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/nema_gfx/lv_draw_nema_gfx_label.c:35:
+.pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/nema_gfx/../../lv_conf_internal.h:77:17: note: #pragma message: Possible failure to include lv_conf.h, please read the comment in this file if you get errors
+         #pragma message("Possible failure to include lv_conf.h, please read the comment in this file if you get errors")
+                 ^~~~~~~
+Compiling .pio\build\esp32-s3-devkitc-1\lib8f0\lvgl\draw\nxp\g2d\lv_draw_g2d_img.c.o
+In file included from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/nema_gfx/lv_draw_nema_gfx.h:42,
+                 from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/nema_gfx/lv_draw_nema_gfx_layer.c:35:
+.pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/nema_gfx/../../lv_conf_internal.h:77:17: note: #pragma message: Possible failure to include lv_conf.h, please read the comment in this file if you get errors
+         #pragma message("Possible failure to include lv_conf.h, please read the comment in this file if you get errors")
+                 ^~~~~~~
+In file included from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/nema_gfx/lv_draw_nema_gfx.h:42,
+                 from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/nema_gfx/lv_draw_nema_gfx_line.c:35:
+.pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/nema_gfx/../../lv_conf_internal.h:77:17: note: #pragma message: Possible failure to include lv_conf.h, please read the comment in this file if you get errors
+         #pragma message("Possible failure to include lv_conf.h, please read the comment in this file if you get errors")
+                 ^~~~~~~
+In file included from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/nema_gfx/lv_draw_nema_gfx_stm32_hal.c:12:
+.pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/nema_gfx/../../lv_conf_internal.h:77:17: note: #pragma message: Possible failure to include lv_conf.h, please read the comment in this file if you get errors
+         #pragma message("Possible failure to include lv_conf.h, please read the comment in this file if you get errors")
+                 ^~~~~~~
+Compiling .pio\build\esp32-s3-devkitc-1\lib8f0\lvgl\draw\nxp\g2d\lv_g2d_buf_map.c.o
+In file included from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/nema_gfx/lv_draw_nema_gfx.h:42,
+                 from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/nema_gfx/lv_draw_nema_gfx_triangle.c:35:
+.pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/nema_gfx/../../lv_conf_internal.h:77:17: note: #pragma message: Possible failure to include lv_conf.h, please read the comment in this file if you get errors
+         #pragma message("Possible failure to include lv_conf.h, please read the comment in this file if you get errors")
+                 ^~~~~~~
+Compiling .pio\build\esp32-s3-devkitc-1\lib8f0\lvgl\draw\nxp\g2d\lv_g2d_utils.c.o
+In file included from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/nema_gfx/lv_draw_nema_gfx.h:42,
+                 from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/nema_gfx/lv_draw_nema_gfx_utils.c:35:
+.pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/nema_gfx/../../lv_conf_internal.h:77:17: note: #pragma message: Possible failure to include lv_conf.h, please read the comment in this file if you get errors
+         #pragma message("Possible failure to include lv_conf.h, please read the comment in this file if you get errors")
+                 ^~~~~~~
+In file included from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/nema_gfx/../../core/lv_obj.h:16,
+                 from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/nema_gfx/../../core/lv_refr.h:16,
+                 from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/nema_gfx/lv_nema_gfx_path.c:35:
+c:\users\hjalmar\tipsy2.0\.pio\libdeps\esp32-s3-devkitc-1\lvgl\src\lv_conf_internal.h:77:17: note: #pragma message: Possible failure to include lv_conf.h, please read the comment in this file if you get errors
+         #pragma message("Possible failure to include lv_conf.h, please read the comment in this file if you get errors")
+                 ^~~~~~~
+In file included from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/nema_gfx/lv_draw_nema_gfx.h:42,
+                 from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/nema_gfx/lv_draw_nema_gfx_vector.c:10:
+.pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/nema_gfx/../../lv_conf_internal.h:77:17: note: #pragma message: Possible failure to include lv_conf.h, please read the comment in this file if you get errors
+         #pragma message("Possible failure to include lv_conf.h, please read the comment in this file if you get errors")
+                 ^~~~~~~
+In file included from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/nxp/g2d/lv_draw_g2d.h:23,
+                 from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/nxp/g2d/lv_draw_buf_g2d.c:16:
+.pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/nxp/g2d/../../../lv_conf_internal.h:77:17: note: #pragma message: Possible failure to include lv_conf.h, please read the comment in this file if you get errors
+         #pragma message("Possible failure to include lv_conf.h, please read the comment in this file if you get errors")
+                 ^~~~~~~
+In file included from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/nxp/g2d/lv_draw_g2d.h:23,
+                 from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/nxp/g2d/lv_draw_g2d.c:12:
+.pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/nxp/g2d/../../../lv_conf_internal.h:77:17: note: #pragma message: Possible failure to include lv_conf.h, please read the comment in this file if you get errors
+         #pragma message("Possible failure to include lv_conf.h, please read the comment in this file if you get errors")
+                 ^~~~~~~
+src/ui/UiManager.cpp:49:57: error: 'kTftWidth' is not a member of 'tipsy::config'
+ constexpr std::size_t kDrawBufferSize = (tipsy::config::kTftWidth * tipsy::config::kTftHeight) / 10;
+                                                         ^~~~~~~~~
+src/ui/UiManager.cpp:49:57: note: suggested alternative:
+In file included from src/ui/UiManager.h:11,
+                 from src/ui/UiManager.cpp:1:
+src/config/DisplaySetup.h:32:24: note:   'kTftWidth'
+ constexpr std::int32_t kTftWidth  = 320;
+                        ^~~~~~~~~
+src/ui/UiManager.cpp:49:84: error: 'kTftHeight' is not a member of 'tipsy::config'
+ constexpr std::size_t kDrawBufferSize = (tipsy::config::kTftWidth * tipsy::config::kTftHeight) / 10;
+                                                                                    ^~~~~~~~~~
+src/ui/UiManager.cpp:49:84: note: suggested alternative:
+In file included from src/ui/UiManager.h:11,
+                 from src/ui/UiManager.cpp:1:
+src/config/DisplaySetup.h:33:24: note:   'kTftHeight'
+ constexpr std::int32_t kTftHeight = 480;
+                        ^~~~~~~~~~
+src/ui/UiManager.cpp: In member function 'bool tipsy::ui::UiManager::registerDisplayDriver()':
+src/ui/UiManager.cpp:78:32: error: 'drawBuffer' was not declared in this scope
+   lv_display_set_buffers(disp, drawBuffer, nullptr, sizeof(drawBuffer), LV_DISPLAY_RENDER_MODE_PARTIAL);
+                                ^~~~~~~~~~
+src/ui/UiManager.cpp:78:32: note: suggested alternative: 'JsonBuffer'
+   lv_display_set_buffers(disp, drawBuffer, nullptr, sizeof(drawBuffer), LV_DISPLAY_RENDER_MODE_PARTIAL);
+                                ^~~~~~~~~~
+                                JsonBuffer
+In file included from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/nxp/g2d/lv_draw_g2d.h:23,
+                 from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/nxp/g2d/lv_draw_g2d_fill.c:16:
+.pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/nxp/g2d/../../../lv_conf_internal.h:77:17: note: #pragma message: Possible failure to include lv_conf.h, please read the comment in this file if you get errors
+         #pragma message("Possible failure to include lv_conf.h, please read the comment in this file if you get errors")
+                 ^~~~~~~
+Compiling .pio\build\esp32-s3-devkitc-1\lib8f0\lvgl\draw\nxp\pxp\lv_draw_buf_pxp.c.o
+In file included from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/nxp/g2d/lv_draw_g2d.h:23,
+                 from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/nxp/g2d/lv_draw_g2d_img.c:16:
+.pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/nxp/g2d/../../../lv_conf_internal.h:77:17: note: #pragma message: Possible failure to include lv_conf.h, please read the comment in this file if you get errors
+         #pragma message("Possible failure to include lv_conf.h, please read the comment in this file if you get errors")
+                 ^~~~~~~
+Compiling .pio\build\esp32-s3-devkitc-1\lib8f0\lvgl\draw\nxp\pxp\lv_draw_pxp.c.o
+In file included from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/nxp/g2d/lv_g2d_buf_map.h:24,
+                 from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/nxp/g2d/lv_g2d_buf_map.c:12:
+.pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/nxp/g2d/../../../lv_conf_internal.h:77:17: note: #pragma message: Possible failure to include lv_conf.h, please read the comment in this file if you get errors
+         #pragma message("Possible failure to include lv_conf.h, please read the comment in this file if you get errors")
+                 ^~~~~~~
+Compiling .pio\build\esp32-s3-devkitc-1\lib8f0\lvgl\draw\nxp\pxp\lv_draw_pxp_fill.c.o
+In file included from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/nxp/g2d/lv_g2d_utils.h:22,
+                 from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/nxp/g2d/lv_g2d_utils.c:16:
+.pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/nxp/g2d/../../../lv_conf_internal.h:77:17: note: #pragma message: Possible failure to include lv_conf.h, please read the comment in this file if you get errors
+         #pragma message("Possible failure to include lv_conf.h, please read the comment in this file if you get errors")
+                 ^~~~~~~
+Compiling .pio\build\esp32-s3-devkitc-1\lib8f0\lvgl\draw\nxp\pxp\lv_draw_pxp_img.c.o
+Compiling .pio\build\esp32-s3-devkitc-1\lib8f0\lvgl\draw\nxp\pxp\lv_draw_pxp_layer.c.o
+Compiling .pio\build\esp32-s3-devkitc-1\lib8f0\lvgl\draw\nxp\pxp\lv_pxp_cfg.c.o
+Compiling .pio\build\esp32-s3-devkitc-1\lib8f0\lvgl\draw\nxp\pxp\lv_pxp_osa.c.o
+*** [.pio\build\esp32-s3-devkitc-1\src\ui\UiManager.cpp.o] Error 1
+In file included from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/nxp/pxp/lv_draw_pxp.h:23,
+                 from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/nxp/pxp/lv_draw_buf_pxp.c:16:
+.pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/nxp/pxp/../../../lv_conf_internal.h:77:17: note: #pragma message: Possible failure to include lv_conf.h, please read the comment in this file if you get errors
+         #pragma message("Possible failure to include lv_conf.h, please read the comment in this file if you get errors")
+                 ^~~~~~~
+In file included from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/nxp/pxp/lv_draw_pxp.h:23,
+                 from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/nxp/pxp/lv_draw_pxp.c:16:
+.pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/nxp/pxp/../../../lv_conf_internal.h:77:17: note: #pragma message: Possible failure to include lv_conf.h, please read the comment in this file if you get errors
+         #pragma message("Possible failure to include lv_conf.h, please read the comment in this file if you get errors")
+                 ^~~~~~~
+In file included from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/nxp/pxp/lv_draw_pxp.h:23,
+                 from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/nxp/pxp/lv_draw_pxp_fill.c:16:
+.pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/nxp/pxp/../../../lv_conf_internal.h:77:17: note: #pragma message: Possible failure to include lv_conf.h, please read the comment in this file if you get errors
+         #pragma message("Possible failure to include lv_conf.h, please read the comment in this file if you get errors")
+                 ^~~~~~~
+In file included from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/nxp/pxp/lv_draw_pxp.h:23,
+                 from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/nxp/pxp/lv_draw_pxp_img.c:16:
+.pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/nxp/pxp/../../../lv_conf_internal.h:77:17: note: #pragma message: Possible failure to include lv_conf.h, please read the comment in this file if you get errors
+         #pragma message("Possible failure to include lv_conf.h, please read the comment in this file if you get errors")
+                 ^~~~~~~
+In file included from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/nxp/pxp/lv_draw_pxp.h:23,
+                 from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/nxp/pxp/lv_draw_pxp_layer.c:16:
+.pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/nxp/pxp/../../../lv_conf_internal.h:77:17: note: #pragma message: Possible failure to include lv_conf.h, please read the comment in this file if you get errors
+         #pragma message("Possible failure to include lv_conf.h, please read the comment in this file if you get errors")
+                 ^~~~~~~
+In file included from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/nxp/pxp/lv_pxp_cfg.h:23,
+                 from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/nxp/pxp/lv_pxp_cfg.c:16:
+.pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/nxp/pxp/../../../lv_conf_internal.h:77:17: note: #pragma message: Possible failure to include lv_conf.h, please read the comment in this file if you get errors
+         #pragma message("Possible failure to include lv_conf.h, please read the comment in this file if you get errors")
+                 ^~~~~~~
+In file included from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/nxp/pxp/lv_pxp_osa.h:23,
+                 from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/nxp/pxp/lv_pxp_osa.c:16:
+.pio/libdeps/esp32-s3-devkitc-1/lvgl/src/draw/nxp/pxp/../../../lv_conf_internal.h:77:17: note: #pragma message: Possible failure to include lv_conf.h, please read the comment in this file if you get errors
+         #pragma message("Possible failure to include lv_conf.h, please read the comment in this file if you get errors")
+                 ^~~~~~~
+========================= [FAILED] Took 37.31 seconds =========================
+
+Environment         Status    Duration
+------------------  --------  ------------
+esp32-s3-devkitc-1  FAILED    00:00:37.307
+==================== 1 failed, 0 succeeded in 00:00:37.307 ====================

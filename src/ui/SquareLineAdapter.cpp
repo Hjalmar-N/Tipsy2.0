@@ -18,12 +18,46 @@ void onDrinkSelected(const char* drinkId) {
   tipsy::ui::events::handleDrinkSelected(*boundUiBridge, drinkId);
 }
 
-void onStartSelectedDrink() {
+void onStartSelectedDrink(std::uint16_t alcoholAmountMl) {
   if (boundUiBridge == nullptr) {
     return;
   }
 
-  tipsy::ui::events::handleStartSelectedDrink(*boundUiBridge);
+  tipsy::ui::events::handleStartSelectedDrink(*boundUiBridge, alcoholAmountMl);
+}
+
+void onAdminOpened() {
+  if (boundUiBridge == nullptr) {
+    return;
+  }
+
+  tipsy::ui::events::handleAdminOpened(*boundUiBridge);
+}
+
+void onPrimePumps() {
+  if (boundUiBridge == nullptr) {
+    return;
+  }
+
+  tipsy::ui::events::handlePrimePumpsRequested(*boundUiBridge);
+}
+
+void onFlushCleaning() {
+  if (boundUiBridge == nullptr) {
+    return;
+  }
+
+  tipsy::ui::events::handleFlushCleaningRequested(*boundUiBridge);
+}
+
+void onPumpAssignmentEdited(std::uint8_t pumpIndex, const char* ingredientId,
+                            const char* ingredientDisplayName, bool enabled) {
+  if (boundUiBridge == nullptr) {
+    return;
+  }
+
+  tipsy::ui::events::handlePumpAssignmentEdited(*boundUiBridge, pumpIndex, ingredientId,
+                                                ingredientDisplayName, enabled);
 }
 
 }  // namespace
@@ -37,6 +71,10 @@ void SquareLineAdapter::begin() {
   generated::ui_init();
   generated::ui_bind_drink_selected(&onDrinkSelected);
   generated::ui_bind_start_selected_drink(&onStartSelectedDrink);
+  generated::ui_bind_admin_opened(&onAdminOpened);
+  generated::ui_bind_prime_pumps(&onPrimePumps);
+  generated::ui_bind_flush_cleaning(&onFlushCleaning);
+  generated::ui_bind_pump_assignment_edited(&onPumpAssignmentEdited);
 }
 
 void SquareLineAdapter::update() {
@@ -121,6 +159,8 @@ generated::UiRenderModel SquareLineAdapter::buildRenderModel(const UiState& stat
   for (std::size_t i = 0; i < state.drinkCount && i < model.drinks.size(); ++i) {
     model.drinks[i].id = state.drinks[i].id;
     model.drinks[i].displayName = state.drinks[i].displayName;
+    model.drinks[i].subtitle = state.drinks[i].subtitle;
+    model.drinks[i].categoryId = state.drinks[i].categoryId;
     model.drinks[i].availabilityText = state.drinks[i].available ? "Available" : "Unavailable";
     model.drinks[i].available = state.drinks[i].available;
     model.drinks[i].selected = state.drinks[i].selected;
@@ -130,6 +170,14 @@ generated::UiRenderModel SquareLineAdapter::buildRenderModel(const UiState& stat
       model.selectedDrinkText = state.drinks[i].displayName;
       model.hasSelectedDrink = true;
     }
+  }
+
+  for (std::size_t i = 0; i < state.pumpAssignments.size() && i < model.pumpAssignments.size(); ++i) {
+    model.pumpAssignments[i].pumpIndex = state.pumpAssignments[i].pumpIndex;
+    model.pumpAssignments[i].ingredientId = state.pumpAssignments[i].ingredientId;
+    model.pumpAssignments[i].ingredientDisplayName =
+        state.pumpAssignments[i].ingredientDisplayName;
+    model.pumpAssignments[i].enabled = state.pumpAssignments[i].enabled;
   }
 
   model.canStartSelectedDrink =

@@ -30,13 +30,6 @@ enum class MockPourStage : std::uint8_t {
   Complete,
 };
 
-struct MockMenuItem {
-  const char* id;
-  const char* name;
-  const char* subtitle;
-  DrinkCategory category;
-};
-
 struct MockMixerIngredient {
   const char* id;
   const char* name;
@@ -75,18 +68,6 @@ struct InternalPourRequest {
   bool canRouteToBackend = false;
 };
 
-constexpr MockMenuItem kMockItems[] = {
-    {"mojito", "Mojito", "Fresh mint rum", DrinkCategory::Drinks},
-    {"gin_tonic", "Gin Tonic", "Classic crisp serve", DrinkCategory::Drinks},
-    {"whiskey_sour", "Whiskey Sour", "Citrus and smooth", DrinkCategory::Drinks},
-    {"vodka_soda", "Vodka Soda", "Clean and light", DrinkCategory::Drinks},
-    {"margarita", "Margarita", "Bright tequila mix", DrinkCategory::Drinks},
-    {"rum_cola", "Rum Cola", "Easy sweet serve", DrinkCategory::Drinks},
-    {"tequila_shot", "Tequila Shot", "Quick shot", DrinkCategory::Shots},
-    {"vodka_shot", "Vodka Shot", "Quick shot", DrinkCategory::Shots},
-    {"whiskey_shot", "Whiskey Shot", "Quick shot", DrinkCategory::Shots},
-};
-
 constexpr MockRecipeDetail kRecipeDetails[] = {
     {"mojito", "rum", "White Rum", false, {{{"mint_mix", "Mint mix", 120}, {"soda", "Soda", 80}, {"lime", "Lime", 20}}}, 3},
     {"gin_tonic", "gin", "Gin", false, {{{"tonic", "Tonic", 150}, {"", "", 0}, {"", "", 0}}}, 1},
@@ -121,15 +102,20 @@ constexpr std::size_t kIngredientOptionCount = sizeof(kIngredientOptions) / size
 UiRenderModel currentModel {};
 DrinkSelectedCallback drinkSelectedCallback = nullptr;
 StartSelectedDrinkCallback startSelectedDrinkCallback = nullptr;
+AdminOpenedCallback adminOpenedCallback = nullptr;
+PrimePumpsCallback primePumpsCallback = nullptr;
+FlushCleaningCallback flushCleaningCallback = nullptr;
+PumpAssignmentEditedCallback pumpAssignmentEditedCallback = nullptr;
 
 ScreenView currentView = ScreenView::Boot;
 DrinkCategory activeCategory = DrinkCategory::All;
-const MockMenuItem* selectedItem = nullptr;
-const MockRecipeDetail* selectedRecipe = nullptr;
+const UiRenderDrinkItem* selectedItem = nullptr;
 std::uint8_t selectedStrengthIndex = 1;
 lv_timer_t* bootTimer = nullptr;
+bool previewModeEnabled = false;
 
 lv_obj_t* rootScreen = nullptr;
+lv_obj_t* previewModeBadge = nullptr;
 
 lv_obj_t* bootScreen = nullptr;
 lv_obj_t* bootLogoLabel = nullptr;
@@ -178,8 +164,6 @@ SettingsSubview currentSettingsSubview = SettingsSubview::Main;
 bool adminLockEnabled = false;
 bool settingsDirty = false;
 String settingsStatusMessage;
-std::array<const char*, kPumpCount> pumpAssignments = {{"gin", "tonic", "vodka", "whiskey", "soda",
-                                                        "tequila"}};
 MockPourStage mockPourStage = MockPourStage::Idle;
 String transientStatusText;
 lv_timer_t* mockPourTimer = nullptr;
@@ -224,8 +208,12 @@ String effectiveStatusText() {
   return "Ready";
 }
 
-bool itemMatchesCategory(const MockMenuItem& item, DrinkCategory category) {
-  return category == DrinkCategory::All || item.category == category;
+DrinkCategory categoryFromItem(const UiRenderDrinkItem& item) {
+  return item.categoryId == "shot" ? DrinkCategory::Shots : DrinkCategory::Drinks;
+}
+
+bool itemMatchesCategory(const UiRenderDrinkItem& item, DrinkCategory category) {
+  return category == DrinkCategory::All || categoryFromItem(item) == category;
 }
 
 const char* ingredientDisplayName(const char* ingredientId) {
@@ -248,51 +236,7 @@ std::size_t ingredientOptionIndex(const char* ingredientId) {
   return 0;
 }
 
-bool isIngredientMapped(const char* ingredientId) {
-  if (ingredientId == nullptr || ingredientId[0] == '\0') {
-    return true;
-  }
 
-  for (const char* mappedIngredientId : pumpAssignments) {
-    if (String(mappedIngredientId) == ingredientId) {
-      return true;
-    }
-  }
-
-  return false;
-}
-
-const MockRecipeDetail* findRecipeDetail(const char* itemId) {
-  if (itemId == nullptr) {
-    return nullptr;
-  }
-
-  for (const auto& detail : kRecipeDetails) {
-    if (String(detail.itemId) == itemId) {
-      return &detail;
-    }
-  }
-
-  return nullptr;
-}
-
-bool isRecipeAvailable(const MockRecipeDetail* recipe) {
-  if (recipe == nullptr) {
-    return false;
-  }
-
-  if (!isIngredientMapped(recipe->alcoholIngredientId)) {
-    return false;
-  }
-
-  for (std::size_t i = 0; i < recipe->mixerCount; ++i) {
-    if (!isIngredientMapped(recipe->mixers[i].id)) {
-      return false;
-    }
-  }
-
-  return true;
-}
 
 void refreshPumpMappingList();
 void refreshVisibleStatus();
@@ -329,30 +273,18 @@ bool backendDrinkAvailable(const char* itemId) {
 
 InternalPourRequest buildPourRequest() {
   InternalPourRequest request {};
-  if (selectedItem == nullptr || selectedRecipe == nullptr) {
+  if (selectedItem == nullptr) {
     return request;
   }
 
   request.itemId = selectedItem->id;
-  request.itemName = selectedItem->name;
-  request.isShot = selectedRecipe->isShot;
+  request.itemName = selectedItem->displayName;
+  request.isShot = false;
   request.alcoholAmountMl = selectedAlcoholAmountMl();
   request.canRouteToBackend =
-      backendKnowsDrink(selectedItem->id) && backendDrinkAvailable(selectedItem->id);
+      backendKnowsDrink(selectedItem->id.c_str()) &&
+      backendDrinkAvailable(selectedItem->id.c_str());
 
-  request.ingredients[0] = {selectedRecipe->alcoholIngredientId, selectedRecipe->alcoholName,
-                            request.alcoholAmountMl, true};
-  request.ingredientCount = 1;
-
-  for (std::size_t i = 0;
-       i < selectedRecipe->mixerCount && request.ingredientCount < request.ingredients.size(); ++i) {
-    request.ingredients[request.ingredientCount] = {selectedRecipe->mixers[i].id,
-                                                    selectedRecipe->mixers[i].name,
-                                                    selectedRecipe->mixers[i].amountMl, false};
-    ++request.ingredientCount;
-  }
-
-  request.estimatedPourTimeSec = estimatePourTimeSeconds();
   return request;
 }
 
@@ -360,6 +292,13 @@ void clearMockPourTimer() {
   if (mockPourTimer != nullptr) {
     lv_timer_delete(mockPourTimer);
     mockPourTimer = nullptr;
+  }
+}
+
+void clearBootTimer() {
+  if (bootTimer != nullptr) {
+    lv_timer_delete(bootTimer);
+    bootTimer = nullptr;
   }
 }
 
@@ -399,18 +338,7 @@ std::uint16_t selectedAlcoholAmountMl() {
 }
 
 std::uint16_t estimatePourTimeSeconds() {
-  if (selectedRecipe == nullptr) {
-    return 0;
-  }
-
-  std::uint32_t totalMl = selectedAlcoholAmountMl();
-  for (std::size_t i = 0; i < selectedRecipe->mixerCount; ++i) {
-    totalMl += selectedRecipe->mixers[i].amountMl;
-  }
-
-  const std::uint32_t placeholderFlowMlPerSecond = 28;
-  return static_cast<std::uint16_t>((totalMl + placeholderFlowMlPerSecond - 1) /
-                                    placeholderFlowMlPerSecond);
+  return 0;
 }
 
 void setScreenVisibility(lv_obj_t* screen, bool visible) {
@@ -534,7 +462,7 @@ lv_obj_t* createActionRow(lv_obj_t* parent, const char* title, const char* subti
 void updateDetailScreen() {
   if (detailTitleLabel != nullptr) {
     lv_label_set_text(detailTitleLabel, selectedItem == nullptr ? "Select a drink"
-                                                                : selectedItem->name);
+                                                                : selectedItem->displayName.c_str());
   }
 
   if (detailStatusLabel != nullptr) {
@@ -547,47 +475,33 @@ void updateDetailScreen() {
                       "Choose alcohol strength only. Mixers stay fixed.");
   }
 
-  if (detailRecipeTitleLabel != nullptr) {
-    lv_label_set_text(detailRecipeTitleLabel, "Recipe");
-  }
-
-  if (detailRecipeAlcoholLabel != nullptr) {
-    String alcoholLine = selectedRecipe == nullptr ? "No recipe selected"
-                                                   : String(selectedRecipe->alcoholName) + " " +
-                                                         selectedAlcoholAmountMl() + " ml";
-    lv_label_set_text(detailRecipeAlcoholLabel, alcoholLine.c_str());
-  }
-
-  for (std::size_t i = 0; i < 3; ++i) {
-    if (detailRecipeMixerLabels[i] == nullptr) {
-      continue;
-    }
-
-    if (selectedRecipe != nullptr && i < selectedRecipe->mixerCount) {
-      String mixerLine = String(selectedRecipe->mixers[i].name) + " " +
-                         selectedRecipe->mixers[i].amountMl + " ml";
-      lv_label_set_text(detailRecipeMixerLabels[i], mixerLine.c_str());
-      lv_obj_remove_flag(detailRecipeMixerLabels[i], LV_OBJ_FLAG_HIDDEN);
-    } else {
-      lv_label_set_text(detailRecipeMixerLabels[i], "");
-      lv_obj_add_flag(detailRecipeMixerLabels[i], LV_OBJ_FLAG_HIDDEN);
-    }
+  if (detailRecipeCard != nullptr) {
+    lv_obj_add_flag(detailRecipeCard, LV_OBJ_FLAG_HIDDEN);
   }
 
   if (detailSummaryLabel != nullptr) {
+    const bool isShot = selectedItem != nullptr && selectedItem->categoryId == "shot";
     String summary = "Alcohol: ";
     summary += strengthMlLabel(selectedStrengthIndex);
-    summary += selectedRecipe != nullptr && selectedRecipe->isShot
-                   ? " | Shot amount only"
-                   : " | Other ingredients stay fixed";
+    summary += isShot ? " | Shot amount only" : " | Mixers stay fixed";
     lv_label_set_text(detailSummaryLabel, summary.c_str());
   }
 
   if (detailEstimatedTimeLabel != nullptr) {
-    String estimate = "Estimated pour time: ";
-    estimate += estimatePourTimeSeconds();
-    estimate += " sec";
-    lv_label_set_text(detailEstimatedTimeLabel, estimate.c_str());
+    lv_label_set_text(detailEstimatedTimeLabel, "Duration driven by hardware.");
+  }
+
+  if (pourButton != nullptr) {
+    const bool available = selectedItem != nullptr &&
+                           (!backendKnowsDrink(selectedItem->id.c_str()) ||
+                            backendDrinkAvailable(selectedItem->id.c_str()));
+    lv_obj_set_style_bg_color(
+        pourButton, available ? lv_color_hex(0xF4B662) : lv_color_hex(0x3A4048), 0);
+    if (available) {
+      lv_obj_clear_state(pourButton, LV_STATE_DISABLED);
+    } else {
+      lv_obj_add_state(pourButton, LV_STATE_DISABLED);
+    }
   }
 
   for (std::uint8_t i = 0; i < 3; ++i) {
@@ -624,23 +538,24 @@ void rebuildMenuGrid() {
   menuEmptyLabel = nullptr;
 
   std::size_t visibleCount = 0;
-  for (const auto& item : kMockItems) {
+  for (std::size_t i = 0; i < currentModel.drinkCount && i < currentModel.drinks.size(); ++i) {
+    const auto& item = currentModel.drinks[i];
     if (!itemMatchesCategory(item, activeCategory)) {
       continue;
     }
 
-    const MockRecipeDetail* recipe = findRecipeDetail(item.id);
-    if (!isRecipeAvailable(recipe)) {
+    if (!item.available) {
       continue;
     }
 
     ++visibleCount;
+    const DrinkCategory itemCategory = categoryFromItem(item);
 
     lv_obj_t* card = lv_button_create(menuGrid);
     lv_obj_set_size(card, 290, 108);
     lv_obj_set_style_radius(card, 24, 0);
     lv_obj_set_style_bg_color(
-        card, item.category == DrinkCategory::Shots ? lv_color_hex(0x2A2318) : lv_color_hex(0x222934), 0);
+        card, itemCategory == DrinkCategory::Shots ? lv_color_hex(0x2A2318) : lv_color_hex(0x222934), 0);
     lv_obj_set_style_border_color(card, lv_color_hex(0xFFFFFF), 0);
     lv_obj_set_style_border_opa(card, LV_OPA_10, 0);
     lv_obj_set_style_border_width(card, 2, 0);
@@ -655,27 +570,26 @@ void rebuildMenuGrid() {
     lv_obj_add_event_cb(
         card,
         [](lv_event_t* event) {
-          selectedItem = static_cast<const MockMenuItem*>(lv_event_get_user_data(event));
-          selectedRecipe = findRecipeDetail(selectedItem == nullptr ? nullptr : selectedItem->id);
+          selectedItem = static_cast<const UiRenderDrinkItem*>(lv_event_get_user_data(event));
           selectedStrengthIndex = 1;
-          if (selectedItem != nullptr && backendKnowsDrink(selectedItem->id) &&
-              backendDrinkAvailable(selectedItem->id)) {
-            ui_trigger_select_drink(selectedItem->id);
+          if (selectedItem != nullptr && selectedItem->available) {
+            ui_trigger_select_drink(selectedItem->id.c_str());
           }
           updateDetailScreen();
           showView(ScreenView::DrinkDetail);
         },
-        LV_EVENT_CLICKED, const_cast<MockMenuItem*>(&item));
+        LV_EVENT_CLICKED, &currentModel.drinks[i]);
 
     lv_obj_t* nameLabel = lv_label_create(card);
-    lv_label_set_text(nameLabel, item.name);
+    lv_label_set_text(nameLabel, item.displayName.c_str());
     lv_obj_set_style_text_color(
-        nameLabel, item.category == DrinkCategory::Shots ? lv_color_hex(0xF6C47A) : lv_color_hex(0xF4F6F8), 0);
+        nameLabel, itemCategory == DrinkCategory::Shots ? lv_color_hex(0xF6C47A) : lv_color_hex(0xF4F6F8), 0);
 
     lv_obj_t* subtitleLabel = lv_label_create(card);
-    lv_label_set_text(subtitleLabel, item.subtitle);
+    lv_label_set_text(subtitleLabel, item.subtitle.isEmpty() ? item.availabilityText.c_str()
+                                                             : item.subtitle.c_str());
     lv_obj_set_style_text_color(
-        subtitleLabel, item.category == DrinkCategory::Shots ? lv_color_hex(0xB58E59) : lv_color_hex(0x95A2B3), 0);
+        subtitleLabel, itemCategory == DrinkCategory::Shots ? lv_color_hex(0xB58E59) : lv_color_hex(0x95A2B3), 0);
   }
 
   if (visibleCount == 0) {
@@ -745,6 +659,7 @@ void animateBootLogo() {
 
 void handleSettingsButton(lv_event_t* event) {
   (void)event;
+  ui_trigger_admin_opened();
   showView(ScreenView::Settings);
 }
 
@@ -790,32 +705,14 @@ void handleStrengthSelect(lv_event_t* event) {
 
 void handlePourAction(lv_event_t* event) {
   (void)event;
-  if (selectedItem == nullptr || selectedRecipe == nullptr) {
-    transientStatusText = "Select a drink before pouring.";
-    mockPourStage = MockPourStage::Idle;
-    refreshVisibleStatus();
+  if (selectedItem == nullptr || selectedItem->id.isEmpty()) {
     return;
   }
 
-  activePourRequest = buildPourRequest();
-  hasActivePourRequest = true;
-  clearMockPourTimer();
-
-  if (activePourRequest.canRouteToBackend) {
-    // Backend-owned drinks continue through the existing bridge/controller hook.
-    // UI-owned mock items still use the same request model, but stay simulated until
-    // the real recipe catalog and pump execution are fully aligned.
-    ui_trigger_select_drink(selectedItem->id);
-    ui_trigger_start_selected_drink();
-  }
-
-  mockPourStage = MockPourStage::Pouring;
-  transientStatusText = String("Pouring ") + activePourRequest.itemName + "...";
-  refreshVisibleStatus();
-
-  const std::uint32_t durationMs =
-      static_cast<std::uint32_t>(activePourRequest.estimatedPourTimeSec) * 250U + 600U;
-  mockPourTimer = lv_timer_create(handleMockPourTimer, durationMs, nullptr);
+  // The backend owns availability, start status, and pour timing.
+  // We simply pass the action down through the generated UI bridge.
+  ui_trigger_select_drink(selectedItem->id.c_str());
+  ui_trigger_start_selected_drink(selectedAlcoholAmountMl());
 }
 
 void openSettingsSubview(SettingsSubview subview) {
@@ -840,13 +737,15 @@ void handleOpenServiceMode(lv_event_t* event) {
 
 void handlePrimePumps(lv_event_t* event) {
   (void)event;
-  settingsStatusMessage = "Prime Pumps simulated in mock mode.";
+  settingsStatusMessage = "";
+  ui_trigger_prime_pumps();
   refreshSettingsScreen();
 }
 
 void handleFlushCleaning(lv_event_t* event) {
   (void)event;
-  settingsStatusMessage = "Flush / Cleaning simulated in mock mode.";
+  settingsStatusMessage = "";
+  ui_trigger_flush_cleaning();
   refreshSettingsScreen();
 }
 
@@ -868,26 +767,14 @@ void handleSaveSettings(lv_event_t* event) {
 void handleCyclePumpAssignment(lv_event_t* event) {
   const std::size_t pumpIndex = static_cast<std::size_t>(
       reinterpret_cast<std::uintptr_t>(lv_event_get_user_data(event)));
-  if (pumpIndex >= pumpAssignments.size()) {
+  if (pumpIndex >= currentModel.pumpAssignments.size()) {
     return;
   }
 
-  const std::size_t currentIndex = ingredientOptionIndex(pumpAssignments[pumpIndex]);
-  const std::size_t nextIndex = (currentIndex + 1) % kIngredientOptionCount;
-  pumpAssignments[pumpIndex] = kIngredientOptions[nextIndex].id;
-
-  settingsDirty = true;
-  settingsStatusMessage = String("Pump ") + (pumpIndex + 1) + " set to " +
-                          ingredientDisplayName(pumpAssignments[pumpIndex]) + ".";
-
-  if (selectedRecipe != nullptr && !isRecipeAvailable(selectedRecipe)) {
-    selectedItem = nullptr;
-    selectedRecipe = nullptr;
-  }
-
-  refreshPumpMappingList();
-  refreshMenuScreen();
-  updateDetailScreen();
+  ui_trigger_pump_assignment_edited(static_cast<std::uint8_t>(pumpIndex), "__CYCLE__",
+                                    "", false);
+  settingsDirty = false;
+  settingsStatusMessage = "Pump assignment updated.";
   refreshSettingsScreen();
 }
 
@@ -928,7 +815,7 @@ void refreshPumpMappingList() {
     return;
   }
 
-  for (std::size_t i = 0; i < pumpAssignments.size(); ++i) {
+  for (std::size_t i = 0; i < currentModel.pumpAssignments.size(); ++i) {
     if (pumpMappingValueLabels[i] == nullptr) {
       continue;
     }
@@ -936,7 +823,9 @@ void refreshPumpMappingList() {
     String rowText = "Pump ";
     rowText += (i + 1);
     rowText += "  ";
-    rowText += ingredientDisplayName(pumpAssignments[i]);
+    rowText += currentModel.pumpAssignments[i].ingredientDisplayName.isEmpty()
+                   ? String("Unassigned")
+                   : currentModel.pumpAssignments[i].ingredientDisplayName;
     lv_label_set_text(pumpMappingValueLabels[i], rowText.c_str());
   }
 }
@@ -1212,7 +1101,8 @@ void buildSettingsScreen() {
   lv_obj_set_style_pad_row(settingsMainList, 10, 0);
   lv_obj_set_layout(settingsMainList, LV_LAYOUT_FLEX);
   lv_obj_set_flex_flow(settingsMainList, LV_FLEX_FLOW_COLUMN);
-  lv_obj_set_flex_align(settingsMainList, LV_FLEX_ALIGN_START, LV_FLEX_ALIGN_START, LV_FLEX_ALIGN_STRETCH);
+  lv_obj_set_flex_align(settingsMainList, LV_FLEX_ALIGN_START, LV_FLEX_ALIGN_START,
+                        LV_FLEX_ALIGN_START);
   lv_obj_align_to(settingsMainList, settingsStatusLabel, LV_ALIGN_OUT_BOTTOM_LEFT, 0, 18);
 
   createActionRow(settingsMainList, "Pump Mapping", "Assign ingredients to pump channels",
@@ -1286,9 +1176,9 @@ void buildSettingsScreen() {
   lv_obj_set_layout(pumpMappingList, LV_LAYOUT_FLEX);
   lv_obj_set_flex_flow(pumpMappingList, LV_FLEX_FLOW_COLUMN);
   lv_obj_set_flex_align(pumpMappingList, LV_FLEX_ALIGN_START, LV_FLEX_ALIGN_START,
-                        LV_FLEX_ALIGN_STRETCH);
+                        LV_FLEX_ALIGN_START);
 
-  for (std::size_t i = 0; i < pumpAssignments.size(); ++i) {
+  for (std::size_t i = 0; i < currentModel.pumpAssignments.size(); ++i) {
     lv_obj_t* row = lv_button_create(pumpMappingList);
     lv_obj_set_width(row, LV_PCT(100));
     lv_obj_set_height(row, 58);
@@ -1330,21 +1220,31 @@ void buildUiSkeleton() {
   buildMenuScreen();
   buildDetailScreen();
   buildSettingsScreen();
+
+  previewModeBadge = lv_label_create(rootScreen);
+  lv_label_set_text(previewModeBadge, "Preview Mode");
+  lv_obj_set_style_text_color(previewModeBadge, lv_color_hex(0x95A2B3), 0);
+  lv_obj_set_style_bg_color(previewModeBadge, lv_color_hex(0x202630), 0);
+  lv_obj_set_style_bg_opa(previewModeBadge, LV_OPA_80, 0);
+  lv_obj_set_style_radius(previewModeBadge, 12, 0);
+  lv_obj_set_style_pad_left(previewModeBadge, 10, 0);
+  lv_obj_set_style_pad_right(previewModeBadge, 10, 0);
+  lv_obj_set_style_pad_top(previewModeBadge, 4, 0);
+  lv_obj_set_style_pad_bottom(previewModeBadge, 4, 0);
+  lv_obj_align(previewModeBadge, LV_ALIGN_TOP_RIGHT, -14, 16);
+  setObjectVisibility(previewModeBadge, previewModeEnabled);
 }
 
-}  // namespace
-
-void ui_init() {
+void initializeUi(bool startInPreviewMenu) {
   currentModel = UiRenderModel {};
   currentModel.headerTitle = "Tipsy";
   currentModel.statusText = "Ready";
   currentModel.primaryActionLabel = "Pour";
+  currentModel.headerSubtitle = startInPreviewMenu ? "Preview Mode" : "";
 
   activeCategory = DrinkCategory::All;
   selectedItem = nullptr;
-  selectedRecipe = nullptr;
   selectedStrengthIndex = 1;
-  pumpAssignments = {{"gin", "tonic", "vodka", "whiskey", "soda", "tequila"}};
   currentSettingsSubview = SettingsSubview::Main;
   settingsDirty = false;
   adminLockEnabled = false;
@@ -1352,21 +1252,39 @@ void ui_init() {
   mockPourStage = MockPourStage::Idle;
   transientStatusText = "";
   hasActivePourRequest = false;
+  previewModeEnabled = startInPreviewMenu;
+  clearBootTimer();
   clearMockPourTimer();
 
   buildUiSkeleton();
   refreshMenuScreen();
   updateDetailScreen();
-  showView(ScreenView::Boot);
   lv_screen_load(rootScreen);
-  animateBootLogo();
-  bootTimer = lv_timer_create(handleBootTimer, 1200, nullptr);
+
+  if (startInPreviewMenu) {
+    showView(ScreenView::MainMenu);
+  } else {
+    showView(ScreenView::Boot);
+    animateBootLogo();
+    bootTimer = lv_timer_create(handleBootTimer, 1200, nullptr);
+  }
+}
+
+}  // namespace
+
+void ui_init() {
+  initializeUi(false);
+}
+
+void ui_init_preview_main_menu() {
+  initializeUi(true);
 }
 
 void ui_apply_model(const UiRenderModel& model) {
   currentModel = model;
   refreshMenuScreen();
   updateDetailScreen();
+  refreshSettingsScreen();
 }
 
 const UiRenderModel& ui_current_model() {
@@ -1381,15 +1299,57 @@ void ui_bind_start_selected_drink(StartSelectedDrinkCallback callback) {
   startSelectedDrinkCallback = callback;
 }
 
+void ui_bind_admin_opened(AdminOpenedCallback callback) {
+  adminOpenedCallback = callback;
+}
+
+void ui_bind_prime_pumps(PrimePumpsCallback callback) {
+  primePumpsCallback = callback;
+}
+
+void ui_bind_flush_cleaning(FlushCleaningCallback callback) {
+  flushCleaningCallback = callback;
+}
+
+void ui_bind_pump_assignment_edited(PumpAssignmentEditedCallback callback) {
+  pumpAssignmentEditedCallback = callback;
+}
+
 void ui_trigger_select_drink(const char* drinkId) {
   if (drinkSelectedCallback != nullptr && drinkId != nullptr) {
     drinkSelectedCallback(drinkId);
   }
 }
 
-void ui_trigger_start_selected_drink() {
+void ui_trigger_start_selected_drink(std::uint16_t alcoholAmountMl) {
   if (startSelectedDrinkCallback != nullptr) {
-    startSelectedDrinkCallback();
+    startSelectedDrinkCallback(alcoholAmountMl);
+  }
+}
+
+void ui_trigger_admin_opened() {
+  if (adminOpenedCallback != nullptr) {
+    adminOpenedCallback();
+  }
+}
+
+void ui_trigger_prime_pumps() {
+  if (primePumpsCallback != nullptr) {
+    primePumpsCallback();
+  }
+}
+
+void ui_trigger_flush_cleaning() {
+  if (flushCleaningCallback != nullptr) {
+    flushCleaningCallback();
+  }
+}
+
+void ui_trigger_pump_assignment_edited(std::uint8_t pumpIndex, const char* ingredientId,
+                                       const char* ingredientDisplayName, bool enabled) {
+  if (pumpAssignmentEditedCallback != nullptr && ingredientId != nullptr &&
+      ingredientDisplayName != nullptr) {
+    pumpAssignmentEditedCallback(pumpIndex, ingredientId, ingredientDisplayName, enabled);
   }
 }
 
@@ -1419,7 +1379,7 @@ String ui_debug_screen_text() {
 
   if (selectedItem != nullptr) {
     text += "Selected item: ";
-    text += selectedItem->name;
+    text += selectedItem->displayName;
     text += "\n";
     text += "Alcohol strength: ";
     text += strengthClLabel(selectedStrengthIndex);

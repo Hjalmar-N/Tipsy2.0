@@ -1,0 +1,124 @@
+Processing esp32-s3-devkitc-1 (platform: espressif32; board: esp32-s3-devkitc-1; framework: arduino)
+--------------------------------------------------------------------------------
+Verbose mode can be enabled via `-v, --verbose` option
+CONFIGURATION: https://docs.platformio.org/page/boards/espressif32/esp32-s3-devkitc-1.html
+PLATFORM: Espressif 32 (6.13.0) > Espressif ESP32-S3-DevKitC-1-N8 (8 MB QD, No PSRAM)
+HARDWARE: ESP32S3 240MHz, 320KB RAM, 8MB Flash
+DEBUG: Current (esp-builtin) On-board (esp-builtin) External (cmsis-dap, esp-bridge, esp-prog, iot-bus-jtag, jlink, minimodule, olimex-arm-usb-ocd, olimex-arm-usb-ocd-h, olimex-arm-usb-tiny-h, olimex-jtag-tiny, tumpa)
+PACKAGES: 
+ - framework-arduinoespressif32 @ 3.20017.241212+sha.dcc1105b 
+ - tool-esptoolpy @ 2.41100.0 (4.11.0) 
+ - tool-mkfatfs @ 2.0.1 
+ - tool-mklittlefs @ 1.203.210628 (2.3) 
+ - tool-mkspiffs @ 2.230.0 (2.30) 
+ - toolchain-riscv32-esp @ 8.4.0+2021r2-patch5 
+ - toolchain-xtensa-esp32s3 @ 8.4.0+2021r2-patch5
+LDF: Library Dependency Finder -> https://bit.ly/configure-pio-ldf
+LDF Modes: Finder ~ chain, Compatibility ~ soft
+Found 36 compatible libraries
+Scanning dependencies...
+Dependency Graph
+|-- lvgl @ 9.5.0
+|-- GFX Library for Arduino @ 1.4.6
+|-- Wire @ 2.0.0
+|-- ArduinoJson @ 6.21.6
+|-- LittleFS @ 2.0.0
+Building in release mode
+Retrieving maximum program size .pio\build\esp32-s3-devkitc-1\firmware.elf
+Checking size .pio\build\esp32-s3-devkitc-1\firmware.elf
+Advanced Memory Usage is available via "PlatformIO Home > Project Inspect"
+RAM:   [====      ]  40.1% (used 131444 bytes from 327680 bytes)
+Flash: [===       ]  28.4% (used 950857 bytes from 3342336 bytes)
+Configuring upload protocol...
+AVAILABLE: cmsis-dap, esp-bridge, esp-builtin, esp-prog, espota, esptool, iot-bus-jtag, jlink, minimodule, olimex-arm-usb-ocd, olimex-arm-usb-ocd-h, olimex-arm-usb-tiny-h, olimex-jtag-tiny, tumpa
+CURRENT: upload_protocol = esptool
+Looking for upload port...
+Using manually specified: COM5
+Uploading .pio\build\esp32-s3-devkitc-1\firmware.bin
+esptool.py v4.11.0
+Serial port COM5
+Connecting...
+Chip is ESP32-S3 (QFN56) (revision v0.2)
+Features: WiFi, BLE, Embedded PSRAM 8MB (AP_3v3)
+Crystal is 40MHz
+USB mode: USB-Serial/JTAG
+MAC: 1c:db:d4:79:87:10
+Uploading stub...
+Running stub...
+Stub running...
+Changing baud rate to 460800
+Changed.
+Configuring flash size...
+Flash will be erased from 0x00000000 to 0x00003fff...
+Flash will be erased from 0x00008000 to 0x00008fff...
+Flash will be erased from 0x0000e000 to 0x0000ffff...
+Flash will be erased from 0x00010000 to 0x000f8fff...
+SHA digest in image updated
+Compressed 15104 bytes to 10431...
+Writing at 0x00000000... (100 %)
+Wrote 15104 bytes (10431 compressed) at 0x00000000 in 0.1 seconds (effective 818.6 kbit/s)...
+Hash of data verified.
+Compressed 3072 bytes to 146...
+Writing at 0x00008000... (100 %)
+Wrote 3072 bytes (146 compressed) at 0x00008000 in 0.0 seconds (effective 914.2 kbit/s)...
+Hash of data verified.
+Compressed 8192 bytes to 49...
+Writing at 0x0000e000... (100 %)
+Wrote 8192 bytes (49 compressed) at 0x0000e000 in 0.1 seconds (effective 1256.4 kbit/s)...
+Hash of data verified.
+Compressed 951216 bytes to 548103...
+Writing at 0x00010000... (2 %)
+Writing at 0x0001824b... (5 %)
+Writing at 0x000255e2... (8 %)
+Writing at 0x000313ed... (11 %)
+Writing at 0x00042938... (14 %)
+Writing at 0x00048945... (17 %)
+Writing at 0x0004ef64... (20 %)
+Writing at 0x000547cc... (23 %)
+Writing at 0x00059a93... (26 %)
+Writing at 0x0005ec01... (29 %)
+Writing at 0x00064810... (32 %)
+Writing at 0x000696f6... (35 %)
+Writing at 0x0006e946... (38 %)
+Writing at 0x00073af8... (41 %)
+Writing at 0x000788db... (44 %)
+Writing at 0x0007e6cd... (47 %)
+Writing at 0x000847c0... (50 %)
+Writing at 0x0008ab39... (52 %)
+Writing at 0x00090777... (55 %)
+Writing at 0x0009611a... (58 %)
+Writing at 0x0009b90e... (61 %)
+Writing at 0x000a0a44... (64 %)
+Writing at 0x000a5ac7... (67 %)
+Writing at 0x000ac075... (70 %)
+Writing at 0x000b56ec... (73 %)
+Writing at 0x000bc618... (76 %)
+Writing at 0x000c413d... (79 %)
+Writing at 0x000ca2e3... (82 %)
+Writing at 0x000d24ef... (85 %)
+Writing at 0x000d8dfc... (88 %)
+Writing at 0x000e1553... (91 %)
+Writing at 0x000eaa82... (94 %)
+Writing at 0x000effb1... (97 %)
+Writing at 0x000f5a66... (100 %)
+Wrote 951216 bytes (548103 compressed) at 0x00010000 in 4.9 seconds (effective 1543.2 kbit/s)...
+Hash of data verified.
+
+Leaving...
+Hard resetting via RTS pin...
+
+Please build project in debug configuration to get more details about an exception.
+See https://docs.platformio.org/page/projectconf/build_configurations.html
+
+
+--- Terminal on COM5 | 115200 8-N-1
+--- Available filters and text transformations: debug, default, direct, esp32_exception_decoder, hexlify, log2file, nocontrol, printable, send_on_enter, time
+--- More details at https://bit.ly/pio-monitor-filters
+--- Quit: Ctrl+C | Menu: Ctrl+T | Help: Ctrl+T followed by Ctrl+H
+[  3448][E][Wire.cpp:513] requestFrom(): i2cRead returned Error -1
+======================== [SUCCESS] Took 139.25 seconds ========================
+
+Environment         Status    Duration
+------------------  --------  ------------
+esp32-s3-devkitc-1  SUCCESS   00:02:19.255
+========================= 1 succeeded in 00:02:19.255 =========================

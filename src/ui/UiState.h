@@ -8,6 +8,7 @@
 #include "app/models/MachineStatus.h"
 #include "config/AppConfig.h"
 #include "ui/UiDrinkItem.h"
+#include "ui/UiPumpAssignmentItem.h"
 
 namespace tipsy::ui {
 
@@ -21,6 +22,7 @@ struct UiState {
   bool adminOpen = false;
   std::array<UiDrinkItem, tipsy::config::kMaxDrinkCount> drinks {};
   std::size_t drinkCount = 0;
+  std::array<UiPumpAssignmentItem, tipsy::config::kPumpCount> pumpAssignments {};
 };
 
 }  // namespace tipsy::ui

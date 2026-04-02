@@ -6,6 +6,12 @@
 
 namespace tipsy::app {
 
+namespace {
+
+constexpr size_t kRecipeDocCapacity = 8192;
+
+}  // namespace
+
 RecipeService::RecipeService(tipsy::storage::JsonStorage& jsonStorage) : jsonStorage_(jsonStorage) {}
 
 bool RecipeService::load() {
@@ -13,7 +19,7 @@ bool RecipeService::load() {
     return false;
   }
 
-  DynamicJsonDocument doc(4096);
+  DynamicJsonDocument doc(kRecipeDocCapacity);
   if (!jsonStorage_.readJson(tipsy::storage::paths::kDrinks, doc)) {
     lastError_ = jsonStorage_.lastError();
     return false;
@@ -23,7 +29,7 @@ bool RecipeService::load() {
 }
 
 bool RecipeService::save() {
-  DynamicJsonDocument doc(4096);
+  DynamicJsonDocument doc(kRecipeDocCapacity);
   doc["schemaVersion"] = 1;
   JsonArray drinks = doc.createNestedArray("drinks");
   serializeRecipes(drinks);
@@ -89,7 +95,7 @@ void RecipeService::loadDefaults() {
   recipes_[0].enabled = true;
   recipes_[0].visibleInMenu = true;
   recipes_[0].sortOrder = 10;
-  recipes_[0].addIngredient({"gin", 50.0F});
+  recipes_[0].addIngredient({"gin", 60.0F, false, true});
   recipes_[0].addIngredient({"tonic", 150.0F});
 
   recipes_[1].id = "vodka_soda";
@@ -99,7 +105,7 @@ void RecipeService::loadDefaults() {
   recipes_[1].enabled = true;
   recipes_[1].visibleInMenu = true;
   recipes_[1].sortOrder = 20;
-  recipes_[1].addIngredient({"vodka", 50.0F});
+  recipes_[1].addIngredient({"vodka", 60.0F, false, true});
   recipes_[1].addIngredient({"soda", 150.0F});
 
   recipes_[2].id = "rum_cola";
@@ -109,7 +115,7 @@ void RecipeService::loadDefaults() {
   recipes_[2].enabled = true;
   recipes_[2].visibleInMenu = true;
   recipes_[2].sortOrder = 30;
-  recipes_[2].addIngredient({"rum", 50.0F});
+  recipes_[2].addIngredient({"rum", 60.0F, false, true});
   recipes_[2].addIngredient({"cola", 150.0F});
 
   recipes_[3].id = "tequila_sunrise";
@@ -119,7 +125,7 @@ void RecipeService::loadDefaults() {
   recipes_[3].enabled = true;
   recipes_[3].visibleInMenu = true;
   recipes_[3].sortOrder = 40;
-  recipes_[3].addIngredient({"tequila", 45.0F});
+  recipes_[3].addIngredient({"tequila", 60.0F, false, true});
   recipes_[3].addIngredient({"orange_juice", 120.0F});
   recipes_[3].addIngredient({"grenadine", 15.0F});
 
@@ -130,14 +136,75 @@ void RecipeService::loadDefaults() {
   recipes_[4].enabled = true;
   recipes_[4].visibleInMenu = true;
   recipes_[4].sortOrder = 50;
-  recipes_[4].addIngredient({"vodka", 50.0F});
+  recipes_[4].addIngredient({"vodka", 60.0F, false, true});
   recipes_[4].addIngredient({"orange_juice", 150.0F});
 
-  recipeCount_ = 5;
+  recipes_[5].id = "mojito";
+  recipes_[5].displayName = "Mojito";
+  recipes_[5].categoryId = "signature";
+  recipes_[5].description = "Rum with mint, soda, and lime.";
+  recipes_[5].enabled = true;
+  recipes_[5].visibleInMenu = true;
+  recipes_[5].sortOrder = 60;
+  recipes_[5].addIngredient({"rum", 60.0F, false, true});
+  recipes_[5].addIngredient({"mint_mix", 120.0F});
+  recipes_[5].addIngredient({"soda", 80.0F});
+  recipes_[5].addIngredient({"lime", 20.0F});
+
+  recipes_[6].id = "whiskey_sour";
+  recipes_[6].displayName = "Whiskey Sour";
+  recipes_[6].categoryId = "signature";
+  recipes_[6].description = "Whiskey with sour mix and lime.";
+  recipes_[6].enabled = true;
+  recipes_[6].visibleInMenu = true;
+  recipes_[6].sortOrder = 70;
+  recipes_[6].addIngredient({"whiskey", 60.0F, false, true});
+  recipes_[6].addIngredient({"sour_mix", 90.0F});
+  recipes_[6].addIngredient({"lime", 20.0F});
+
+  recipes_[7].id = "margarita";
+  recipes_[7].displayName = "Margarita";
+  recipes_[7].categoryId = "signature";
+  recipes_[7].description = "Tequila with citrus mix and lime.";
+  recipes_[7].enabled = true;
+  recipes_[7].visibleInMenu = true;
+  recipes_[7].sortOrder = 80;
+  recipes_[7].addIngredient({"tequila", 60.0F, false, true});
+  recipes_[7].addIngredient({"citrus_mix", 80.0F});
+  recipes_[7].addIngredient({"lime", 20.0F});
+
+  recipes_[8].id = "tequila_shot";
+  recipes_[8].displayName = "Tequila Shot";
+  recipes_[8].categoryId = "shot";
+  recipes_[8].description = "Straight tequila shot.";
+  recipes_[8].enabled = true;
+  recipes_[8].visibleInMenu = true;
+  recipes_[8].sortOrder = 90;
+  recipes_[8].addIngredient({"tequila", 60.0F, false, true});
+
+  recipes_[9].id = "vodka_shot";
+  recipes_[9].displayName = "Vodka Shot";
+  recipes_[9].categoryId = "shot";
+  recipes_[9].description = "Straight vodka shot.";
+  recipes_[9].enabled = true;
+  recipes_[9].visibleInMenu = true;
+  recipes_[9].sortOrder = 100;
+  recipes_[9].addIngredient({"vodka", 60.0F, false, true});
+
+  recipes_[10].id = "whiskey_shot";
+  recipes_[10].displayName = "Whiskey Shot";
+  recipes_[10].categoryId = "shot";
+  recipes_[10].description = "Straight whiskey shot.";
+  recipes_[10].enabled = true;
+  recipes_[10].visibleInMenu = true;
+  recipes_[10].sortOrder = 110;
+  recipes_[10].addIngredient({"whiskey", 60.0F, false, true});
+
+  recipeCount_ = 11;
 }
 
 bool RecipeService::ensureDefaultFile() {
-  DynamicJsonDocument doc(4096);
+  DynamicJsonDocument doc(kRecipeDocCapacity);
   doc["schemaVersion"] = 1;
   JsonArray drinks = doc.createNestedArray("drinks");
   loadDefaults();
@@ -170,7 +237,8 @@ bool RecipeService::parseRecipes(const JsonArrayConst& drinksArray) {
     for (JsonObjectConst ingredient : ingredients) {
       recipe.addIngredient({ingredient["ingredientId"] | "",
                             ingredient["amountMl"] | 0.0F,
-                            ingredient["optional"] | false});
+                            ingredient["optional"] | false,
+                            ingredient["isAlcohol"] | false});
     }
 
     if (!recipe.isValid()) {
@@ -204,6 +272,7 @@ void RecipeService::serializeRecipes(JsonArray drinksArray) const {
       ingredient["ingredientId"] = recipe.ingredients[j].ingredientId;
       ingredient["amountMl"] = recipe.ingredients[j].amountMl;
       ingredient["optional"] = recipe.ingredients[j].optional;
+      ingredient["isAlcohol"] = recipe.ingredients[j].isAlcohol;
     }
   }
 }

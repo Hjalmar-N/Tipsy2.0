@@ -1,0 +1,156 @@
+Processing esp32-s3-devkitc-1 (platform: espressif32; board: esp32-s3-devkitc-1; framework: arduino)
+--------------------------------------------------------------------------------
+Verbose mode can be enabled via `-v, --verbose` option
+CONFIGURATION: https://docs.platformio.org/page/boards/espressif32/esp32-s3-devkitc-1.html
+PLATFORM: Espressif 32 (6.13.0) > Espressif ESP32-S3-DevKitC-1-N8 (8 MB QD, No PSRAM)
+HARDWARE: ESP32S3 240MHz, 320KB RAM, 8MB Flash
+DEBUG: Current (esp-builtin) On-board (esp-builtin) External (cmsis-dap, esp-bridge, esp-prog, iot-bus-jtag, jlink, minimodule, olimex-arm-usb-ocd, olimex-arm-usb-ocd-h, olimex-arm-usb-tiny-h, olimex-jtag-tiny, tumpa)
+PACKAGES: 
+ - framework-arduinoespressif32 @ 3.20017.241212+sha.dcc1105b 
+ - tool-esptoolpy @ 2.41100.0 (4.11.0) 
+ - tool-mkfatfs @ 2.0.1 
+ - tool-mklittlefs @ 1.203.210628 (2.3) 
+ - tool-mkspiffs @ 2.230.0 (2.30) 
+ - toolchain-riscv32-esp @ 8.4.0+2021r2-patch5 
+ - toolchain-xtensa-esp32s3 @ 8.4.0+2021r2-patch5
+LDF: Library Dependency Finder -> https://bit.ly/configure-pio-ldf
+LDF Modes: Finder ~ chain, Compatibility ~ soft
+Found 36 compatible libraries
+Scanning dependencies...
+Dependency Graph
+|-- lvgl @ 9.5.0
+|-- GFX Library for Arduino @ 1.4.6
+|-- Wire @ 2.0.0
+|-- ArduinoJson @ 6.21.6
+|-- LittleFS @ 2.0.0
+Building in release mode
+Compiling .pio\build\esp32-s3-devkitc-1\src\main.cpp.o
+In file included from .pio/libdeps/esp32-s3-devkitc-1/lvgl/src/lv_init.h:16,
+                 from .pio/libdeps/esp32-s3-devkitc-1/lvgl/lvgl.h:21,
+                 from src/ui/UiManager.h:5,
+                 from src/app/Application.h:11,
+                 from src/main.cpp:4:
+.pio/libdeps/esp32-s3-devkitc-1/lvgl/src/lv_conf_internal.h:77:120: note: #pragma message: Possible failure to include lv_conf.h, please read the comment in this file if you get errors
+         #pragma message("Possible failure to include lv_conf.h, please read the comment in this file if you get errors")
+                                                                                                                        ^
+Linking .pio\build\esp32-s3-devkitc-1\firmware.elf
+Retrieving maximum program size .pio\build\esp32-s3-devkitc-1\firmware.elf
+Checking size .pio\build\esp32-s3-devkitc-1\firmware.elf
+Advanced Memory Usage is available via "PlatformIO Home > Project Inspect"
+RAM:   [====      ]  40.1% (used 131452 bytes from 327680 bytes)
+Flash: [===       ]  28.4% (used 950465 bytes from 3342336 bytes)
+Building .pio\build\esp32-s3-devkitc-1\firmware.bin
+esptool.py v4.11.0
+Creating esp32s3 image...
+Merged 2 ELF sections
+Successfully created esp32s3 image.
+Configuring upload protocol...
+AVAILABLE: cmsis-dap, esp-bridge, esp-builtin, esp-prog, espota, esptool, iot-bus-jtag, jlink, minimodule, olimex-arm-usb-ocd, olimex-arm-usb-ocd-h, olimex-arm-usb-tiny-h, olimex-jtag-tiny, tumpa
+CURRENT: upload_protocol = esptool
+Looking for upload port...
+Using manually specified: COM5
+Uploading .pio\build\esp32-s3-devkitc-1\firmware.bin
+esptool.py v4.11.0
+Serial port COM5
+Connecting...
+Chip is ESP32-S3 (QFN56) (revision v0.2)
+Features: WiFi, BLE, Embedded PSRAM 8MB (AP_3v3)
+Crystal is 40MHz
+USB mode: USB-Serial/JTAG
+MAC: 1c:db:d4:79:87:10
+Uploading stub...
+Running stub...
+Stub running...
+Changing baud rate to 460800
+Changed.
+Configuring flash size...
+Flash will be erased from 0x00000000 to 0x00003fff...
+Flash will be erased from 0x00008000 to 0x00008fff...
+Flash will be erased from 0x0000e000 to 0x0000ffff...
+Flash will be erased from 0x00010000 to 0x000f8fff...
+SHA digest in image updated
+Compressed 15104 bytes to 10431...
+Writing at 0x00000000... (100 %)
+Wrote 15104 bytes (10431 compressed) at 0x00000000 in 0.1 seconds (effective 821.5 kbit/s)...
+Hash of data verified.
+Compressed 3072 bytes to 146...
+Writing at 0x00008000... (100 %)
+Wrote 3072 bytes (146 compressed) at 0x00008000 in 0.0 seconds (effective 911.0 kbit/s)...
+Hash of data verified.
+Compressed 8192 bytes to 49...
+Writing at 0x0000e000... (100 %)
+Wrote 8192 bytes (49 compressed) at 0x0000e000 in 0.1 seconds (effective 1195.6 kbit/s)...
+Hash of data verified.
+Compressed 950832 bytes to 547946...
+Writing at 0x00010000... (2 %)
+Writing at 0x00018241... (5 %)
+Writing at 0x00025569... (8 %)
+Writing at 0x0003146d... (11 %)
+Writing at 0x00042964... (14 %)
+Writing at 0x00048941... (17 %)
+Writing at 0x0004ef43... (20 %)
+Writing at 0x0005479f... (23 %)
+Writing at 0x00059a51... (26 %)
+Writing at 0x0005ebbf... (29 %)
+Writing at 0x000647bf... (32 %)
+Writing at 0x000696b9... (35 %)
+Writing at 0x0006e901... (38 %)
+Writing at 0x00073abd... (41 %)
+Writing at 0x000788a1... (44 %)
+Writing at 0x0007e691... (47 %)
+Writing at 0x00084776... (50 %)
+Writing at 0x0008aaef... (52 %)
+Writing at 0x000906fc... (55 %)
+Writing at 0x000960b5... (58 %)
+Writing at 0x0009b8bb... (61 %)
+Writing at 0x000a09ad... (64 %)
+Writing at 0x000a5a30... (67 %)
+Writing at 0x000ac08d... (70 %)
+Writing at 0x000b5636... (73 %)
+Writing at 0x000bc6e0... (76 %)
+Writing at 0x000c40ab... (79 %)
+Writing at 0x000ca20c... (82 %)
+Writing at 0x000d240a... (85 %)
+Writing at 0x000d8e3e... (88 %)
+Writing at 0x000e14cc... (91 %)
+Writing at 0x000ea9e9... (94 %)
+Writing at 0x000efeec... (97 %)
+Writing at 0x000f59a1... (100 %)
+Wrote 950832 bytes (547946 compressed) at 0x00010000 in 4.9 seconds (effective 1542.2 kbit/s)...
+Hash of data verified.
+
+Leaving...
+Hard resetting via RTS pin...
+
+Please build project in debug configuration to get more details about an exception.
+See https://docs.platformio.org/page/projectconf/build_configurations.html
+
+
+--- Terminal on COM5 | 115200 8-N-1
+--- Available filters and text transformations: debug, default, direct, esp32_exception_decoder, hexlify, log2file, nocontrol, printable, send_on_enter, time
+--- More details at https://bit.ly/pio-monitor-filters
+--- Quit: Ctrl+C | Menu: Ctrl+T | Help: Ctrl+T followed by Ctrl+H
+--- Tipsy 2.0 Boot Sequence ---
+
+=== I2C BUS SCAN START ===
+SDA pin: 8
+SCL pin: 9
+Total devices found: 0
+Address 0x20 responded: NO
+Address 0x38 responded: NO
+=== I2C BUS SCAN END ===
+
+1. Initializing Pump Controller...
+2. Initializing Application (LittleFS, Display, UI)...
+[  5462][E][Wire.cpp:513] requestFrom(): i2cRead returned Error -1
+Tipsy 2.0 booted successfully!
+[heartbeat] 5934 ms, appReady=1
+[heartbeat] 11020 ms, appReady=1
+[heartbeat] 16130 ms, appReady=1
+[heartbeat] 21239 ms, appReady=1
+========================= [SUCCESS] Took 49.60 seconds =========================
+
+Environment         Status    Duration
+------------------  --------  ------------
+esp32-s3-devkitc-1  SUCCESS   00:00:49.600
+========================= 1 succeeded in 00:00:49.600 =========================

@@ -6,6 +6,12 @@
 
 namespace tipsy::app {
 
+namespace {
+
+constexpr size_t kIngredientDocCapacity = 4096;
+
+}  // namespace
+
 IngredientService::IngredientService(tipsy::storage::JsonStorage& jsonStorage)
     : jsonStorage_(jsonStorage) {}
 
@@ -14,7 +20,7 @@ bool IngredientService::load() {
     return false;
   }
 
-  DynamicJsonDocument doc(3072);
+  DynamicJsonDocument doc(kIngredientDocCapacity);
   if (!jsonStorage_.readJson(tipsy::storage::paths::kIngredients, doc)) {
     lastError_ = jsonStorage_.lastError();
     return false;
@@ -24,7 +30,7 @@ bool IngredientService::load() {
 }
 
 bool IngredientService::save() {
-  DynamicJsonDocument doc(3072);
+  DynamicJsonDocument doc(kIngredientDocCapacity);
   doc["schemaVersion"] = 1;
   JsonArray ingredients = doc.createNestedArray("ingredients");
   serializeIngredients(ingredients);
@@ -62,16 +68,21 @@ void IngredientService::loadDefaults() {
   ingredients_[1] = {"vodka", "Vodka", "spirit", true, true, 40.0F, 20};
   ingredients_[2] = {"rum", "Rum", "spirit", true, true, 37.5F, 30};
   ingredients_[3] = {"tequila", "Tequila", "spirit", true, true, 38.0F, 40};
-  ingredients_[4] = {"tonic", "Tonic Water", "mixer", true, false, 0.0F, 50};
-  ingredients_[5] = {"soda", "Soda Water", "mixer", true, false, 0.0F, 60};
-  ingredients_[6] = {"cola", "Cola", "mixer", true, false, 0.0F, 70};
-  ingredients_[7] = {"orange_juice", "Orange Juice", "juice", true, false, 0.0F, 80};
-  ingredients_[8] = {"grenadine", "Grenadine", "syrup", true, false, 0.0F, 90};
-  ingredientCount_ = 9;
+  ingredients_[4] = {"whiskey", "Whiskey", "spirit", true, true, 40.0F, 50};
+  ingredients_[5] = {"tonic", "Tonic Water", "mixer", true, false, 0.0F, 60};
+  ingredients_[6] = {"soda", "Soda Water", "mixer", true, false, 0.0F, 70};
+  ingredients_[7] = {"cola", "Cola", "mixer", true, false, 0.0F, 80};
+  ingredients_[8] = {"orange_juice", "Orange Juice", "juice", true, false, 0.0F, 90};
+  ingredients_[9] = {"grenadine", "Grenadine", "syrup", true, false, 0.0F, 100};
+  ingredients_[10] = {"mint_mix", "Mint Mix", "mixer", true, false, 0.0F, 110};
+  ingredients_[11] = {"lime", "Lime", "juice", true, false, 0.0F, 120};
+  ingredients_[12] = {"sour_mix", "Sour Mix", "mixer", true, false, 0.0F, 130};
+  ingredients_[13] = {"citrus_mix", "Citrus Mix", "mixer", true, false, 0.0F, 140};
+  ingredientCount_ = 14;
 }
 
 bool IngredientService::ensureDefaultFile() {
-  DynamicJsonDocument doc(3072);
+  DynamicJsonDocument doc(kIngredientDocCapacity);
   doc["schemaVersion"] = 1;
   JsonArray ingredients = doc.createNestedArray("ingredients");
   loadDefaults();

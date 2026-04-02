@@ -9,9 +9,9 @@ struct DrinkIngredient {
   String ingredientId;
   float amountMl = 0.0F;
   bool optional = false;
+  bool isAlcohol = false;
 
   bool isValid() const;
 };
 
 }  // namespace tipsy::domain
-
