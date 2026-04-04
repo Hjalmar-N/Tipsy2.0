@@ -24,80 +24,7 @@ enum class SettingsSubview : std::uint8_t {
   ServiceMode,
 };
 
-enum class MockPourStage : std::uint8_t {
-  Idle = 0,
-  Pouring,
-  Complete,
-};
-
-struct MockMixerIngredient {
-  const char* id;
-  const char* name;
-  std::uint16_t amountMl;
-};
-
-struct MockIngredientOption {
-  const char* id;
-  const char* name;
-};
-
-struct MockRecipeDetail {
-  const char* itemId;
-  const char* alcoholIngredientId;
-  const char* alcoholName;
-  bool isShot = false;
-  std::array<MockMixerIngredient, 3> mixers {};
-  std::size_t mixerCount = 0;
-};
-
-struct InternalPourIngredient {
-  const char* ingredientId;
-  const char* displayName;
-  std::uint16_t amountMl;
-  bool isAlcohol = false;
-};
-
-struct InternalPourRequest {
-  String itemId;
-  String itemName;
-  bool isShot = false;
-  std::uint16_t alcoholAmountMl = 0;
-  std::array<InternalPourIngredient, 4> ingredients {};
-  std::size_t ingredientCount = 0;
-  std::uint16_t estimatedPourTimeSec = 0;
-  bool canRouteToBackend = false;
-};
-
-constexpr MockRecipeDetail kRecipeDetails[] = {
-    {"mojito", "rum", "White Rum", false, {{{"mint_mix", "Mint mix", 120}, {"soda", "Soda", 80}, {"lime", "Lime", 20}}}, 3},
-    {"gin_tonic", "gin", "Gin", false, {{{"tonic", "Tonic", 150}, {"", "", 0}, {"", "", 0}}}, 1},
-    {"whiskey_sour", "whiskey", "Whiskey", false, {{{"sour_mix", "Sour mix", 90}, {"lime", "Lime", 20}, {"", "", 0}}}, 2},
-    {"vodka_soda", "vodka", "Vodka", false, {{{"soda", "Soda", 150}, {"", "", 0}, {"", "", 0}}}, 1},
-    {"margarita", "tequila", "Tequila", false, {{{"citrus_mix", "Citrus mix", 80}, {"lime", "Lime", 20}, {"", "", 0}}}, 2},
-    {"rum_cola", "rum", "Rum", false, {{{"cola", "Cola", 150}, {"", "", 0}, {"", "", 0}}}, 1},
-    {"tequila_shot", "tequila", "Tequila", true, {{{"", "", 0}, {"", "", 0}, {"", "", 0}}}, 0},
-    {"vodka_shot", "vodka", "Vodka", true, {{{"", "", 0}, {"", "", 0}, {"", "", 0}}}, 0},
-    {"whiskey_shot", "whiskey", "Whiskey", true, {{{"", "", 0}, {"", "", 0}, {"", "", 0}}}, 0},
-};
-
-constexpr MockIngredientOption kIngredientOptions[] = {
-    {"", "Unassigned"},
-    {"gin", "Gin"},
-    {"vodka", "Vodka"},
-    {"rum", "Rum"},
-    {"tequila", "Tequila"},
-    {"whiskey", "Whiskey"},
-    {"tonic", "Tonic"},
-    {"cola", "Cola"},
-    {"soda", "Soda"},
-    {"mint_mix", "Mint Mix"},
-    {"lime", "Lime"},
-    {"sour_mix", "Sour Mix"},
-    {"citrus_mix", "Citrus Mix"},
-};
-
 constexpr std::size_t kPumpCount = 6;
-constexpr std::size_t kIngredientOptionCount = sizeof(kIngredientOptions) / sizeof(kIngredientOptions[0]);
 
 UiRenderModel currentModel {};
 DrinkSelectedCallback drinkSelectedCallback = nullptr;
@@ -124,9 +51,11 @@ lv_obj_t* bootGlowLine = nullptr;
 lv_obj_t* menuScreen = nullptr;
 lv_obj_t* menuTitleLabel = nullptr;
 lv_obj_t* menuStatusLabel = nullptr;
+lv_obj_t* menuHeaderBlock = nullptr;
 lv_obj_t* allTabButton = nullptr;
 lv_obj_t* drinksTabButton = nullptr;
 lv_obj_t* shotsTabButton = nullptr;
+lv_obj_t* tabsRow = nullptr;
 lv_obj_t* menuGrid = nullptr;
 lv_obj_t* menuEmptyLabel = nullptr;
 lv_obj_t* settingsButton = nullptr;
@@ -164,11 +93,6 @@ SettingsSubview currentSettingsSubview = SettingsSubview::Main;
 bool adminLockEnabled = false;
 bool settingsDirty = false;
 String settingsStatusMessage;
-MockPourStage mockPourStage = MockPourStage::Idle;
-String transientStatusText;
-lv_timer_t* mockPourTimer = nullptr;
-InternalPourRequest activePourRequest {};
-bool hasActivePourRequest = false;
 
 const char* strengthClLabel(std::uint8_t index) {
   switch (index) {
@@ -197,10 +121,6 @@ const char* strengthMlLabel(std::uint8_t index) {
 }
 
 String effectiveStatusText() {
-  if (!transientStatusText.isEmpty()) {
-    return transientStatusText;
-  }
-
   if (!currentModel.statusText.isEmpty()) {
     return currentModel.statusText;
   }
@@ -216,32 +136,10 @@ bool itemMatchesCategory(const UiRenderDrinkItem& item, DrinkCategory category) 
   return category == DrinkCategory::All || categoryFromItem(item) == category;
 }
 
-const char* ingredientDisplayName(const char* ingredientId) {
-  for (const auto& ingredient : kIngredientOptions) {
-    if (String(ingredient.id) == ingredientId) {
-      return ingredient.name;
-    }
-  }
-
-  return "Unknown";
-}
-
-std::size_t ingredientOptionIndex(const char* ingredientId) {
-  for (std::size_t i = 0; i < kIngredientOptionCount; ++i) {
-    if (String(kIngredientOptions[i].id) == ingredientId) {
-      return i;
-    }
-  }
-
-  return 0;
-}
-
-
-
 void refreshPumpMappingList();
 void refreshVisibleStatus();
 std::uint16_t selectedAlcoholAmountMl();
-std::uint16_t estimatePourTimeSeconds();
+void refreshSettingsScreen();
 
 bool backendKnowsDrink(const char* itemId) {
   if (itemId == nullptr) {
@@ -271,57 +169,11 @@ bool backendDrinkAvailable(const char* itemId) {
   return false;
 }
 
-InternalPourRequest buildPourRequest() {
-  InternalPourRequest request {};
-  if (selectedItem == nullptr) {
-    return request;
-  }
-
-  request.itemId = selectedItem->id;
-  request.itemName = selectedItem->displayName;
-  request.isShot = false;
-  request.alcoholAmountMl = selectedAlcoholAmountMl();
-  request.canRouteToBackend =
-      backendKnowsDrink(selectedItem->id.c_str()) &&
-      backendDrinkAvailable(selectedItem->id.c_str());
-
-  return request;
-}
-
-void clearMockPourTimer() {
-  if (mockPourTimer != nullptr) {
-    lv_timer_delete(mockPourTimer);
-    mockPourTimer = nullptr;
-  }
-}
-
 void clearBootTimer() {
   if (bootTimer != nullptr) {
     lv_timer_delete(bootTimer);
     bootTimer = nullptr;
   }
-}
-
-void handleMockPourTimer(lv_timer_t* timer) {
-  (void)timer;
-
-  if (mockPourStage == MockPourStage::Pouring) {
-    mockPourStage = MockPourStage::Complete;
-    transientStatusText =
-        hasActivePourRequest ? String(activePourRequest.itemName) + " complete."
-                             : String("Pour complete.");
-    if (mockPourTimer != nullptr) {
-      lv_timer_set_period(mockPourTimer, 1400);
-    }
-    refreshVisibleStatus();
-    return;
-  }
-
-  mockPourStage = MockPourStage::Idle;
-  transientStatusText = "";
-  hasActivePourRequest = false;
-  clearMockPourTimer();
-  refreshVisibleStatus();
 }
 
 std::uint16_t selectedAlcoholAmountMl() {
@@ -335,10 +187,6 @@ std::uint16_t selectedAlcoholAmountMl() {
     default:
       return 60;
   }
-}
-
-std::uint16_t estimatePourTimeSeconds() {
-  return 0;
 }
 
 void setScreenVisibility(lv_obj_t* screen, bool visible) {
@@ -372,8 +220,224 @@ void showView(ScreenView view) {
   setScreenVisibility(detailScreen, view == ScreenView::DrinkDetail);
   setScreenVisibility(settingsScreen, view == ScreenView::Settings);
 }
+constexpr std::uint32_t kColorBackgroundHex = 0x050505;
+constexpr std::uint32_t kColorSurfaceHex = 0xFFFFFF;
+constexpr std::uint32_t kColorSurfaceMutedHex = 0xF5F5F5;
+constexpr std::uint32_t kColorSurfaceTextHex = 0x111111;
+constexpr std::uint32_t kColorSurfaceSubtextHex = 0x4A4A4A;
+constexpr std::uint32_t kColorTextPrimaryHex = 0xFFFFFF;
+constexpr std::uint32_t kColorTextSecondaryHex = 0xE8E8E8;
+constexpr std::uint32_t kColorTextMutedHex = 0xC8C8C8;
+constexpr std::uint32_t kColorAccentHex = 0xF28C28;
+constexpr std::uint32_t kColorAccentTextHex = 0x140B00;
+constexpr std::uint32_t kColorPanelHex = 0x101418;
+constexpr std::uint32_t kColorPanelRaisedHex = 0x141A22;
 
-void refreshSettingsScreen();
+lv_color_t uiColor(std::uint32_t hex) {
+  return lv_color_hex(hex);
+}
+
+void applyChildLabelColor(lv_obj_t* parent, lv_color_t color) {
+  if (parent == nullptr) {
+    return;
+  }
+
+  std::uint32_t childCount = lv_obj_get_child_count(parent);
+  for (std::uint32_t i = 0; i < childCount; ++i) {
+    lv_obj_t* child = lv_obj_get_child(parent, static_cast<int32_t>(i));
+    if (child != nullptr) {
+      lv_obj_set_style_text_color(child, color, 0);
+      lv_obj_set_style_text_color(child, color, LV_PART_MAIN | LV_STATE_DEFAULT);
+      lv_obj_set_style_text_color(child, color, LV_PART_MAIN | LV_STATE_PRESSED);
+      lv_obj_set_style_text_color(child, color, LV_PART_MAIN | LV_STATE_FOCUSED);
+      lv_obj_set_style_text_color(child, color, LV_PART_MAIN | LV_STATE_CHECKED);
+      lv_obj_set_style_text_color(child, color, LV_PART_MAIN | LV_STATE_DISABLED);
+    }
+  }
+}
+
+void applyTextOnDarkBackgroundStyle(lv_obj_t* label, std::uint32_t textHex = kColorTextPrimaryHex) {
+  if (label == nullptr) {
+    return;
+  }
+
+  lv_obj_set_style_text_color(label, uiColor(textHex), 0);
+  lv_obj_set_style_text_color(label, uiColor(textHex), LV_PART_MAIN | LV_STATE_DEFAULT);
+  lv_obj_set_style_text_color(label, uiColor(textHex), LV_PART_MAIN | LV_STATE_PRESSED);
+  lv_obj_set_style_text_color(label, uiColor(textHex), LV_PART_MAIN | LV_STATE_FOCUSED);
+  lv_obj_set_style_text_color(label, uiColor(textHex), LV_PART_MAIN | LV_STATE_CHECKED);
+  lv_obj_set_style_text_color(label, uiColor(textHex), LV_PART_MAIN | LV_STATE_DISABLED);
+}
+
+void applyDarkBackgroundStyle(lv_obj_t* object, std::uint32_t backgroundHex) {
+  if (object == nullptr) {
+    return;
+  }
+
+  lv_obj_set_style_bg_opa(object, LV_OPA_COVER, 0);
+  lv_obj_set_style_bg_color(object, uiColor(backgroundHex), 0);
+  lv_obj_set_style_bg_grad_dir(object, LV_GRAD_DIR_NONE, 0);
+  lv_obj_set_style_bg_image_opa(object, LV_OPA_TRANSP, 0);
+  lv_obj_set_style_border_width(object, 0, 0);
+  lv_obj_set_style_border_opa(object, LV_OPA_TRANSP, 0);
+  lv_obj_set_style_shadow_width(object, 0, 0);
+  lv_obj_set_style_outline_width(object, 0, 0);
+  lv_obj_set_style_outline_opa(object, LV_OPA_TRANSP, 0);
+
+  const lv_style_selector_t selectors[] = {
+      LV_PART_MAIN | LV_STATE_DEFAULT,
+      LV_PART_MAIN | LV_STATE_PRESSED,
+      LV_PART_MAIN | LV_STATE_FOCUSED,
+      LV_PART_MAIN | LV_STATE_CHECKED,
+      LV_PART_MAIN | LV_STATE_DISABLED,
+  };
+
+  for (lv_style_selector_t selector : selectors) {
+    lv_obj_set_style_bg_opa(object, LV_OPA_COVER, selector);
+    lv_obj_set_style_bg_color(object, uiColor(backgroundHex), selector);
+    lv_obj_set_style_bg_grad_dir(object, LV_GRAD_DIR_NONE, selector);
+    lv_obj_set_style_bg_image_opa(object, LV_OPA_TRANSP, selector);
+    lv_obj_set_style_border_width(object, 0, selector);
+    lv_obj_set_style_border_opa(object, LV_OPA_TRANSP, selector);
+    lv_obj_set_style_shadow_width(object, 0, selector);
+    lv_obj_set_style_outline_width(object, 0, selector);
+    lv_obj_set_style_outline_opa(object, LV_OPA_TRANSP, selector);
+  }
+}
+
+void applyTransparentContainerStyle(lv_obj_t* object) {
+  if (object == nullptr) {
+    return;
+  }
+
+  lv_obj_set_style_bg_opa(object, LV_OPA_TRANSP, 0);
+  lv_obj_set_style_bg_color(object, uiColor(kColorBackgroundHex), 0);
+  lv_obj_set_style_bg_grad_dir(object, LV_GRAD_DIR_NONE, 0);
+  lv_obj_set_style_bg_image_opa(object, LV_OPA_TRANSP, 0);
+  lv_obj_set_style_border_width(object, 0, 0);
+  lv_obj_set_style_border_opa(object, LV_OPA_TRANSP, 0);
+  lv_obj_set_style_shadow_width(object, 0, 0);
+  lv_obj_set_style_outline_width(object, 0, 0);
+  lv_obj_set_style_outline_opa(object, LV_OPA_TRANSP, 0);
+}
+
+void applySurfaceLabelStyle(lv_obj_t* label, std::uint32_t textHex) {
+  if (label == nullptr) {
+    return;
+  }
+
+  const lv_color_t color = uiColor(textHex);
+  lv_obj_set_style_text_color(label, color, 0);
+  lv_obj_set_style_text_color(label, color, LV_PART_MAIN | LV_STATE_DEFAULT);
+  lv_obj_set_style_text_color(label, color, LV_PART_MAIN | LV_STATE_PRESSED);
+  lv_obj_set_style_text_color(label, color, LV_PART_MAIN | LV_STATE_FOCUSED);
+  lv_obj_set_style_text_color(label, color, LV_PART_MAIN | LV_STATE_CHECKED);
+  lv_obj_set_style_text_color(label, color, LV_PART_MAIN | LV_STATE_DISABLED);
+}
+
+void applyLightSurfaceButtonStyle(lv_obj_t* button) {
+  if (button == nullptr) {
+    return;
+  }
+
+  lv_obj_set_style_bg_opa(button, LV_OPA_COVER, 0);
+  lv_obj_set_style_bg_color(button, uiColor(kColorSurfaceHex), 0);
+  lv_obj_set_style_bg_grad_dir(button, LV_GRAD_DIR_NONE, 0);
+  lv_obj_set_style_bg_image_opa(button, LV_OPA_TRANSP, 0);
+  lv_obj_set_style_border_width(button, 0, 0);
+  lv_obj_set_style_border_opa(button, LV_OPA_TRANSP, 0);
+  lv_obj_set_style_shadow_width(button, 0, 0);
+  lv_obj_set_style_outline_width(button, 0, 0);
+  lv_obj_set_style_outline_opa(button, LV_OPA_TRANSP, 0);
+  lv_obj_set_style_text_color(button, uiColor(kColorSurfaceTextHex), 0);
+
+  const lv_style_selector_t selectors[] = {
+      LV_PART_MAIN | LV_STATE_DEFAULT,
+      LV_PART_MAIN | LV_STATE_PRESSED,
+      LV_PART_MAIN | LV_STATE_FOCUSED,
+      LV_PART_MAIN | LV_STATE_CHECKED,
+      LV_PART_MAIN | LV_STATE_DISABLED,
+  };
+
+  for (lv_style_selector_t selector : selectors) {
+    lv_obj_set_style_bg_opa(button, LV_OPA_COVER, selector);
+    lv_obj_set_style_bg_color(button, uiColor(kColorSurfaceHex), selector);
+    lv_obj_set_style_bg_grad_dir(button, LV_GRAD_DIR_NONE, selector);
+    lv_obj_set_style_bg_image_opa(button, LV_OPA_TRANSP, selector);
+    lv_obj_set_style_border_width(button, 0, selector);
+    lv_obj_set_style_border_opa(button, LV_OPA_TRANSP, selector);
+    lv_obj_set_style_shadow_width(button, 0, selector);
+    lv_obj_set_style_outline_width(button, 0, selector);
+    lv_obj_set_style_outline_opa(button, LV_OPA_TRANSP, selector);
+    lv_obj_set_style_text_color(button, uiColor(kColorSurfaceTextHex), selector);
+  }
+
+  applyChildLabelColor(button, uiColor(kColorSurfaceTextHex));
+}
+
+void applyAccentButtonStyle(lv_obj_t* button) {
+  if (button == nullptr) {
+    return;
+  }
+
+  lv_obj_set_style_bg_opa(button, LV_OPA_COVER, 0);
+  lv_obj_set_style_bg_color(button, uiColor(kColorAccentHex), 0);
+  lv_obj_set_style_bg_grad_dir(button, LV_GRAD_DIR_NONE, 0);
+  lv_obj_set_style_bg_image_opa(button, LV_OPA_TRANSP, 0);
+  lv_obj_set_style_border_width(button, 0, 0);
+  lv_obj_set_style_border_opa(button, LV_OPA_TRANSP, 0);
+  lv_obj_set_style_shadow_width(button, 0, 0);
+  lv_obj_set_style_outline_width(button, 0, 0);
+  lv_obj_set_style_outline_opa(button, LV_OPA_TRANSP, 0);
+  lv_obj_set_style_text_color(button, uiColor(kColorAccentTextHex), 0);
+
+  const lv_style_selector_t selectors[] = {
+      LV_PART_MAIN | LV_STATE_DEFAULT,
+      LV_PART_MAIN | LV_STATE_PRESSED,
+      LV_PART_MAIN | LV_STATE_FOCUSED,
+      LV_PART_MAIN | LV_STATE_CHECKED,
+      LV_PART_MAIN | LV_STATE_DISABLED,
+  };
+
+  for (lv_style_selector_t selector : selectors) {
+    lv_obj_set_style_bg_opa(button, LV_OPA_COVER, selector);
+    lv_obj_set_style_bg_color(button, uiColor(kColorAccentHex), selector);
+    lv_obj_set_style_bg_grad_dir(button, LV_GRAD_DIR_NONE, selector);
+    lv_obj_set_style_bg_image_opa(button, LV_OPA_TRANSP, selector);
+    lv_obj_set_style_border_width(button, 0, selector);
+    lv_obj_set_style_border_opa(button, LV_OPA_TRANSP, selector);
+    lv_obj_set_style_shadow_width(button, 0, selector);
+    lv_obj_set_style_outline_width(button, 0, selector);
+    lv_obj_set_style_outline_opa(button, LV_OPA_TRANSP, selector);
+    lv_obj_set_style_text_color(button, uiColor(kColorAccentTextHex), selector);
+  }
+
+  applyChildLabelColor(button, uiColor(kColorAccentTextHex));
+}
+
+void applyAdminSwitchStyle(lv_obj_t* sw, bool checked) {
+  if (sw == nullptr) {
+    return;
+  }
+
+  lv_obj_set_style_bg_opa(sw, LV_OPA_COVER, LV_PART_MAIN | LV_STATE_ANY);
+  lv_obj_set_style_bg_color(sw, uiColor(kColorSurfaceMutedHex), LV_PART_MAIN | LV_STATE_DEFAULT);
+  lv_obj_set_style_bg_color(sw, uiColor(kColorSurfaceMutedHex), LV_PART_MAIN | LV_STATE_PRESSED);
+  lv_obj_set_style_bg_color(sw, uiColor(kColorAccentHex), LV_PART_MAIN | LV_STATE_CHECKED);
+  lv_obj_set_style_border_width(sw, 0, LV_PART_MAIN | LV_STATE_ANY);
+  lv_obj_set_style_shadow_width(sw, 0, LV_PART_MAIN | LV_STATE_ANY);
+  lv_obj_set_style_outline_width(sw, 0, LV_PART_MAIN | LV_STATE_ANY);
+
+  lv_obj_set_style_bg_opa(sw, LV_OPA_COVER, LV_PART_INDICATOR | LV_STATE_ANY);
+  lv_obj_set_style_bg_color(sw, uiColor(checked ? kColorAccentHex : kColorSurfaceMutedHex),
+                            LV_PART_INDICATOR | LV_STATE_ANY);
+  lv_obj_set_style_border_width(sw, 0, LV_PART_INDICATOR | LV_STATE_ANY);
+
+  lv_obj_set_style_bg_opa(sw, LV_OPA_COVER, LV_PART_KNOB | LV_STATE_ANY);
+  lv_obj_set_style_bg_color(sw, uiColor(kColorSurfaceHex), LV_PART_KNOB | LV_STATE_ANY);
+  lv_obj_set_style_border_width(sw, 0, LV_PART_KNOB | LV_STATE_ANY);
+  lv_obj_set_style_shadow_width(sw, 0, LV_PART_KNOB | LV_STATE_ANY);
+}
 
 void applyTabStyle(lv_obj_t* button, bool active) {
   if (button == nullptr) {
@@ -381,22 +445,23 @@ void applyTabStyle(lv_obj_t* button, bool active) {
   }
 
   if (active) {
-    lv_obj_set_style_bg_color(button, lv_color_hex(0xF4B662), 0);
-    lv_obj_set_style_text_color(button, lv_color_hex(0x11151B), 0);
+    applyAccentButtonStyle(button);
   } else {
-    lv_obj_set_style_bg_color(button, lv_color_hex(0x222934), 0);
-    lv_obj_set_style_text_color(button, lv_color_hex(0xF4F6F8), 0);
+    applyLightSurfaceButtonStyle(button);
   }
 }
 
 void updateMenuHeader() {
   if (menuTitleLabel != nullptr) {
-    lv_label_set_text(menuTitleLabel, "Tipsy");
+    const char* title = currentModel.headerTitle.isEmpty() ? "Tipsy" : currentModel.headerTitle.c_str();
+    lv_label_set_text(menuTitleLabel, title);
+    applyTextOnDarkBackgroundStyle(menuTitleLabel, kColorTextPrimaryHex);
   }
 
   if (menuStatusLabel != nullptr) {
     const String status = effectiveStatusText();
     lv_label_set_text(menuStatusLabel, status.c_str());
+    applyTextOnDarkBackgroundStyle(menuStatusLabel, kColorTextSecondaryHex);
   }
 }
 
@@ -404,25 +469,27 @@ lv_obj_t* createTopBackButton(lv_obj_t* parent, lv_event_cb_t callback) {
   lv_obj_t* button = lv_button_create(parent);
   lv_obj_set_size(button, 108, 46);
   lv_obj_set_style_radius(button, 20, 0);
-  lv_obj_set_style_bg_color(button, lv_color_hex(0x202630), 0);
-  lv_obj_set_style_border_width(button, 0, 0);
+  applyLightSurfaceButtonStyle(button);
   lv_obj_add_event_cb(button, callback, LV_EVENT_CLICKED, nullptr);
 
   lv_obj_t* label = lv_label_create(button);
   lv_label_set_text(label, "Back");
+  lv_obj_set_style_text_color(label, uiColor(kColorSurfaceTextHex), LV_PART_MAIN | LV_STATE_ANY);
   lv_obj_center(label);
   return button;
 }
 
 lv_obj_t* createTabButton(lv_obj_t* parent, const char* text, lv_event_cb_t callback) {
   lv_obj_t* button = lv_button_create(parent);
-  lv_obj_set_height(button, 48);
-  lv_obj_set_style_radius(button, 18, 0);
-  lv_obj_set_style_border_width(button, 0, 0);
+  lv_obj_set_height(button, 50);
+  lv_obj_set_style_radius(button, 16, 0);
+  lv_obj_set_style_pad_all(button, 0, 0);
+  applyLightSurfaceButtonStyle(button);
   lv_obj_add_event_cb(button, callback, LV_EVENT_CLICKED, nullptr);
 
   lv_obj_t* label = lv_label_create(button);
   lv_label_set_text(label, text);
+  applySurfaceLabelStyle(label, kColorSurfaceTextHex);
   lv_obj_center(label);
   return button;
 }
@@ -433,10 +500,7 @@ lv_obj_t* createActionRow(lv_obj_t* parent, const char* title, const char* subti
   lv_obj_set_width(row, LV_PCT(100));
   lv_obj_set_height(row, 92);
   lv_obj_set_style_radius(row, 24, 0);
-  lv_obj_set_style_bg_color(row, lv_color_hex(0x151B23), 0);
-  lv_obj_set_style_border_color(row, lv_color_hex(0xFFFFFF), 0);
-  lv_obj_set_style_border_opa(row, LV_OPA_10, 0);
-  lv_obj_set_style_border_width(row, 2, 0);
+  applyLightSurfaceButtonStyle(row);
   lv_obj_set_style_pad_left(row, 18, 0);
   lv_obj_set_style_pad_right(row, 18, 0);
   lv_obj_set_style_pad_top(row, 14, 0);
@@ -451,11 +515,11 @@ lv_obj_t* createActionRow(lv_obj_t* parent, const char* title, const char* subti
 
   lv_obj_t* titleLabel = lv_label_create(row);
   lv_label_set_text(titleLabel, title);
-  lv_obj_set_style_text_color(titleLabel, lv_color_hex(0xF4F6F8), 0);
+  lv_obj_set_style_text_color(titleLabel, uiColor(kColorSurfaceTextHex), 0);
 
   lv_obj_t* subtitleLabel = lv_label_create(row);
   lv_label_set_text(subtitleLabel, subtitle);
-  lv_obj_set_style_text_color(subtitleLabel, lv_color_hex(0x95A2B3), 0);
+  lv_obj_set_style_text_color(subtitleLabel, uiColor(kColorSurfaceSubtextHex), 0);
   return row;
 }
 
@@ -495,8 +559,16 @@ void updateDetailScreen() {
     const bool available = selectedItem != nullptr &&
                            (!backendKnowsDrink(selectedItem->id.c_str()) ||
                             backendDrinkAvailable(selectedItem->id.c_str()));
-    lv_obj_set_style_bg_color(
-        pourButton, available ? lv_color_hex(0xF4B662) : lv_color_hex(0x3A4048), 0);
+    applyLightSurfaceButtonStyle(pourButton);
+    if (!available) {
+      lv_obj_set_style_bg_color(pourButton, uiColor(kColorSurfaceMutedHex),
+                                LV_PART_MAIN | LV_STATE_DEFAULT);
+      lv_obj_set_style_bg_color(pourButton, uiColor(kColorSurfaceMutedHex),
+                                LV_PART_MAIN | LV_STATE_PRESSED);
+      lv_obj_set_style_bg_color(pourButton, uiColor(kColorSurfaceMutedHex),
+                                LV_PART_MAIN | LV_STATE_FOCUSED);
+    }
+    applyChildLabelColor(pourButton, uiColor(kColorSurfaceTextHex));
     if (available) {
       lv_obj_clear_state(pourButton, LV_STATE_DISABLED);
     } else {
@@ -510,21 +582,24 @@ void updateDetailScreen() {
     }
 
     const bool active = i == selectedStrengthIndex;
-    lv_obj_set_style_bg_color(strengthButtons[i],
-                              active ? lv_color_hex(0xF4B662) : lv_color_hex(0x222934), 0);
-    lv_obj_set_style_text_color(strengthButtons[i],
-                                active ? lv_color_hex(0x11151B) : lv_color_hex(0xF4F6F8), 0);
+    if (active) {
+      applyAccentButtonStyle(strengthButtons[i]);
+    } else {
+      applyLightSurfaceButtonStyle(strengthButtons[i]);
+    }
 
     if (strengthPrimaryLabels[i] != nullptr) {
       lv_label_set_text(strengthPrimaryLabels[i], strengthClLabel(i));
       lv_obj_set_style_text_color(strengthPrimaryLabels[i],
-                                  active ? lv_color_hex(0x11151B) : lv_color_hex(0xF4F6F8), 0);
+                                  active ? uiColor(kColorAccentTextHex)
+                                         : uiColor(kColorSurfaceTextHex),
+                                  0);
     }
 
     if (strengthSecondaryLabels[i] != nullptr) {
       lv_label_set_text(strengthSecondaryLabels[i], strengthMlLabel(i));
       lv_obj_set_style_text_color(strengthSecondaryLabels[i],
-                                  active ? lv_color_hex(0x2E333B) : lv_color_hex(0x9AA7B7), 0);
+                                  active ? lv_color_hex(0x3E2400) : lv_color_hex(0x4A4A4A), 0);
     }
   }
 }
@@ -549,16 +624,11 @@ void rebuildMenuGrid() {
     }
 
     ++visibleCount;
-    const DrinkCategory itemCategory = categoryFromItem(item);
 
     lv_obj_t* card = lv_button_create(menuGrid);
-    lv_obj_set_size(card, 290, 108);
+    lv_obj_set_size(card, LV_PCT(100), 84);
     lv_obj_set_style_radius(card, 24, 0);
-    lv_obj_set_style_bg_color(
-        card, itemCategory == DrinkCategory::Shots ? lv_color_hex(0x2A2318) : lv_color_hex(0x222934), 0);
-    lv_obj_set_style_border_color(card, lv_color_hex(0xFFFFFF), 0);
-    lv_obj_set_style_border_opa(card, LV_OPA_10, 0);
-    lv_obj_set_style_border_width(card, 2, 0);
+    applyLightSurfaceButtonStyle(card);
     lv_obj_set_style_pad_left(card, 16, 0);
     lv_obj_set_style_pad_right(card, 16, 0);
     lv_obj_set_style_pad_top(card, 14, 0);
@@ -568,9 +638,13 @@ void rebuildMenuGrid() {
     lv_obj_set_flex_flow(card, LV_FLEX_FLOW_COLUMN);
     lv_obj_set_flex_align(card, LV_FLEX_ALIGN_CENTER, LV_FLEX_ALIGN_START, LV_FLEX_ALIGN_START);
     lv_obj_add_event_cb(
-        card,
-        [](lv_event_t* event) {
-          selectedItem = static_cast<const UiRenderDrinkItem*>(lv_event_get_user_data(event));
+        card, [](lv_event_t* event) {
+          const auto* item = static_cast<const UiRenderDrinkItem*>(lv_event_get_user_data(event));
+          if (item == nullptr) {
+            return;
+          }
+
+          selectedItem = item;
           selectedStrengthIndex = 1;
           if (selectedItem != nullptr && selectedItem->available) {
             ui_trigger_select_drink(selectedItem->id.c_str());
@@ -582,20 +656,13 @@ void rebuildMenuGrid() {
 
     lv_obj_t* nameLabel = lv_label_create(card);
     lv_label_set_text(nameLabel, item.displayName.c_str());
-    lv_obj_set_style_text_color(
-        nameLabel, itemCategory == DrinkCategory::Shots ? lv_color_hex(0xF6C47A) : lv_color_hex(0xF4F6F8), 0);
-
-    lv_obj_t* subtitleLabel = lv_label_create(card);
-    lv_label_set_text(subtitleLabel, item.subtitle.isEmpty() ? item.availabilityText.c_str()
-                                                             : item.subtitle.c_str());
-    lv_obj_set_style_text_color(
-        subtitleLabel, itemCategory == DrinkCategory::Shots ? lv_color_hex(0xB58E59) : lv_color_hex(0x95A2B3), 0);
+    lv_obj_set_style_text_color(nameLabel, uiColor(kColorSurfaceTextHex), 0);
   }
 
   if (visibleCount == 0) {
     menuEmptyLabel = lv_label_create(menuGrid);
     lv_label_set_text(menuEmptyLabel, "No available items for this category");
-    lv_obj_set_style_text_color(menuEmptyLabel, lv_color_hex(0x95A2B3), 0);
+    applyTextOnDarkBackgroundStyle(menuEmptyLabel, kColorTextMutedHex);
   }
 }
 
@@ -865,14 +932,12 @@ void refreshSettingsScreen() {
 void buildBootScreen() {
   bootScreen = lv_obj_create(rootScreen);
   lv_obj_set_size(bootScreen, LV_PCT(100), LV_PCT(100));
-  lv_obj_set_style_bg_color(bootScreen, lv_color_hex(0x101418), 0);
-  lv_obj_set_style_bg_opa(bootScreen, LV_OPA_COVER, 0);
-  lv_obj_set_style_border_width(bootScreen, 0, 0);
+  applyDarkBackgroundStyle(bootScreen, kColorPanelHex);
   lv_obj_set_style_pad_all(bootScreen, 0, 0);
 
   bootLogoLabel = lv_label_create(bootScreen);
   lv_label_set_text(bootLogoLabel, "Tipsy");
-  lv_obj_set_style_text_color(bootLogoLabel, lv_color_hex(0xF4F6F8), 0);
+  applyTextOnDarkBackgroundStyle(bootLogoLabel);
   lv_obj_set_style_text_letter_space(bootLogoLabel, 2, 0);
   lv_obj_align(bootLogoLabel, LV_ALIGN_CENTER, 0, 0);
   lv_obj_set_style_opa(bootLogoLabel, 0, 0);
@@ -889,74 +954,81 @@ void buildBootScreen() {
 void buildMenuScreen() {
   menuScreen = lv_obj_create(rootScreen);
   lv_obj_set_size(menuScreen, LV_PCT(100), LV_PCT(100));
-  lv_obj_set_style_bg_color(menuScreen, lv_color_hex(0x101418), 0);
-  lv_obj_set_style_bg_opa(menuScreen, LV_OPA_COVER, 0);
-  lv_obj_set_style_border_width(menuScreen, 0, 0);
+  applyDarkBackgroundStyle(menuScreen, kColorPanelHex);
   lv_obj_set_style_pad_left(menuScreen, 18, 0);
   lv_obj_set_style_pad_right(menuScreen, 18, 0);
   lv_obj_set_style_pad_top(menuScreen, 16, 0);
   lv_obj_set_style_pad_bottom(menuScreen, 16, 0);
+  lv_obj_remove_flag(
+      menuScreen,
+      static_cast<lv_obj_flag_t>(LV_OBJ_FLAG_SCROLLABLE | LV_OBJ_FLAG_SCROLL_ELASTIC |
+                                 LV_OBJ_FLAG_SCROLL_MOMENTUM | LV_OBJ_FLAG_SCROLL_CHAIN));
 
   menuTitleLabel = lv_label_create(menuScreen);
-  lv_obj_set_style_text_color(menuTitleLabel, lv_color_hex(0xF4F6F8), 0);
+  applyTextOnDarkBackgroundStyle(menuTitleLabel, kColorTextPrimaryHex);
   lv_obj_align(menuTitleLabel, LV_ALIGN_TOP_LEFT, 0, 0);
 
   menuStatusLabel = lv_label_create(menuScreen);
-  lv_obj_set_style_text_color(menuStatusLabel, lv_color_hex(0xA6B0BF), 0);
+  applyTextOnDarkBackgroundStyle(menuStatusLabel, kColorTextSecondaryHex);
   lv_obj_align_to(menuStatusLabel, menuTitleLabel, LV_ALIGN_OUT_BOTTOM_LEFT, 0, 6);
 
-  lv_obj_t* tabsRow = lv_obj_create(menuScreen);
+  tabsRow = lv_obj_create(menuScreen);
   lv_obj_set_size(tabsRow, LV_PCT(100), LV_SIZE_CONTENT);
-  lv_obj_set_style_bg_opa(tabsRow, LV_OPA_TRANSP, 0);
-  lv_obj_set_style_border_width(tabsRow, 0, 0);
+  applyTransparentContainerStyle(tabsRow);
   lv_obj_set_style_pad_all(tabsRow, 0, 0);
+  lv_obj_set_style_pad_row(tabsRow, 10, 0);
   lv_obj_set_style_pad_column(tabsRow, 10, 0);
   lv_obj_set_layout(tabsRow, LV_LAYOUT_FLEX);
-  lv_obj_set_flex_flow(tabsRow, LV_FLEX_FLOW_ROW);
+  lv_obj_set_flex_flow(tabsRow, LV_FLEX_FLOW_ROW_WRAP);
+  lv_obj_set_flex_align(tabsRow, LV_FLEX_ALIGN_SPACE_BETWEEN, LV_FLEX_ALIGN_START,
+                        LV_FLEX_ALIGN_START);
   lv_obj_align_to(tabsRow, menuStatusLabel, LV_ALIGN_OUT_BOTTOM_LEFT, 0, 18);
 
   allTabButton = createTabButton(tabsRow, "All", handleFilterAll);
-  lv_obj_set_width(allTabButton, 92);
+  lv_obj_set_width(allTabButton, LV_PCT(48));
   drinksTabButton = createTabButton(tabsRow, "Drinks", handleFilterDrinks);
-  lv_obj_set_width(drinksTabButton, 120);
+  lv_obj_set_width(drinksTabButton, LV_PCT(48));
   shotsTabButton = createTabButton(tabsRow, "Shots", handleFilterShots);
-  lv_obj_set_width(shotsTabButton, 110);
+  lv_obj_set_width(shotsTabButton, LV_PCT(48));
+
+  settingsButton = createTabButton(tabsRow, "Settings", handleSettingsButton);
+  lv_obj_set_width(settingsButton, LV_PCT(48));
+
+  lv_obj_update_layout(menuScreen);
+  const lv_coord_t menuGridTop =
+      lv_obj_get_y(tabsRow) + lv_obj_get_height(tabsRow) + 16;
+  const lv_coord_t menuScreenHeight = lv_display_get_vertical_resolution(nullptr);
+  lv_coord_t menuGridHeight = menuScreenHeight - menuGridTop - 16;
+  if (menuGridHeight < 140) {
+    menuGridHeight = 140;
+  }
 
   menuGrid = lv_obj_create(menuScreen);
-  lv_obj_set_size(menuGrid, LV_PCT(100), 420);
-  lv_obj_set_style_bg_color(menuGrid, lv_color_hex(0x12171F), 0);
-  lv_obj_set_style_bg_opa(menuGrid, LV_OPA_60, 0);
-  lv_obj_set_style_radius(menuGrid, 24, 0);
-  lv_obj_set_style_border_width(menuGrid, 0, 0);
-  lv_obj_set_style_pad_all(menuGrid, 12, 0);
+  lv_obj_set_size(menuGrid, LV_PCT(100), menuGridHeight);
+  applyTransparentContainerStyle(menuGrid);
+  lv_obj_set_style_radius(menuGrid, 0, 0);
+  lv_obj_set_style_pad_all(menuGrid, 0, 0);
   lv_obj_set_style_pad_row(menuGrid, 10, 0);
-  lv_obj_set_style_pad_column(menuGrid, 10, 0);
+  lv_obj_set_style_pad_column(menuGrid, 0, 0);
   lv_obj_set_scrollbar_mode(menuGrid, LV_SCROLLBAR_MODE_OFF);
+  lv_obj_set_scroll_dir(menuGrid, LV_DIR_VER);
+  lv_obj_remove_flag(
+      menuGrid,
+      static_cast<lv_obj_flag_t>(LV_OBJ_FLAG_SCROLL_ELASTIC | LV_OBJ_FLAG_SCROLL_MOMENTUM |
+                                 LV_OBJ_FLAG_SCROLL_CHAIN_HOR | LV_OBJ_FLAG_SCROLL_CHAIN_VER));
   lv_obj_set_layout(menuGrid, LV_LAYOUT_FLEX);
-  lv_obj_set_flex_flow(menuGrid, LV_FLEX_FLOW_ROW_WRAP);
-  lv_obj_set_flex_align(menuGrid, LV_FLEX_ALIGN_SPACE_BETWEEN, LV_FLEX_ALIGN_START,
+  lv_obj_set_flex_flow(menuGrid, LV_FLEX_FLOW_COLUMN);
+  lv_obj_set_flex_align(menuGrid, LV_FLEX_ALIGN_START, LV_FLEX_ALIGN_START,
                         LV_FLEX_ALIGN_START);
   lv_obj_align_to(menuGrid, tabsRow, LV_ALIGN_OUT_BOTTOM_LEFT, 0, 16);
 
-  settingsButton = lv_button_create(menuScreen);
-  lv_obj_set_size(settingsButton, LV_PCT(100), 68);
-  lv_obj_set_style_radius(settingsButton, 26, 0);
-  lv_obj_set_style_bg_color(settingsButton, lv_color_hex(0x202630), 0);
-  lv_obj_set_style_border_width(settingsButton, 0, 0);
-  lv_obj_add_event_cb(settingsButton, handleSettingsButton, LV_EVENT_CLICKED, nullptr);
-  lv_obj_align(settingsButton, LV_ALIGN_BOTTOM_MID, 0, 0);
-
-  lv_obj_t* settingsLabel = lv_label_create(settingsButton);
-  lv_label_set_text(settingsLabel, "Settings");
-  lv_obj_center(settingsLabel);
+  menuEmptyLabel = nullptr;
 }
 
 void buildDetailScreen() {
   detailScreen = lv_obj_create(rootScreen);
   lv_obj_set_size(detailScreen, LV_PCT(100), LV_PCT(100));
-  lv_obj_set_style_bg_color(detailScreen, lv_color_hex(0x101418), 0);
-  lv_obj_set_style_bg_opa(detailScreen, LV_OPA_COVER, 0);
-  lv_obj_set_style_border_width(detailScreen, 0, 0);
+  applyDarkBackgroundStyle(detailScreen, kColorPanelHex);
   lv_obj_set_style_pad_left(detailScreen, 18, 0);
   lv_obj_set_style_pad_right(detailScreen, 18, 0);
   lv_obj_set_style_pad_top(detailScreen, 16, 0);
@@ -966,25 +1038,24 @@ void buildDetailScreen() {
   lv_obj_align(detailBackButton, LV_ALIGN_TOP_LEFT, 0, 0);
 
   detailTitleLabel = lv_label_create(detailScreen);
-  lv_obj_set_style_text_color(detailTitleLabel, lv_color_hex(0xF4F6F8), 0);
-  lv_obj_align_to(detailTitleLabel, detailBackButton, LV_ALIGN_OUT_BOTTOM_LEFT, 0, 18);
+  applyTextOnDarkBackgroundStyle(detailTitleLabel);
+  lv_obj_align_to(detailTitleLabel, detailBackButton, LV_ALIGN_OUT_BOTTOM_LEFT, 0, 12);
 
   detailStatusLabel = lv_label_create(detailScreen);
-  lv_obj_set_style_text_color(detailStatusLabel, lv_color_hex(0xA6B0BF), 0);
-  lv_obj_align_to(detailStatusLabel, detailTitleLabel, LV_ALIGN_OUT_BOTTOM_LEFT, 0, 6);
+  applyTextOnDarkBackgroundStyle(detailStatusLabel);
+  lv_obj_align_to(detailStatusLabel, detailTitleLabel, LV_ALIGN_OUT_BOTTOM_LEFT, 0, 4);
 
   detailSubtitleLabel = lv_label_create(detailScreen);
   lv_label_set_long_mode(detailSubtitleLabel, LV_LABEL_LONG_WRAP);
   lv_obj_set_width(detailSubtitleLabel, LV_PCT(100));
-  lv_obj_set_style_text_color(detailSubtitleLabel, lv_color_hex(0x95A2B3), 0);
-  lv_obj_align_to(detailSubtitleLabel, detailStatusLabel, LV_ALIGN_OUT_BOTTOM_LEFT, 0, 18);
+  applyTextOnDarkBackgroundStyle(detailSubtitleLabel);
+  lv_obj_align_to(detailSubtitleLabel, detailStatusLabel, LV_ALIGN_OUT_BOTTOM_LEFT, 0, 12);
 
   detailRecipeCard = lv_obj_create(detailScreen);
   lv_obj_set_size(detailRecipeCard, LV_PCT(100), 150);
-  lv_obj_set_style_bg_color(detailRecipeCard, lv_color_hex(0x141A22), 0);
-  lv_obj_set_style_bg_opa(detailRecipeCard, LV_OPA_80, 0);
+  applyDarkBackgroundStyle(detailRecipeCard, kColorPanelRaisedHex);
+  lv_obj_set_style_bg_opa(detailRecipeCard, LV_OPA_80, LV_PART_MAIN | LV_STATE_ANY);
   lv_obj_set_style_radius(detailRecipeCard, 24, 0);
-  lv_obj_set_style_border_width(detailRecipeCard, 0, 0);
   lv_obj_set_style_pad_all(detailRecipeCard, 14, 0);
   lv_obj_set_style_pad_row(detailRecipeCard, 6, 0);
   lv_obj_set_layout(detailRecipeCard, LV_LAYOUT_FLEX);
@@ -1005,13 +1076,12 @@ void buildDetailScreen() {
   }
 
   lv_obj_t* selectorCard = lv_obj_create(detailScreen);
-  lv_obj_set_size(selectorCard, LV_PCT(100), 260);
-  lv_obj_set_style_bg_color(selectorCard, lv_color_hex(0x141A22), 0);
-  lv_obj_set_style_bg_opa(selectorCard, LV_OPA_80, 0);
+  lv_obj_set_size(selectorCard, LV_PCT(100), 210);
+  applyDarkBackgroundStyle(selectorCard, kColorPanelRaisedHex);
+  lv_obj_set_style_bg_opa(selectorCard, LV_OPA_80, LV_PART_MAIN | LV_STATE_ANY);
   lv_obj_set_style_radius(selectorCard, 28, 0);
-  lv_obj_set_style_border_width(selectorCard, 0, 0);
-  lv_obj_set_style_pad_all(selectorCard, 16, 0);
-  lv_obj_align_to(selectorCard, detailRecipeCard, LV_ALIGN_OUT_BOTTOM_LEFT, 0, 16);
+  lv_obj_set_style_pad_all(selectorCard, 14, 0);
+  lv_obj_align_to(selectorCard, detailSubtitleLabel, LV_ALIGN_OUT_BOTTOM_LEFT, 0, 12);
 
   lv_obj_t* selectorTitle = lv_label_create(selectorCard);
   lv_label_set_text(selectorTitle, "Alcohol Strength");
@@ -1025,12 +1095,12 @@ void buildDetailScreen() {
 
   for (std::uint8_t i = 0; i < 3; ++i) {
     lv_obj_t* button = lv_button_create(selectorCard);
-    lv_obj_set_size(button, LV_PCT(100), 52);
+    lv_obj_set_size(button, LV_PCT(100), 46);
     lv_obj_set_style_radius(button, 22, 0);
-    lv_obj_set_style_border_width(button, 0, 0);
+    applyLightSurfaceButtonStyle(button);
     lv_obj_add_event_cb(button, handleStrengthSelect, LV_EVENT_CLICKED,
                         reinterpret_cast<void*>(static_cast<std::uintptr_t>(i)));
-    lv_obj_align(button, LV_ALIGN_TOP_LEFT, 0, 54 + (i * 62));
+    lv_obj_align(button, LV_ALIGN_TOP_LEFT, 0, 48 + (i * 50));
     strengthButtons[i] = button;
 
     strengthPrimaryLabels[i] = lv_label_create(button);
@@ -1043,18 +1113,17 @@ void buildDetailScreen() {
   detailSummaryLabel = lv_label_create(detailScreen);
   lv_label_set_long_mode(detailSummaryLabel, LV_LABEL_LONG_WRAP);
   lv_obj_set_width(detailSummaryLabel, LV_PCT(100));
-  lv_obj_set_style_text_color(detailSummaryLabel, lv_color_hex(0xAAB5C3), 0);
-  lv_obj_align_to(detailSummaryLabel, selectorCard, LV_ALIGN_OUT_BOTTOM_LEFT, 0, 18);
+  applyTextOnDarkBackgroundStyle(detailSummaryLabel);
+  lv_obj_align_to(detailSummaryLabel, selectorCard, LV_ALIGN_OUT_BOTTOM_LEFT, 0, 10);
 
   detailEstimatedTimeLabel = lv_label_create(detailScreen);
-  lv_obj_set_style_text_color(detailEstimatedTimeLabel, lv_color_hex(0x95A2B3), 0);
-  lv_obj_align_to(detailEstimatedTimeLabel, detailSummaryLabel, LV_ALIGN_OUT_BOTTOM_LEFT, 0, 10);
+  applyTextOnDarkBackgroundStyle(detailEstimatedTimeLabel);
+  lv_obj_align_to(detailEstimatedTimeLabel, detailSummaryLabel, LV_ALIGN_OUT_BOTTOM_LEFT, 0, 6);
 
   pourButton = lv_button_create(detailScreen);
-  lv_obj_set_size(pourButton, LV_PCT(100), 72);
-  lv_obj_set_style_radius(pourButton, 28, 0);
-  lv_obj_set_style_bg_color(pourButton, lv_color_hex(0xF4B662), 0);
-  lv_obj_set_style_border_width(pourButton, 0, 0);
+  lv_obj_set_size(pourButton, LV_PCT(100), 64);
+  lv_obj_set_style_radius(pourButton, 24, 0);
+  applyLightSurfaceButtonStyle(pourButton);
   lv_obj_add_event_cb(pourButton, handlePourAction, LV_EVENT_CLICKED, nullptr);
   lv_obj_align(pourButton, LV_ALIGN_BOTTOM_MID, 0, 0);
 
@@ -1067,38 +1136,54 @@ void buildDetailScreen() {
 void buildSettingsScreen() {
   settingsScreen = lv_obj_create(rootScreen);
   lv_obj_set_size(settingsScreen, LV_PCT(100), LV_PCT(100));
-  lv_obj_set_style_bg_color(settingsScreen, lv_color_hex(0x101418), 0);
-  lv_obj_set_style_bg_opa(settingsScreen, LV_OPA_COVER, 0);
-  lv_obj_set_style_border_width(settingsScreen, 0, 0);
+  applyDarkBackgroundStyle(settingsScreen, kColorPanelHex);
   lv_obj_set_style_pad_left(settingsScreen, 18, 0);
   lv_obj_set_style_pad_right(settingsScreen, 18, 0);
   lv_obj_set_style_pad_top(settingsScreen, 16, 0);
   lv_obj_set_style_pad_bottom(settingsScreen, 16, 0);
+  lv_obj_remove_flag(
+      settingsScreen,
+      static_cast<lv_obj_flag_t>(LV_OBJ_FLAG_SCROLLABLE | LV_OBJ_FLAG_SCROLL_ELASTIC |
+                                 LV_OBJ_FLAG_SCROLL_MOMENTUM | LV_OBJ_FLAG_SCROLL_CHAIN));
 
   settingsBackButton = createTopBackButton(settingsScreen, handleSettingsBack);
   lv_obj_align(settingsBackButton, LV_ALIGN_TOP_LEFT, 0, 0);
 
   lv_obj_t* title = lv_label_create(settingsScreen);
   lv_label_set_text(title, "Settings");
-  lv_obj_set_style_text_color(title, lv_color_hex(0xF4F6F8), 0);
+  applyTextOnDarkBackgroundStyle(title);
   lv_obj_align_to(title, settingsBackButton, LV_ALIGN_OUT_BOTTOM_LEFT, 0, 18);
 
   settingsSubtitleLabel = lv_label_create(settingsScreen);
   lv_label_set_text(settingsSubtitleLabel, "Machine configuration");
-  lv_obj_set_style_text_color(settingsSubtitleLabel, lv_color_hex(0x95A2B3), 0);
+  applyTextOnDarkBackgroundStyle(settingsSubtitleLabel);
   lv_obj_align_to(settingsSubtitleLabel, title, LV_ALIGN_OUT_BOTTOM_LEFT, 0, 6);
 
   settingsStatusLabel = lv_label_create(settingsScreen);
   lv_label_set_text(settingsStatusLabel, "Ready");
-  lv_obj_set_style_text_color(settingsStatusLabel, lv_color_hex(0xA6B0BF), 0);
+  applyTextOnDarkBackgroundStyle(settingsStatusLabel);
   lv_obj_align_to(settingsStatusLabel, settingsSubtitleLabel, LV_ALIGN_OUT_BOTTOM_LEFT, 0, 10);
 
+  lv_obj_update_layout(settingsScreen);
+  const lv_coord_t settingsScreenHeight = lv_display_get_vertical_resolution(nullptr);
+  const lv_coord_t settingsContentTop =
+      lv_obj_get_y(settingsStatusLabel) + lv_obj_get_height(settingsStatusLabel) + 18;
+  lv_coord_t settingsViewportHeight = settingsScreenHeight - settingsContentTop - 16;
+  if (settingsViewportHeight < 140) {
+    settingsViewportHeight = 140;
+  }
+
   settingsMainList = lv_obj_create(settingsScreen);
-  lv_obj_set_size(settingsMainList, LV_PCT(100), 520);
+  lv_obj_set_size(settingsMainList, LV_PCT(100), settingsViewportHeight);
   lv_obj_set_style_bg_opa(settingsMainList, LV_OPA_TRANSP, 0);
   lv_obj_set_style_border_width(settingsMainList, 0, 0);
   lv_obj_set_style_pad_all(settingsMainList, 0, 0);
   lv_obj_set_style_pad_row(settingsMainList, 10, 0);
+  lv_obj_set_scroll_dir(settingsMainList, LV_DIR_VER);
+  lv_obj_remove_flag(
+      settingsMainList,
+      static_cast<lv_obj_flag_t>(LV_OBJ_FLAG_SCROLL_ELASTIC | LV_OBJ_FLAG_SCROLL_MOMENTUM |
+                                 LV_OBJ_FLAG_SCROLL_CHAIN_HOR | LV_OBJ_FLAG_SCROLL_CHAIN_VER));
   lv_obj_set_layout(settingsMainList, LV_LAYOUT_FLEX);
   lv_obj_set_flex_flow(settingsMainList, LV_FLEX_FLOW_COLUMN);
   lv_obj_set_flex_align(settingsMainList, LV_FLEX_ALIGN_START, LV_FLEX_ALIGN_START,
@@ -1118,10 +1203,11 @@ void buildSettingsScreen() {
   lv_obj_set_width(adminRow, LV_PCT(100));
   lv_obj_set_height(adminRow, 92);
   lv_obj_set_style_radius(adminRow, 24, 0);
-  lv_obj_set_style_bg_color(adminRow, lv_color_hex(0x151B23), 0);
-  lv_obj_set_style_border_color(adminRow, lv_color_hex(0xFFFFFF), 0);
-  lv_obj_set_style_border_opa(adminRow, LV_OPA_10, 0);
-  lv_obj_set_style_border_width(adminRow, 2, 0);
+  lv_obj_set_style_bg_opa(adminRow, LV_OPA_COVER, LV_PART_MAIN | LV_STATE_ANY);
+  lv_obj_set_style_bg_color(adminRow, uiColor(kColorSurfaceHex), LV_PART_MAIN | LV_STATE_ANY);
+  lv_obj_set_style_border_width(adminRow, 0, LV_PART_MAIN | LV_STATE_ANY);
+  lv_obj_set_style_shadow_width(adminRow, 0, LV_PART_MAIN | LV_STATE_ANY);
+  lv_obj_set_style_outline_width(adminRow, 0, LV_PART_MAIN | LV_STATE_ANY);
   lv_obj_set_style_pad_left(adminRow, 18, 0);
   lv_obj_set_style_pad_right(adminRow, 18, 0);
   lv_obj_set_style_pad_top(adminRow, 14, 0);
@@ -1129,15 +1215,16 @@ void buildSettingsScreen() {
 
   lv_obj_t* adminTitle = lv_label_create(adminRow);
   lv_label_set_text(adminTitle, "Admin Lock");
-  lv_obj_set_style_text_color(adminTitle, lv_color_hex(0xF4F6F8), 0);
+  lv_obj_set_style_text_color(adminTitle, uiColor(kColorSurfaceTextHex), 0);
   lv_obj_align(adminTitle, LV_ALIGN_TOP_LEFT, 0, 0);
 
   lv_obj_t* adminSubtitle = lv_label_create(adminRow);
   lv_label_set_text(adminSubtitle, "Protect settings access");
-  lv_obj_set_style_text_color(adminSubtitle, lv_color_hex(0x95A2B3), 0);
+  lv_obj_set_style_text_color(adminSubtitle, uiColor(kColorSurfaceSubtextHex), 0);
   lv_obj_align_to(adminSubtitle, adminTitle, LV_ALIGN_OUT_BOTTOM_LEFT, 0, 6);
 
   adminLockSwitch = lv_switch_create(adminRow);
+  applyAdminSwitchStyle(adminLockSwitch, adminLockEnabled);
   lv_obj_align(adminLockSwitch, LV_ALIGN_RIGHT_MID, 0, 0);
   lv_obj_add_event_cb(adminLockSwitch, handleAdminLockChanged, LV_EVENT_VALUE_CHANGED, nullptr);
 
@@ -1145,13 +1232,16 @@ void buildSettingsScreen() {
                   handleOpenServiceMode);
 
   settingsDetailCard = lv_obj_create(settingsScreen);
-  lv_obj_set_size(settingsDetailCard, LV_PCT(100), 360);
-  lv_obj_set_style_bg_color(settingsDetailCard, lv_color_hex(0x141A22), 0);
-  lv_obj_set_style_bg_opa(settingsDetailCard, LV_OPA_80, 0);
+  lv_obj_set_size(settingsDetailCard, LV_PCT(100), settingsViewportHeight);
+  applyDarkBackgroundStyle(settingsDetailCard, kColorPanelRaisedHex);
+  lv_obj_set_style_bg_opa(settingsDetailCard, LV_OPA_80, LV_PART_MAIN | LV_STATE_ANY);
   lv_obj_set_style_radius(settingsDetailCard, 26, 0);
-  lv_obj_set_style_border_width(settingsDetailCard, 0, 0);
   lv_obj_set_style_pad_all(settingsDetailCard, 18, 0);
   lv_obj_set_style_pad_row(settingsDetailCard, 12, 0);
+  lv_obj_remove_flag(
+      settingsDetailCard,
+      static_cast<lv_obj_flag_t>(LV_OBJ_FLAG_SCROLLABLE | LV_OBJ_FLAG_SCROLL_ELASTIC |
+                                 LV_OBJ_FLAG_SCROLL_MOMENTUM | LV_OBJ_FLAG_SCROLL_CHAIN));
   lv_obj_set_layout(settingsDetailCard, LV_LAYOUT_FLEX);
   lv_obj_set_flex_flow(settingsDetailCard, LV_FLEX_FLOW_COLUMN);
   lv_obj_set_flex_align(settingsDetailCard, LV_FLEX_ALIGN_START, LV_FLEX_ALIGN_START,
@@ -1168,11 +1258,17 @@ void buildSettingsScreen() {
 
   pumpMappingList = lv_obj_create(settingsDetailCard);
   lv_obj_set_width(pumpMappingList, LV_PCT(100));
-  lv_obj_set_height(pumpMappingList, LV_SIZE_CONTENT);
+  lv_obj_set_height(pumpMappingList, 0);
+  lv_obj_set_flex_grow(pumpMappingList, 1);
   lv_obj_set_style_bg_opa(pumpMappingList, LV_OPA_TRANSP, 0);
   lv_obj_set_style_border_width(pumpMappingList, 0, 0);
   lv_obj_set_style_pad_all(pumpMappingList, 0, 0);
   lv_obj_set_style_pad_row(pumpMappingList, 10, 0);
+  lv_obj_set_scroll_dir(pumpMappingList, LV_DIR_VER);
+  lv_obj_remove_flag(
+      pumpMappingList,
+      static_cast<lv_obj_flag_t>(LV_OBJ_FLAG_SCROLL_ELASTIC | LV_OBJ_FLAG_SCROLL_MOMENTUM |
+                                 LV_OBJ_FLAG_SCROLL_CHAIN_HOR | LV_OBJ_FLAG_SCROLL_CHAIN_VER));
   lv_obj_set_layout(pumpMappingList, LV_LAYOUT_FLEX);
   lv_obj_set_flex_flow(pumpMappingList, LV_FLEX_FLOW_COLUMN);
   lv_obj_set_flex_align(pumpMappingList, LV_FLEX_ALIGN_START, LV_FLEX_ALIGN_START,
@@ -1183,21 +1279,19 @@ void buildSettingsScreen() {
     lv_obj_set_width(row, LV_PCT(100));
     lv_obj_set_height(row, 58);
     lv_obj_set_style_radius(row, 20, 0);
-    lv_obj_set_style_bg_color(row, lv_color_hex(0x1A212C), 0);
-    lv_obj_set_style_border_width(row, 0, 0);
+    applyLightSurfaceButtonStyle(row);
     lv_obj_add_event_cb(row, handleCyclePumpAssignment, LV_EVENT_CLICKED,
                         reinterpret_cast<void*>(static_cast<std::uintptr_t>(i)));
 
     pumpMappingValueLabels[i] = lv_label_create(row);
-    lv_obj_set_style_text_color(pumpMappingValueLabels[i], lv_color_hex(0xF4F6F8), 0);
+    lv_obj_set_style_text_color(pumpMappingValueLabels[i], uiColor(kColorSurfaceTextHex), 0);
     lv_obj_align(pumpMappingValueLabels[i], LV_ALIGN_LEFT_MID, 16, 0);
   }
 
   settingsSaveButton = lv_button_create(settingsScreen);
   lv_obj_set_size(settingsSaveButton, LV_PCT(100), 68);
   lv_obj_set_style_radius(settingsSaveButton, 26, 0);
-  lv_obj_set_style_bg_color(settingsSaveButton, lv_color_hex(0xF4B662), 0);
-  lv_obj_set_style_border_width(settingsSaveButton, 0, 0);
+  applyLightSurfaceButtonStyle(settingsSaveButton);
   lv_obj_add_event_cb(settingsSaveButton, handleSaveSettings, LV_EVENT_CLICKED, nullptr);
   lv_obj_align(settingsSaveButton, LV_ALIGN_BOTTOM_MID, 0, 0);
 
@@ -1211,10 +1305,12 @@ void buildSettingsScreen() {
 
 void buildUiSkeleton() {
   rootScreen = lv_obj_create(nullptr);
-  lv_obj_set_style_bg_color(rootScreen, lv_color_hex(0x101418), 0);
-  lv_obj_set_style_bg_opa(rootScreen, LV_OPA_COVER, 0);
-  lv_obj_set_style_border_width(rootScreen, 0, 0);
+  applyDarkBackgroundStyle(rootScreen, kColorPanelHex);
   lv_obj_set_style_pad_all(rootScreen, 0, 0);
+  lv_obj_remove_flag(
+      rootScreen,
+      static_cast<lv_obj_flag_t>(LV_OBJ_FLAG_SCROLLABLE | LV_OBJ_FLAG_SCROLL_ELASTIC |
+                                 LV_OBJ_FLAG_SCROLL_MOMENTUM | LV_OBJ_FLAG_SCROLL_CHAIN));
 
   buildBootScreen();
   buildMenuScreen();
@@ -1249,17 +1345,13 @@ void initializeUi(bool startInPreviewMenu) {
   settingsDirty = false;
   adminLockEnabled = false;
   settingsStatusMessage = "";
-  mockPourStage = MockPourStage::Idle;
-  transientStatusText = "";
-  hasActivePourRequest = false;
   previewModeEnabled = startInPreviewMenu;
   clearBootTimer();
-  clearMockPourTimer();
 
   buildUiSkeleton();
+  lv_screen_load(rootScreen);
   refreshMenuScreen();
   updateDetailScreen();
-  lv_screen_load(rootScreen);
 
   if (startInPreviewMenu) {
     showView(ScreenView::MainMenu);
@@ -1351,71 +1443,6 @@ void ui_trigger_pump_assignment_edited(std::uint8_t pumpIndex, const char* ingre
       ingredientDisplayName != nullptr) {
     pumpAssignmentEditedCallback(pumpIndex, ingredientId, ingredientDisplayName, enabled);
   }
-}
-
-String ui_debug_screen_text() {
-  String text;
-  text.reserve(768);
-
-  text += "View: ";
-  switch (currentView) {
-    case ScreenView::Boot:
-      text += "Boot";
-      break;
-    case ScreenView::MainMenu:
-      text += "MainMenu";
-      break;
-    case ScreenView::DrinkDetail:
-      text += "DrinkDetail";
-      break;
-    case ScreenView::Settings:
-      text += "Settings";
-      break;
-  }
-  text += "\n";
-  text += "Status: ";
-  text += effectiveStatusText();
-  text += "\n";
-
-  if (selectedItem != nullptr) {
-    text += "Selected item: ";
-    text += selectedItem->displayName;
-    text += "\n";
-    text += "Alcohol strength: ";
-    text += strengthClLabel(selectedStrengthIndex);
-    text += " / ";
-    text += strengthMlLabel(selectedStrengthIndex);
-    text += "\n";
-  }
-
-  if (hasActivePourRequest) {
-    text += "Pour request: ";
-    text += activePourRequest.itemName;
-    text += activePourRequest.isShot ? " [shot]" : " [drink]";
-    text += "\n";
-    text += "Alcohol: ";
-    text += activePourRequest.alcoholAmountMl;
-    text += " ml\n";
-    text += "Estimated: ";
-    text += activePourRequest.estimatedPourTimeSec;
-    text += " sec\n";
-  }
-
-  text += "Category: ";
-  switch (activeCategory) {
-    case DrinkCategory::All:
-      text += "All";
-      break;
-    case DrinkCategory::Drinks:
-      text += "Drinks";
-      break;
-    case DrinkCategory::Shots:
-      text += "Shots";
-      break;
-  }
-  text += "\n";
-
-  return text;
 }
 
 }  // namespace tipsy::ui::generated

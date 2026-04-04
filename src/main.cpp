@@ -1,5 +1,4 @@
 #include <Arduino.h>
-
 #include "app/Application.h"
 #include "app/MachineController.h"
 #include "app/services/IngredientService.h"
@@ -30,7 +29,6 @@ tipsy::ui::UiManager uiManager(uiBridge);
 tipsy::app::Application application(storageManager, recipeService, ingredientService,
                                     settingsService, machineController, pumpController, uiManager);
 bool applicationReady = false;
-
 }  // namespace
 
 void setup() {
@@ -85,4 +83,3 @@ void loop() {
   uiManager.tick(deltaMs);
   application.update();
 }
-

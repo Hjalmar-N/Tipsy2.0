@@ -83,7 +83,14 @@ void SquareLineAdapter::update() {
   }
 
   const UiState state = uiBridge_->currentState();
-  generated::ui_apply_model(buildRenderModel(state));
+  const generated::UiRenderModel model = buildRenderModel(state);
+  if (hasRenderedModel_ && renderModelsEqual(lastRenderedModel_, model)) {
+    return;
+  }
+
+  generated::ui_apply_model(model);
+  lastRenderedModel_ = model;
+  hasRenderedModel_ = true;
 }
 
 String SquareLineAdapter::machineStateText(tipsy::app::MachineState state) const {
@@ -114,7 +121,7 @@ void SquareLineAdapter::applyStateFeedback(const UiState& state,
   switch (state.machineState) {
     case tipsy::app::MachineState::Pouring:
       model.feedbackTitle = "Pouring";
-      model.feedbackText = "Drink is being poured in mock mode.";
+      model.feedbackText = "Drink is being poured.";
       model.showPouringFeedback = true;
       break;
     case tipsy::app::MachineState::Complete:
@@ -189,6 +196,57 @@ generated::UiRenderModel SquareLineAdapter::buildRenderModel(const UiState& stat
   applyStateFeedback(state, model);
 
   return model;
+}
+
+bool SquareLineAdapter::renderModelsEqual(const generated::UiRenderModel& lhs,
+                                          const generated::UiRenderModel& rhs) {
+  if (lhs.headerTitle != rhs.headerTitle ||
+      lhs.headerSubtitle != rhs.headerSubtitle ||
+      lhs.machineStateLabel != rhs.machineStateLabel ||
+      lhs.machineStateText != rhs.machineStateText ||
+      lhs.statusLabel != rhs.statusLabel ||
+      lhs.statusText != rhs.statusText ||
+      lhs.selectedDrinkLabel != rhs.selectedDrinkLabel ||
+      lhs.selectedDrinkText != rhs.selectedDrinkText ||
+      lhs.feedbackTitle != rhs.feedbackTitle ||
+      lhs.feedbackText != rhs.feedbackText ||
+      lhs.primaryActionLabel != rhs.primaryActionLabel ||
+      lhs.hasSelectedDrink != rhs.hasSelectedDrink ||
+      lhs.canStartSelectedDrink != rhs.canStartSelectedDrink ||
+      lhs.showPouringFeedback != rhs.showPouringFeedback ||
+      lhs.showCompleteFeedback != rhs.showCompleteFeedback ||
+      lhs.showErrorFeedback != rhs.showErrorFeedback ||
+      lhs.drinkCount != rhs.drinkCount) {
+    return false;
+  }
+
+  for (std::size_t i = 0; i < lhs.drinkCount && i < lhs.drinks.size(); ++i) {
+    const auto& left = lhs.drinks[i];
+    const auto& right = rhs.drinks[i];
+    if (left.id != right.id ||
+        left.displayName != right.displayName ||
+        left.subtitle != right.subtitle ||
+        left.categoryId != right.categoryId ||
+        left.availabilityText != right.availabilityText ||
+        left.available != right.available ||
+        left.selected != right.selected ||
+        left.disabled != right.disabled) {
+      return false;
+    }
+  }
+
+  for (std::size_t i = 0; i < lhs.pumpAssignments.size(); ++i) {
+    const auto& left = lhs.pumpAssignments[i];
+    const auto& right = rhs.pumpAssignments[i];
+    if (left.pumpIndex != right.pumpIndex ||
+        left.ingredientId != right.ingredientId ||
+        left.ingredientDisplayName != right.ingredientDisplayName ||
+        left.enabled != right.enabled) {
+      return false;
+    }
+  }
+
+  return true;
 }
 
 }  // namespace tipsy::ui

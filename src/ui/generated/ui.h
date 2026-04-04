@@ -78,6 +78,5 @@ void ui_trigger_prime_pumps();
 void ui_trigger_flush_cleaning();
 void ui_trigger_pump_assignment_edited(std::uint8_t pumpIndex, const char* ingredientId,
                                        const char* ingredientDisplayName, bool enabled);
-String ui_debug_screen_text();
 
 }  // namespace tipsy::ui::generated
