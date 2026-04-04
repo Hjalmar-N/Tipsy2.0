@@ -38,13 +38,22 @@
       "sortOrder": 40
     },
     {
+      "id": "whiskey",
+      "displayName": "Whiskey",
+      "categoryId": "spirit",
+      "enabled": true,
+      "alcoholic": true,
+      "abvPercent": 40.0,
+      "sortOrder": 50
+    },
+    {
       "id": "tonic",
       "displayName": "Tonic Water",
       "categoryId": "mixer",
       "enabled": true,
       "alcoholic": false,
       "abvPercent": 0.0,
-      "sortOrder": 50
+      "sortOrder": 60
     },
     {
       "id": "soda",
@@ -53,7 +62,7 @@
       "enabled": true,
       "alcoholic": false,
       "abvPercent": 0.0,
-      "sortOrder": 60
+      "sortOrder": 70
     },
     {
       "id": "cola",
@@ -62,7 +71,7 @@
       "enabled": true,
       "alcoholic": false,
       "abvPercent": 0.0,
-      "sortOrder": 70
+      "sortOrder": 80
     },
     {
       "id": "orange_juice",
@@ -71,7 +80,7 @@
       "enabled": true,
       "alcoholic": false,
       "abvPercent": 0.0,
-      "sortOrder": 80
+      "sortOrder": 90
     },
     {
       "id": "grenadine",
@@ -80,8 +89,43 @@
       "enabled": true,
       "alcoholic": false,
       "abvPercent": 0.0,
-      "sortOrder": 90
+      "sortOrder": 100
+    },
+    {
+      "id": "mint_mix",
+      "displayName": "Mint Mix",
+      "categoryId": "mixer",
+      "enabled": true,
+      "alcoholic": false,
+      "abvPercent": 0.0,
+      "sortOrder": 110
+    },
+    {
+      "id": "lime",
+      "displayName": "Lime",
+      "categoryId": "juice",
+      "enabled": true,
+      "alcoholic": false,
+      "abvPercent": 0.0,
+      "sortOrder": 120
+    },
+    {
+      "id": "sour_mix",
+      "displayName": "Sour Mix",
+      "categoryId": "mixer",
+      "enabled": true,
+      "alcoholic": false,
+      "abvPercent": 0.0,
+      "sortOrder": 130
+    },
+    {
+      "id": "citrus_mix",
+      "displayName": "Citrus Mix",
+      "categoryId": "mixer",
+      "enabled": true,
+      "alcoholic": false,
+      "abvPercent": 0.0,
+      "sortOrder": 140
     }
   ]
 }
-

@@ -16,8 +16,12 @@ class SquareLineAdapter {
   String machineStateText(tipsy::app::MachineState state) const;
   void applyStateFeedback(const UiState& state, generated::UiRenderModel& model) const;
   generated::UiRenderModel buildRenderModel(const UiState& state) const;
+  static bool renderModelsEqual(const generated::UiRenderModel& lhs,
+                                const generated::UiRenderModel& rhs);
 
   UiBridge* uiBridge_ = nullptr;
+  generated::UiRenderModel lastRenderedModel_ {};
+  bool hasRenderedModel_ = false;
 };
 
 }  // namespace tipsy::ui

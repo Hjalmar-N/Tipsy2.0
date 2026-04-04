@@ -6,6 +6,13 @@
 
 namespace tipsy::app {
 
+namespace {
+
+constexpr size_t kSettingsDocCapacity = 4096;
+constexpr size_t kPumpMapDocCapacity = 4096;
+
+}  // namespace
+
 SettingsService::SettingsService(tipsy::storage::JsonStorage& jsonStorage)
     : jsonStorage_(jsonStorage) {}
 
@@ -14,8 +21,8 @@ bool SettingsService::load() {
     return false;
   }
 
-  DynamicJsonDocument settingsDoc(3072);
-  DynamicJsonDocument pumpMapDoc(2048);
+  DynamicJsonDocument settingsDoc(kSettingsDocCapacity);
+  DynamicJsonDocument pumpMapDoc(kPumpMapDocCapacity);
 
   if (!jsonStorage_.readJson(tipsy::storage::paths::kSettings, settingsDoc)) {
     lastError_ = jsonStorage_.lastError();
@@ -126,7 +133,7 @@ void SettingsService::loadDefaults() {
 bool SettingsService::ensureDefaultFiles() {
   loadDefaults();
 
-  DynamicJsonDocument pumpMapDoc(2048);
+  DynamicJsonDocument pumpMapDoc(kPumpMapDocCapacity);
   pumpMapDoc["schemaVersion"] = 1;
   JsonArray assignments = pumpMapDoc.createNestedArray("pumpAssignments");
   for (const auto& assignment : settings_.pumpAssignments) {
@@ -137,7 +144,7 @@ bool SettingsService::ensureDefaultFiles() {
     entry["ingredientDisplayName"] = assignment.ingredientDisplayName;
   }
 
-  DynamicJsonDocument settingsDoc(3072);
+  DynamicJsonDocument settingsDoc(kSettingsDocCapacity);
   settingsDoc["schemaVersion"] = settings_.schemaVersion;
   settingsDoc["machineId"] = settings_.machineId;
   settingsDoc["venueName"] = settings_.venueName;
@@ -224,7 +231,7 @@ bool SettingsService::loadSettingsDocument(const JsonObjectConst& settingsObject
 }
 
 bool SettingsService::savePumpMap() const {
-  DynamicJsonDocument doc(2048);
+  DynamicJsonDocument doc(kPumpMapDocCapacity);
   doc["schemaVersion"] = settings_.schemaVersion;
   JsonArray assignments = doc.createNestedArray("pumpAssignments");
 
@@ -242,7 +249,7 @@ bool SettingsService::savePumpMap() const {
 }
 
 bool SettingsService::saveSettingsDocument() const {
-  DynamicJsonDocument doc(3072);
+  DynamicJsonDocument doc(kSettingsDocCapacity);
   doc["schemaVersion"] = settings_.schemaVersion;
   doc["machineId"] = settings_.machineId;
   doc["venueName"] = settings_.venueName;

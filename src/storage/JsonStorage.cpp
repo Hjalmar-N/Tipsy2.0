@@ -1,5 +1,7 @@
 #include "storage/JsonStorage.h"
 
+#include <memory>
+
 namespace tipsy::storage {
 
 JsonStorage::JsonStorage(FileSystemManager& fileSystemManager)
@@ -16,7 +18,7 @@ bool JsonStorage::readJson(const char* path, DynamicJsonDocument& doc) {
     return false;
   }
 
-  const DeserializationError error = deserializeJson(doc, content);
+  const DeserializationError error = deserializeJson(doc, content.c_str());
   if (error) {
     lastError_ = String("JSON parse failed for ") + path + ": " + error.c_str();
     return false;
@@ -27,8 +29,11 @@ bool JsonStorage::readJson(const char* path, DynamicJsonDocument& doc) {
 }
 
 bool JsonStorage::writeJson(const char* path, const DynamicJsonDocument& doc) {
-  String content;
-  serializeJson(doc, content);
+  const size_t contentLength = measureJson(doc);
+  auto buffer = std::make_unique<char[]>(contentLength + 1U);
+  const size_t written = serializeJson(doc, buffer.get(), contentLength + 1U);
+  buffer[written] = '\0';
+  const String content(buffer.get());
   if (!fileSystemManager_.writeText(path, content)) {
     lastError_ = String("JSON write failed for ") + path + ": " +
                  fileSystemManager_.lastError();
