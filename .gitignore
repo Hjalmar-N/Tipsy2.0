@@ -4,6 +4,21 @@
 # Local editor and OS files
 .vscode/
 .idea/
+.claude/
 Thumbs.db
 Desktop.ini
 
+# Local logs and capture artifacts
+boot_capture_current.err.log
+boot_capture_current.out.log
+boot_log.txt
+i2c_scan*.log
+monitor*.log
+pio_build*.log
+pio_log*.txt
+pio_path.txt
+upload*.log
+
+# Local vendor/reference material
+waveshare_demo/
+waveshare_demo.zip
