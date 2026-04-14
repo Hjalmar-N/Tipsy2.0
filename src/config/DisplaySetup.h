@@ -266,8 +266,8 @@ inline bool wakeupTca9554LcdReset() {
   }
 
   log_printf("LCD control bit pulsed via expander bit %u.\n", kTcaExioLcdRst);
-  log_printf("LCD reset released through expander bit %u.\n", kTcaExioLcdRst);
-  delay(120);
+  log_printf("LCD reset released (AXS15231B 200 ms stabilization) via expander bit %u.\n", kTcaExioLcdRst);
+  delay(200);  // AXS15231B requires >= 200 ms after reset release before QSPI init
   return true;
 }
 
@@ -284,9 +284,33 @@ inline void enableDisplayBacklight() {
   log_printf("LCD backlight enabled on GPIO %d.\n", kTftBlPin);
 }
 
+// Thin subclass that sends COLMOD=0x55 (RGB565 16-bit) immediately after the
+// panel's own begin() sequence completes. Uses the inherited protected _bus so
+// no public sendCommand API is required.
+class TipsyArduino_AXS15231B : public Arduino_AXS15231B {
+public:
+  using Arduino_AXS15231B::Arduino_AXS15231B;
+
+  bool begin(int32_t speed = GFX_NOT_DEFINED) override {
+    if (!Arduino_AXS15231B::begin(speed)) {
+      return false;
+    }
+    log_printf("[diag][display] Setting COLMOD to RGB565 (0x55)\n");
+    uint8_t colmod = 0x55;
+    _bus->beginWrite();
+    _bus->writeCommand(0x3A);  // COLMOD
+    _bus->write(colmod);
+    _bus->endWrite();
+    log_printf("[diag][display] COLMOD set\n");
+    return true;
+  }
+};
+
 // Instantiates the QSPI bus and AXS15231B display object for the diagnostic probe path.
 // Only compiled and callable when TIPSY_PROBE_AXS15231B_QSPI is 1.
-inline Arduino_GFX* createAXS15231BQspiDriver() {
+// Returns a TipsyArduino_AXS15231B (direct driver, no Canvas).
+// begin() sends COLMOD 0x55 (RGB565 16-bit) immediately after panel init.
+inline Arduino_AXS15231B* createAXS15231BQspiDriver() {
   log_printf("[diag][display] AXS15231B/QSPI probe path active\n");
   log_printf("[diag][display] Initializing Arduino_ESP32QSPI"
              " CS=%d SCK=%d D0=%d D1=%d D2=%d D3=%d\n",
@@ -298,7 +322,7 @@ inline Arduino_GFX* createAXS15231BQspiDriver() {
 
   log_printf("[diag][display] Initializing Arduino_AXS15231B %dx%d RST=-1\n",
              AXS15231B_TFTWIDTH, AXS15231B_TFTHEIGHT);
-  return new Arduino_AXS15231B(
+  return new TipsyArduino_AXS15231B(
       bus, GFX_NOT_DEFINED /* RST */, 0 /* rotation */,
       false /* IPS */, AXS15231B_TFTWIDTH, AXS15231B_TFTHEIGHT);
 }
