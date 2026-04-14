@@ -15,7 +15,34 @@ bool UiManager::begin() {
     return false;
   }
   tipsy::config::enableDisplayBacklight();
+
+#if TIPSY_PROBE_AXS15231B_QSPI
+  {
+    Arduino_GFX* gfx = tipsy::config::createAXS15231BQspiDriver();
+    if (gfx == nullptr || !gfx->begin()) {
+      log_printf("[diag][display] AXS15231B/QSPI begin() FAILED\n");
+      while (true) { delay(2000); }
+    }
+    log_printf("[diag][display] AXS15231B/QSPI begin() OK\n");
+
+    static constexpr struct { uint16_t color; const char* name; } kColors[] = {
+      { 0xF800, "RED"   }, { 0x07E0, "GREEN" }, { 0x001F, "BLUE" },
+      { 0xFFFF, "WHITE" }, { 0x0000, "BLACK" },
+    };
+    for (const auto& c : kColors) {
+      log_printf("[diag][display] fillScreen %s\n", c.name);
+      gfx->fillScreen(c.color);
+      delay(500);
+    }
+
+    while (true) {
+      log_printf("[diag][display] AXS15231B/QSPI probe alive\n");
+      delay(2000);
+    }
+  }
+#else
   display_ = tipsy::config::createDisplayDriver();
+#endif
 #endif
 
   if (display_ == nullptr) {
