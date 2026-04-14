@@ -22,6 +22,20 @@ constexpr std::uint8_t kTca9554AddressAllHigh = 0x27;
 constexpr std::uint8_t kTcaExioLcdAux = 0;
 constexpr std::uint8_t kTcaExioLcdRst = 1;     // EXIO1 is LCD_RST
 
+// --- Probe flag: set to 1 to activate AXS15231B/QSPI diagnostic path ---
+// Set back to 0 to restore normal ST7796/SPI operation.
+#define TIPSY_PROBE_AXS15231B_QSPI 1
+
+// --- QSPI pin constants for AXS15231B probe ---
+// Confirmed pin mapping for Waveshare ESP32-S3-Touch-LCD-3.5B.
+// RST is -1 because the TCA9554 path handles the hardware reset pulse.
+constexpr std::int8_t kQspiCsPin  = 45;
+constexpr std::int8_t kQspiSckPin = 47;
+constexpr std::int8_t kQspiD0Pin  = 21;
+constexpr std::int8_t kQspiD1Pin  = 48;
+constexpr std::int8_t kQspiD2Pin  = 40;
+constexpr std::int8_t kQspiD3Pin  = 39;
+
 // --- SPI Config (ST7796 Display) ---
 // Waveshare's official Arduino_GFX example for this exact board uses:
 // MOSI=1, SCLK=5, DC=3, CS=-1, RST=-1, BL=6. The same demo keeps a MISO pin
@@ -273,6 +287,25 @@ inline void enableDisplayBacklight() {
   pinMode(kTftBlPin, OUTPUT);
   digitalWrite(kTftBlPin, HIGH);
   log_printf("LCD backlight enabled on GPIO %d.\n", kTftBlPin);
+}
+
+// Instantiates the QSPI bus and AXS15231B display object for the diagnostic probe path.
+// Only compiled and callable when TIPSY_PROBE_AXS15231B_QSPI is 1.
+inline Arduino_GFX* createAXS15231BQspiDriver() {
+  log_printf("[diag][display] AXS15231B/QSPI probe path active\n");
+  log_printf("[diag][display] Initializing Arduino_ESP32QSPI"
+             " CS=%d SCK=%d D0=%d D1=%d D2=%d D3=%d\n",
+             kQspiCsPin, kQspiSckPin,
+             kQspiD0Pin, kQspiD1Pin, kQspiD2Pin, kQspiD3Pin);
+  Arduino_DataBus* bus = new Arduino_ESP32QSPI(
+      kQspiCsPin, kQspiSckPin,
+      kQspiD0Pin, kQspiD1Pin, kQspiD2Pin, kQspiD3Pin);
+
+  log_printf("[diag][display] Initializing Arduino_AXS15231B %dx%d RST=-1\n",
+             AXS15231B_TFTWIDTH, AXS15231B_TFTHEIGHT);
+  return new Arduino_AXS15231B(
+      bus, GFX_NOT_DEFINED /* RST */, 0 /* rotation */,
+      false /* IPS */, AXS15231B_TFTWIDTH, AXS15231B_TFTHEIGHT);
 }
 
 } // namespace tipsy::config
