@@ -3,6 +3,67 @@
 Tipsy2.0 is an ESP32-S3 based cocktail machine project built with PlatformIO and the Arduino framework.
 The current codebase focuses on clean architecture, mockable hardware seams, JSON-backed storage, and a future-ready UI integration path for LVGL and SquareLine Studio.
 
+## Quick Start
+
+From the repo root:
+
+```powershell
+py -m platformio run -e esp32-s3-devkitc-1
+```
+
+Other useful targets:
+
+```powershell
+py -m platformio run -e desktop-preview-win
+py -m platformio run -e tipsy-sim-win
+```
+
+Simple wrapper script:
+
+```bash
+./pre-flight.sh
+./pre-flight.sh desktop-preview-win
+./pre-flight.sh tipsy-sim-win
+```
+
+## Build Targets
+
+### `esp32-s3-devkitc-1`
+
+The main firmware target. This builds the embedded application from `src/` for ESP32-S3 bring-up using PlatformIO + Arduino.
+
+- Intended path for real firmware work
+- Uses LittleFS and the main application stack
+- Still contains placeholder or unfinished hardware integration in parts of the HAL, UI/display path, and real pump driver path
+
+### `desktop-preview-win`
+
+Native Windows LVGL preview build for checking the current generated UI flow in a desktop window.
+
+- Intended path for UI preview work
+- Reuses the generated UI sources
+- Separate from the real embedded runtime path
+- Does not prove real display, touch, storage, or pump hardware readiness
+
+See [desktop_preview/README.md](/C:/Users/Hjalmar/Tipsy2.0/desktop_preview/README.md).
+
+### `tipsy-sim-win`
+
+Native Windows console simulation for backend/product-logic validation.
+
+- Intended path for simulation and logic checks
+- Reuses backend-oriented code without requiring the LVGL desktop window path
+- Useful before hardware is finalized
+
+See [simulation/README.md](/C:/Users/Hjalmar/Tipsy2.0/simulation/README.md).
+
+## Current Paths And Status
+
+- Real firmware path: `src/` via `esp32-s3-devkitc-1`
+- Desktop preview path: `desktop_preview/` via `desktop-preview-win`
+- Simulation path: `simulation/` via `tipsy-sim-win`
+- Placeholder / unfinished integration: real pump output details, finalized board mappings, LVGL display/input integration, and other hardware-specific bring-up pieces are not complete yet
+
 ## Current Architecture
 
 ### `src/app`
@@ -103,4 +164,3 @@ Main loop responsibilities:
 - Non-blocking control flow suitable for embedded runtime
 - Compatibility with both mock mode and future real hardware mode
 - Future-proof structure for restaurant/admin features and UI growth
-
