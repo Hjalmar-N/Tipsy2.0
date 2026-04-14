@@ -228,8 +228,7 @@ inline bool wakeupTca9554LcdReset() {
     return false;
   }
 
-  conf &= ~(1 << kTcaExioLcdAux);
-  conf &= ~(1 << kTcaExioLcdRst);
+  conf &= ~(1 << kTcaExioLcdRst);  // EXIO1 only: confirmed LCD reset line
   if (!writeTcaRegister(busConfig.address, 0x03, conf)) {
     log_printf("Display control write failed: config register.\n");
     return false;
@@ -241,10 +240,9 @@ inline bool wakeupTca9554LcdReset() {
     return false;
   }
 
-  // Waveshare's TCA9554-based display demos for this board family pulse two
-  // expander bits before gfx->begin(). EXIO1 is the confirmed LCD reset line;
-  // EXIO0 is the smallest vendor-pattern-matching auxiliary control candidate.
-  output |= (1 << kTcaExioLcdAux);
+  // Pulse only EXIO1 (confirmed LCD_RST line). EXIO0 is left undisturbed:
+  // its function on this board is unknown and toggling it alongside reset
+  // risks corrupting the panel boot sequence.
   output |= (1 << kTcaExioLcdRst);
   if (!writeTcaRegister(busConfig.address, 0x01, output)) {
     log_printf("Display control write failed: output register high phase.\n");
@@ -253,7 +251,6 @@ inline bool wakeupTca9554LcdReset() {
 
   delay(10);
 
-  output &= ~(1 << kTcaExioLcdAux);
   output &= ~(1 << kTcaExioLcdRst);
   if (!writeTcaRegister(busConfig.address, 0x01, output)) {
     log_printf("Display control write failed: output register low phase.\n");
@@ -262,17 +259,15 @@ inline bool wakeupTca9554LcdReset() {
 
   delay(10);
 
-  output |= (1 << kTcaExioLcdAux);
   output |= (1 << kTcaExioLcdRst);
   if (!writeTcaRegister(busConfig.address, 0x01, output)) {
     log_printf("Display control write failed: output register final phase.\n");
     return false;
   }
 
-  log_printf("LCD control bits pulsed via expander bits %u and %u.\n",
-             kTcaExioLcdAux, kTcaExioLcdRst);
-  log_printf("LCD reset released through expander bit %u.\n", kTcaExioLcdRst);
-  delay(120); // ST7796 requires 120ms to stabilize after reset goes high
+  log_printf("LCD control bit pulsed via expander bit %u.\n", kTcaExioLcdRst);
+  log_printf("LCD reset released (AXS15231B 200 ms stabilization) via expander bit %u.\n", kTcaExioLcdRst);
+  delay(200);  // AXS15231B requires >= 200 ms after reset release before QSPI init
   return true;
 }
 
@@ -289,9 +284,33 @@ inline void enableDisplayBacklight() {
   log_printf("LCD backlight enabled on GPIO %d.\n", kTftBlPin);
 }
 
+// Thin subclass that sends COLMOD=0x55 (RGB565 16-bit) immediately after the
+// panel's own begin() sequence completes. Uses the inherited protected _bus so
+// no public sendCommand API is required.
+class TipsyArduino_AXS15231B : public Arduino_AXS15231B {
+public:
+  using Arduino_AXS15231B::Arduino_AXS15231B;
+
+  bool begin(int32_t speed = GFX_NOT_DEFINED) override {
+    if (!Arduino_AXS15231B::begin(speed)) {
+      return false;
+    }
+    log_printf("[diag][display] Setting COLMOD to RGB565 (0x55)\n");
+    uint8_t colmod = 0x55;
+    _bus->beginWrite();
+    _bus->writeCommand(0x3A);  // COLMOD
+    _bus->write(colmod);
+    _bus->endWrite();
+    log_printf("[diag][display] COLMOD set\n");
+    return true;
+  }
+};
+
 // Instantiates the QSPI bus and AXS15231B display object for the diagnostic probe path.
 // Only compiled and callable when TIPSY_PROBE_AXS15231B_QSPI is 1.
-inline Arduino_GFX* createAXS15231BQspiDriver() {
+// Returns a TipsyArduino_AXS15231B (direct driver, no Canvas).
+// begin() sends COLMOD 0x55 (RGB565 16-bit) immediately after panel init.
+inline Arduino_AXS15231B* createAXS15231BQspiDriver() {
   log_printf("[diag][display] AXS15231B/QSPI probe path active\n");
   log_printf("[diag][display] Initializing Arduino_ESP32QSPI"
              " CS=%d SCK=%d D0=%d D1=%d D2=%d D3=%d\n",
@@ -303,7 +322,7 @@ inline Arduino_GFX* createAXS15231BQspiDriver() {
 
   log_printf("[diag][display] Initializing Arduino_AXS15231B %dx%d RST=-1\n",
              AXS15231B_TFTWIDTH, AXS15231B_TFTHEIGHT);
-  return new Arduino_AXS15231B(
+  return new TipsyArduino_AXS15231B(
       bus, GFX_NOT_DEFINED /* RST */, 0 /* rotation */,
       false /* IPS */, AXS15231B_TFTWIDTH, AXS15231B_TFTHEIGHT);
 }

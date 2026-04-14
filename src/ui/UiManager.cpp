@@ -18,8 +18,8 @@ bool UiManager::begin() {
 
 #if TIPSY_PROBE_AXS15231B_QSPI
   {
-    Arduino_GFX* gfx = tipsy::config::createAXS15231BQspiDriver();
-    if (gfx == nullptr || !gfx->begin()) {
+    Arduino_AXS15231B* axsDriver = tipsy::config::createAXS15231BQspiDriver();
+    if (axsDriver == nullptr || !axsDriver->begin()) {
       log_printf("[diag][display] AXS15231B/QSPI begin() FAILED\n");
       while (true) { delay(2000); }
     }
@@ -31,7 +31,7 @@ bool UiManager::begin() {
     };
     for (const auto& c : kColors) {
       log_printf("[diag][display] fillScreen %s\n", c.name);
-      gfx->fillScreen(c.color);
+      axsDriver->fillScreen(c.color);
       delay(500);
     }
 
