@@ -228,8 +228,7 @@ inline bool wakeupTca9554LcdReset() {
     return false;
   }
 
-  conf &= ~(1 << kTcaExioLcdAux);
-  conf &= ~(1 << kTcaExioLcdRst);
+  conf &= ~(1 << kTcaExioLcdRst);  // EXIO1 only: confirmed LCD reset line
   if (!writeTcaRegister(busConfig.address, 0x03, conf)) {
     log_printf("Display control write failed: config register.\n");
     return false;
@@ -241,10 +240,9 @@ inline bool wakeupTca9554LcdReset() {
     return false;
   }
 
-  // Waveshare's TCA9554-based display demos for this board family pulse two
-  // expander bits before gfx->begin(). EXIO1 is the confirmed LCD reset line;
-  // EXIO0 is the smallest vendor-pattern-matching auxiliary control candidate.
-  output |= (1 << kTcaExioLcdAux);
+  // Pulse only EXIO1 (confirmed LCD_RST line). EXIO0 is left undisturbed:
+  // its function on this board is unknown and toggling it alongside reset
+  // risks corrupting the panel boot sequence.
   output |= (1 << kTcaExioLcdRst);
   if (!writeTcaRegister(busConfig.address, 0x01, output)) {
     log_printf("Display control write failed: output register high phase.\n");
@@ -253,7 +251,6 @@ inline bool wakeupTca9554LcdReset() {
 
   delay(10);
 
-  output &= ~(1 << kTcaExioLcdAux);
   output &= ~(1 << kTcaExioLcdRst);
   if (!writeTcaRegister(busConfig.address, 0x01, output)) {
     log_printf("Display control write failed: output register low phase.\n");
@@ -262,17 +259,15 @@ inline bool wakeupTca9554LcdReset() {
 
   delay(10);
 
-  output |= (1 << kTcaExioLcdAux);
   output |= (1 << kTcaExioLcdRst);
   if (!writeTcaRegister(busConfig.address, 0x01, output)) {
     log_printf("Display control write failed: output register final phase.\n");
     return false;
   }
 
-  log_printf("LCD control bits pulsed via expander bits %u and %u.\n",
-             kTcaExioLcdAux, kTcaExioLcdRst);
+  log_printf("LCD control bit pulsed via expander bit %u.\n", kTcaExioLcdRst);
   log_printf("LCD reset released through expander bit %u.\n", kTcaExioLcdRst);
-  delay(120); // ST7796 requires 120ms to stabilize after reset goes high
+  delay(120);
   return true;
 }
 
